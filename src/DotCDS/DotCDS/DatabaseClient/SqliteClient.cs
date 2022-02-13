@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotCDS.Database
 {
-    internal class Postgres
+    internal class SqliteClient
     {
     }
 }
