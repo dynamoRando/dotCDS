@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32127.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCDS", "DotCDS\DotCDS.csproj", "{3E4F6D5B-627A-438C-82DF-D51E55AFB82C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E4F6D5B-627A-438C-82DF-D51E55AFB82C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E4F6D5B-627A-438C-82DF-D51E55AFB82C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E4F6D5B-627A-438C-82DF-D51E55AFB82C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E4F6D5B-627A-438C-82DF-D51E55AFB82C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {584AB903-BB3D-4164-BBA0-E2A1B47FD204}
+	EndGlobalSection
+EndGlobal
