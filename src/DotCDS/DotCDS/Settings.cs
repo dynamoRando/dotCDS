@@ -14,6 +14,8 @@ namespace DotCDS
         #endregion
 
         #region Public Properties
+        public int SQLServicePort { get; set; }
+        public int DatabaseServicePort { get; set; }
         public string RootFolder
         {
             get
@@ -26,6 +28,7 @@ namespace DotCDS
             }
         }
         public int DatabaseClientType { get; set; }
+        public string CoopSchemaName { get; set; }
         #endregion
 
         #region Constructors

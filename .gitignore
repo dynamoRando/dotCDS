@@ -9,3 +9,9 @@
 /src/DotCDS/DotCDS.Console/obj
 /src/DotCDS/DotCDS/bin/Debug/net6.0
 /src/DotCDS/DotCDS.Console/bin/Debug/net6.0
+/src/DotCDS/DotCDS.Client/bin/Debug/net6.0
+/src/DotCDS/DotCDS.Client/obj
+/src/DotCDS/DotCDS.Common/bin/Debug/net6.0
+/src/DotCDS/DotCDS.Common/obj
+/tests/DotCDS.Tests/bin/Debug/net6.0
+/tests/DotCDS.Tests/obj

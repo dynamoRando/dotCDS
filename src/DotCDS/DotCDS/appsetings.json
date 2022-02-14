@@ -1,6 +1,9 @@
 {
   "Settings": {
     "RootFolder": "",
-    "DatabaseClientType": "1"
+    "DatabaseClientType": "1",
+    "DatabaseServicePort": 5016,
+    "SQLServicePort": 5017,
+    "CoopSchemaName":  "coop"
   }
 }
