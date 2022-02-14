@@ -18,6 +18,9 @@ namespace DotCDS.Tests
 
             // ASSERT
             Assert.Equal(5016, _process.Settings.DatabaseServicePort);
+
+            string connectionString = "data source=exmaple;initial catalog=example;persist security info=True;user id=example;password=example";
+            Assert.Equal(_process.TestConnectionString(), connectionString);
         }
     }
 }
