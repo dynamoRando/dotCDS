@@ -8,6 +8,7 @@
         #endregion
 
         #region Public Properties
+        public Settings Settings => _settings;
         #endregion
 
         #region Constructors

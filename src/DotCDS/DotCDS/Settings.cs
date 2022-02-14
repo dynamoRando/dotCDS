@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DotCDS
 {
-    internal class Settings
+    public class Settings
     {
         #region Private Fields
         private string _rootFolder = string.Empty;
