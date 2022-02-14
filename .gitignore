@@ -7,3 +7,5 @@
 /src/DotCDS/.vs/DotCDS
 /src/DotCDS/DotCDS/obj
 /src/DotCDS/DotCDS.Console/obj
+/src/DotCDS/DotCDS/bin/Debug/net6.0
+/src/DotCDS/DotCDS.Console/bin/Debug/net6.0
