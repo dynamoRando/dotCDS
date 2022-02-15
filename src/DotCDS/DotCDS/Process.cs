@@ -12,7 +12,7 @@ namespace DotCDS
         private bool _overrideDefaultDb = false;
         private DatabaseClientType _clientType;
         private string _connectionString;
-        private IDatabaseClient _databaseClient;
+        private IDatabaseClient _cooperativeStore;
         #endregion
 
         #region Public Properties
@@ -37,7 +37,7 @@ namespace DotCDS
         public void Start()
         {
             LoadConfiguration();
-            ConfigureBackingDatabase();
+            ConfigureBackingStore();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace DotCDS
             _overrideDefaultDb = true;
 
             LoadConfiguration();
-            ConfigureBackingDatabase();
+            ConfigureBackingStore();
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace DotCDS
         /// <summary>
         /// Checks the backing database to see if it needs to be setup
         /// </summary>
-        private void ConfigureBackingDatabase()
+        private void ConfigureBackingStore()
         {
             const string unknownDbType = "Unknown client databasetype";
 
@@ -112,13 +112,13 @@ namespace DotCDS
                 case DatabaseClientType.Unknown:
                     throw new InvalidOperationException(unknownDbType);
                 case DatabaseClientType.SQLServer:
-                    _databaseClient = new SQLServerClient();
+                    _cooperativeStore = new SQLServerClient();
                     break;
                 case DatabaseClientType.Postgres:
-                    _databaseClient = new PostgresClient();
+                    _cooperativeStore = new PostgresClient();
                     break;
                 case DatabaseClientType.Sqlite:
-                    _databaseClient = new SqliteClient(_connectionString, Settings.BackingDatabaseName, _rootPath);
+                    _cooperativeStore = new SqliteClient(_connectionString, Settings.BackingDatabaseName, _rootPath);
                     break;
                 default:
                     throw new InvalidOperationException(unknownDbType);
