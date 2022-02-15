@@ -10,7 +10,7 @@ namespace DotCDS
     /// Represents the primary database that is backing dotCDS. This db has the dotCDS database 
     /// and other metadata used by the service.
     /// </summary>
-    internal enum DatabaseClientType
+    public enum DatabaseClientType
     {
         Unknown,
         SQLServer,

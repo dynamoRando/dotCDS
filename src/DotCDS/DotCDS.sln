@@ -11,11 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{78481813-313
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{42A22158-AFD5-45D7-BC4F-5F1F83E6CAFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCDS.Tests", "..\..\tests\DotCDS.Tests\DotCDS.Tests.csproj", "{FF5462A4-E38F-4028-BCED-32AAE97AFCE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotCDS.Tests", "..\..\tests\DotCDS.Tests\DotCDS.Tests.csproj", "{FF5462A4-E38F-4028-BCED-32AAE97AFCE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCDS.Common", "DotCDS.Common\DotCDS.Common.csproj", "{000BBE91-60B0-4DC1-AC3B-3294FC9C5ABC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotCDS.Common", "DotCDS.Common\DotCDS.Common.csproj", "{000BBE91-60B0-4DC1-AC3B-3294FC9C5ABC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCDS.Client", "DotCDS.Client\DotCDS.Client.csproj", "{9A955B88-0BD8-48E4-BE2E-03E69EA88623}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotCDS.Client", "DotCDS.Client\DotCDS.Client.csproj", "{9A955B88-0BD8-48E4-BE2E-03E69EA88623}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

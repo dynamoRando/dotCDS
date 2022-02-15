@@ -24,8 +24,14 @@ namespace DotCDS
         #region Public Methods
         public string TestDefaultConnection()
         {
-            return _config.GetConnectionString("TestDefaultConnection"); 
+            return _config.GetConnectionString("TestDefault"); 
         }
+
+        public string DefaultConnection()
+        {
+            return _config.GetConnectionString("Default");
+        }
+
         internal Settings Load()
         {
             var allSettings = _config.GetSection(nameof(Settings));
