@@ -20,6 +20,10 @@ namespace DotCDS.Tests
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Creates a testing harness for a single instance of dotCDS with the specific root folder directory
+        /// </summary>
+        /// <param name="rootFolder"></param>
         public SingleHarness(string rootFolder)
         {
             _rootFolder = rootFolder;
@@ -27,6 +31,10 @@ namespace DotCDS.Tests
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Configures the root folder for testing. If there are any files in the root folder, it will delete them. Otherwise, if the directory does 
+        /// not exist, it will create it.
+        /// </summary>
         public void SetupTempFolder()
         {
             var directory = new DirectoryInfo(_rootFolder);

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace DotCDS.Database
 {
+    /// <summary>
+    /// A backing library for working with a Postgres database
+    /// </summary>
     internal class PostgresClient : IDatabaseClient
     {
         #region Private Fields

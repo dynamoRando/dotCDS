@@ -9,6 +9,9 @@ using System.Data.SQLite;
 
 namespace DotCDS.Database
 {
+    /// <summary>
+    /// A backing library for interacting with a Sqlite database
+    /// </summary>
     internal class SqliteClient : IDatabaseClient
     {
         #region Private Fields
@@ -25,6 +28,13 @@ namespace DotCDS.Database
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Creates a new instance of the Sqlite client. If the backing database or structures in the backing database
+        /// do not exist, it will create them.
+        /// </summary>
+        /// <param name="connectionString">The connection string for the database</param>
+        /// <param name="backingDbName">The name of the backing database</param>
+        /// <param name="rootFolder">The folder where the database exists</param>
         public SqliteClient(string connectionString, string backingDbName, string rootFolder)
         {
             _connectionString = connectionString;

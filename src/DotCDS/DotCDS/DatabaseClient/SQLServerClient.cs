@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace DotCDS.Database
 {
+    /// <summary>
+    /// A backing library for working with a SQL Server database
+    /// </summary>
     internal class SQLServerClient : IDatabaseClient
     {
         #region Private Fields
