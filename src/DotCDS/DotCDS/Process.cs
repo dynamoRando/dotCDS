@@ -74,6 +74,16 @@ namespace DotCDS
         {
             throw new NotImplementedException();
         }
+
+        public void StartSQLService()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartSQLService(int overrideSettingsPortNumber, bool overrideSettingsUseHttps)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Private Methods
