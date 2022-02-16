@@ -1,0 +1,9 @@
+syntax = "proto3";
+import "CDS.proto";
+import "google/protobuf/timestamp.proto";
+option csharp_namespace = "DotCDS.Common";
+package CDSDatabaseService;
+
+service DatabaseService {
+	rpc IsOnline(CDS.TestRequest) returns (CDS.TestReply);
+}

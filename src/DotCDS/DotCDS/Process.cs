@@ -64,6 +64,16 @@ namespace DotCDS
         {
             return _configurator.TestDefaultConnection();
         }
+
+        public void StartDatabaseService()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartDatabaseService(int overrideSettingsPortNumber, bool overrideSettingsUseHttps)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Private Methods

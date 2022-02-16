@@ -1,0 +1,20 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+package CDS;
+option csharp_namespace = "DotCDS.Common";
+
+// A message for basic online testing
+message TestRequest {
+	string requestTimeUTC = 1;
+	string requestOriginURL = 2;
+	string requestOriginIP4 = 3;
+	string requestOriginIP6 = 4;
+	uint32 requestPortNumber = 5;
+	string requestEchoMessage = 6;
+}
+
+// A message for basic online testing
+message TestReply {
+	string replyTimeUTC = 1;
+	string replyEchoMessage = 2;
+}
