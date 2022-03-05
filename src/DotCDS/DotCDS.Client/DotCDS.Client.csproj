@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DotCDS.Common\DotCDS.Common.csproj" />
+  </ItemGroup>
+
 </Project>

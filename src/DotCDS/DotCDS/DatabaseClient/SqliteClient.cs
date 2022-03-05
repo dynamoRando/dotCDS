@@ -46,6 +46,20 @@ namespace DotCDS.Database
         #endregion
 
         #region Public Methods
+        public bool TryExecuteSqlStatement(string sqlStatement)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryCreateDatabase(string databaseName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryCreateTable(string databaseName, string createTableStatement)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Private Methods

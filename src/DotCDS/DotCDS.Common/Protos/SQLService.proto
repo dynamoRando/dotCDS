@@ -6,4 +6,30 @@ package CDSSQLService;
 
 service SQLService {
 	rpc IsOnline(CDS.TestRequest) returns (CDS.TestReply);
+	rpc ExecuteSQLQuery (SQLQueryRequest) returns (SQLQueryReply);  
+}
+
+// A SQL Query Request
+message SQLQueryRequest {
+  CDS.AuthRequest authentication = 1;
+  string databaseName = 2;
+  string sqlStatement = 3;
+  string userSessionId = 4;
+  uint32 databaseType = 5;
+}
+
+// a message representing the results of a SQL query
+message SQLResultset {
+	bool isError = 1;
+	string resultMessage = 2;
+	uint64 numberOfRowsAffected = 3;
+	repeated CDS.Row rows = 4;
+	string executionErrorMessage = 5;
+}
+
+// A SQL Query Reply
+message SQLQueryReply {
+	CDS.AuthResult authenticationResult = 1;
+	uint64 totalResultsets = 2;
+	repeated SQLResultset results = 3;
 }

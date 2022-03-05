@@ -17,5 +17,10 @@ namespace DotCDS.Services
             reply.ReplyEchoMessage = request.RequestEchoMessage;
             return Task.FromResult(reply);
         }
+
+        public override Task<CreateDatabaseResult> CreateDatabase(CreateDatabaseRequest request, ServerCallContext context)
+        {
+            return base.CreateDatabase(request, context);
+        }
     }
 }

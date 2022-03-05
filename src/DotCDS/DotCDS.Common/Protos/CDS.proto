@@ -18,3 +18,98 @@ message TestReply {
 	string replyTimeUTC = 1;
 	string replyEchoMessage = 2;
 }
+
+// a message for general information
+message MessageInfo {
+	bool isLittleEndian = 1;
+	repeated string messageAddresses = 2;
+	string messageGeneratedTimeUTC = 3;
+	uint32 messageType = 4;
+	string messageGUID = 5;
+}
+
+// A message for authentication purposes (note: this is proof of concept, and obviously not secure)
+message AuthRequest{
+  string userName = 1;
+  string pw = 2;
+  bytes pwHash = 3;
+  bytes token = 4;
+}
+
+// A message describing the results of an authentication attempt
+message AuthResult {
+	string userName = 1;
+	string token = 2;
+	bool isAuthenticated = 3;
+	string authenticationMessage = 4;
+}
+
+// A message for creating a user database
+message CreateDatabaseRequest{
+	AuthResult authentication = 1;
+	MessageInfo messageInfo = 2;
+	string databaseName = 3;
+}
+
+// A message describing the results of a CreateDatabaseRequest
+message CreateDatabaseResult {
+	AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	string databaseName = 3;
+	string resultMessage = 4;
+	string databaseId = 5;
+}
+
+
+// an object for representing a row in a table. used for returning data
+message Row {
+	uint32 rowId = 1;
+	uint32 tableId = 2;
+	string databaseId = 3;
+	repeated RowValue values = 4;
+	bool isRemoteable = 5;
+	RowRemoteMetadata remoteMetadata = 6;
+}
+
+
+// an object for storing values for a row in a table. used for returning data
+message RowValue {
+	ColumnSchema column = 1;
+	bool isNullValue = 2;
+	// we send the raw bytes and expect the client to convert the value based on the column type. 
+	// note: this value does not include the 4 byte INT length prefix for variable length fields
+	// to ease conversion refer to the Drummersoft.DrummerDB.Common library, in particular the `DbBinaryConvert` class
+	bytes value = 3; 
+}
+
+message RowRemoteMetadata {
+	bool isRemoteOutOfSyncWithHost = 1;
+	bool isHashOutOfSyncWithHost = 2;
+	bool isRemoteDeleted = 3;
+	google.protobuf.Timestamp remoteDeletedDate = 4;
+	bool isLocalDeleted = 5;
+}
+
+
+// a message for describing schema information of a column in a database table
+// see Drummersoft.DrummerDB.Core.Structures.Version.SystemSchemaConstants100 for more information
+message ColumnSchema {
+	// the name of the column. Max length of 50 characters
+	string columnName = 1;
+	// The ENUM data type of the column. See Drummersoft.DrummerDB.Common.SQLColumnType
+	uint32 columnType = 2; 
+	// the max or fixed length of the column, if applicable
+	uint32 columnLength = 3; 
+	// if the column is nullable or not
+	bool isNullable = 4;
+	// the ordinal value of the column, i.e. the order in which the column appears in the table
+	uint32 ordinal = 5; 
+	// empty value in a request, populated in a response with the column identifier (INT)
+	uint32 columnId = 6;
+	// empty string in a request, populated in a response with the table GUID the column is attached to
+	string tableId = 7; 
+	// empty string in a request, populated in a response with the column GUID value
+	string columnGUID = 8;
+	// if the column is the primary key of the table. If this is part of a list of columns, it is implied to be a composite primary key
+	bool isPrimaryKey = 9;
+}

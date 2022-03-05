@@ -6,4 +6,5 @@ package CDSDatabaseService;
 
 service DatabaseService {
 	rpc IsOnline(CDS.TestRequest) returns (CDS.TestReply);
+	rpc CreateDatabase(CDS.CreateDatabaseRequest) returns (CDS.CreateDatabaseResult);
 }
