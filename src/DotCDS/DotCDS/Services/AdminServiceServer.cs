@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace DotCDS.Services
 {
+    /// <summary>
+    /// An endpoint for admin functions for a CDS
+    /// </summary>
     internal class AdminServiceServer
     {
         #region Private Fields
