@@ -16,6 +16,14 @@ namespace DotCDS
         private DatabaseServiceServer _databaseServiceServer;
         private DatabaseServiceHandler _databaseServiceHandler;
         private PortSettings _databaseServicePort;
+
+        private AdminServiceServer _adminServiceServer;
+        private AdminServiceHandler _adminServiceHandler;
+        private PortSettings _adminServicePort;
+
+        private SQLServiceServer _sqlServiceServer;
+        private SQLServiceHandler _sqlServiceHandler;
+        private PortSettings _sqlServicePort;
         #endregion
 
         #region Public Properties
@@ -28,9 +36,15 @@ namespace DotCDS
         /// <summary>
         /// Starts the Database Service with the supplied parameters
         /// </summary>
+        /// <param name="portsettings">The settings to use for ip address and port number</param>
         /// <param name="useHttps">If the connection should use HTTPS or not</param>
-        public void StartServerForDatabaseService(bool useHttps)
+        public void StartServerForDatabaseService(PortSettings portsettings, bool useHttps)
         {
+            if (_databaseServicePort.PortNumber == 0)
+            {
+                _databaseServicePort = portsettings;
+            }
+
             string clientUrl;
 
             if (_databaseServiceHandler is null)
@@ -63,6 +77,90 @@ namespace DotCDS
             if (_databaseServiceServer is not null)
             {
                 _databaseServiceServer.StopAsync();
+            }
+        }
+
+        public void StartServerForSqlService(PortSettings portsettings, bool useHttps)
+        {
+            if (_sqlServicePort.PortNumber == 0)
+            {
+                _sqlServicePort = portsettings;
+            }
+
+            string clientUrl;
+
+            if (_sqlServiceHandler is null)
+            {
+                _sqlServiceHandler = new SQLServiceHandler();
+            }
+
+            if (useHttps)
+            {
+                clientUrl = $"https://{_sqlServicePort.IPAddress}:{_sqlServicePort.PortNumber.ToString()}";
+            }
+            else
+            {
+                clientUrl = $"http://{_sqlServicePort.IPAddress}:{_sqlServicePort.PortNumber.ToString()}";
+            }
+
+            string[] urls = new string[1];
+            urls[0] = clientUrl;
+
+            if (_sqlServiceServer is null)
+            {
+                _sqlServiceServer = new SQLServiceServer();
+            }
+
+            _sqlServiceServer.RunAsync(null, urls, _sqlServiceHandler, _sqlServicePort);
+        }
+
+        public void StopServerForSqlService()
+        {
+            if (_sqlServiceServer is not null)
+            {
+                _sqlServiceServer.StopAsync();
+            }
+        }
+
+        public void StartServerForAdminService(PortSettings portsettings, bool useHttps)
+        {
+            if (_adminServicePort.PortNumber == 0)
+            {
+                _adminServicePort = portsettings;
+            }
+
+            string clientUrl;
+
+            if (_adminServiceHandler is null)
+            {
+                _adminServiceHandler = new AdminServiceHandler();
+            }
+
+            if (useHttps)
+            {
+                clientUrl = $"https://{_adminServicePort.IPAddress}:{_adminServicePort.PortNumber.ToString()}";
+            }
+            else
+            {
+                clientUrl = $"http://{_adminServicePort.IPAddress}:{_adminServicePort.PortNumber.ToString()}";
+            }
+
+            string[] urls = new string[1];
+            urls[0] = clientUrl;
+
+            if (_adminServiceServer is null)
+            {
+                _adminServiceServer = new AdminServiceServer();
+            }
+
+            _adminServiceServer.RunAsync(null, urls, _adminServiceHandler, _adminServicePort);
+        }
+
+        public void StopServerForAdminService()
+        {
+            if (_adminServiceServer is not null)
+            {
+                _adminServiceServer.StopAsync();
             }
         }
         #endregion

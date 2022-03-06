@@ -64,6 +64,11 @@ namespace DotCDS.Services
                     foo.Add(new ServiceDescriptor(typeof(AdminServiceHandler), processor));
                 });
         }
+
+        public Task StopAsync()
+        {
+            return _server.StopAsync();
+        }
         #endregion
     }
 }

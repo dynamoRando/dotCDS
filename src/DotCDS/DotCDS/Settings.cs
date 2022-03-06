@@ -18,6 +18,11 @@ namespace DotCDS
 
         #region Public Properties
         /// <summary>
+        /// The default IP Address to use for bringing online services
+        /// </summary>
+        public string DefaultIP4 { get; set; }
+
+        /// <summary>
         /// The port used for SQL statements to be submitted to
         /// </summary>
         public int SQLServicePort { get; set; }
@@ -26,6 +31,11 @@ namespace DotCDS
         /// The port used for database actions to be submitted to
         /// </summary>
         public int DatabaseServicePort { get; set; }
+
+        /// <summary>
+        /// The port use for admin functions for a CDS instance
+        /// </summary>
+        public int AdminServicePort { get; set; }
 
         /// <summary>
         /// The root folder the application should use for settings.

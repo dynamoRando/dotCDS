@@ -37,6 +37,11 @@ namespace DotCDS.Services
 
             return _server.RunAsync();
         }
+
+        public Task StopAsync()
+        {
+            return _server.StopAsync();
+        }
         #endregion
 
         #region Private Methods

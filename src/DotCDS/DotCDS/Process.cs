@@ -72,22 +72,56 @@ namespace DotCDS
 
         public void StartDatabaseService()
         {
-            throw new NotImplementedException();
+            PortSettings settings = new PortSettings();
+            settings.IPAddress = _settings.DefaultIP4;
+            settings.PortNumber = _settings.DatabaseServicePort;
+
+            _networkManager.StartServerForDatabaseService(settings, true);
         }
 
         public void StartDatabaseService(int overrideSettingsPortNumber, bool overrideSettingsUseHttps)
         {
-            throw new NotImplementedException();
+            PortSettings settings = new PortSettings();
+            settings.IPAddress = _settings.DefaultIP4;
+            settings.PortNumber = overrideSettingsPortNumber;
+
+            _networkManager.StartServerForDatabaseService(settings, overrideSettingsUseHttps);
         }
 
         public void StartSQLService()
         {
-            throw new NotImplementedException();
+            PortSettings settings = new PortSettings();
+            settings.IPAddress = _settings.DefaultIP4;
+            settings.PortNumber = _settings.SQLServicePort;
+
+            _networkManager.StartServerForSqlService(settings, true);
         }
 
         public void StartSQLService(int overrideSettingsPortNumber, bool overrideSettingsUseHttps)
         {
-            throw new NotImplementedException();
+            PortSettings settings = new PortSettings();
+            settings.IPAddress = _settings.DefaultIP4;
+            settings.PortNumber = overrideSettingsPortNumber;
+
+            _networkManager.StartServerForSqlService(settings, overrideSettingsUseHttps);
+        }
+
+        public void StartAdminService()
+        {
+            PortSettings settings = new PortSettings();
+            settings.IPAddress = _settings.DefaultIP4;
+            settings.PortNumber = _settings.AdminServicePort;
+
+            _networkManager.StartServerForAdminService(settings, true);
+        }
+
+        public void StartAdminService(int overrideSettingsPortNumber, bool overrideSettingsUseHttps)
+        {
+            PortSettings settings = new PortSettings();
+            settings.IPAddress = _settings.DefaultIP4;
+            settings.PortNumber = overrideSettingsPortNumber;
+
+            _networkManager.StartServerForAdminService(settings, overrideSettingsUseHttps);
         }
         #endregion
 
