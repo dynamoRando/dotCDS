@@ -21,5 +21,6 @@
 		<Protobuf Include="Protos\DatabaseService.proto" ProtoRoot="Protos\" ProtoCompile="True" />
 		<Protobuf Include="Protos\SQLService.proto" ProtoRoot="Protos\" ProtoCompile="True" />
 		<Protobuf Include="Protos\CDS.proto" ProtoRoot="Protos\" ProtoCompile="True" />
+		<Protobuf Include="Protos\AdminService.proto" ProtoRoot="Protos\" ProtoCompile="True" />
 	</ItemGroup>
 </Project>

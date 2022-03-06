@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DotCDS.Tests
 {
-    internal class TestConstants
+    public class TestConstants
     {
         public static string TEST_TEMP_FOLDER = Path.Combine(Path.GetTempPath(), "dotCDS");
     }

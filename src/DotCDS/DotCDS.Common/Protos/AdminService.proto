@@ -1,0 +1,24 @@
+syntax = "proto3";
+import "CDS.proto";
+import "google/protobuf/timestamp.proto";
+option csharp_namespace = "DotCDS.Common";
+package AdminService;
+
+// a service for admin functions for a particular CDS instance
+service AdminService {
+	rpc IsOnline(CDS.TestRequest) returns (CDS.TestReply);
+	rpc GetLocalDatabaseInfo (LocalDatabasesRequest) returns (LocalDatabasesReply);
+}
+
+message LocalDatabaseInfo {
+	string databaseName = 1;
+	// see DatabaseClientType.cs 
+	uint32 databaseType = 2; 
+} 
+
+message LocalDatabasesRequest {
+}
+
+message LocalDatabasesReply {
+	repeated LocalDatabaseInfo databases = 1;
+}

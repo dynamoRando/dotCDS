@@ -2,9 +2,11 @@ syntax = "proto3";
 import "CDS.proto";
 import "google/protobuf/timestamp.proto";
 option csharp_namespace = "DotCDS.Common";
-package CDSDatabaseService;
+package CooperativeDataService;
 
-service DatabaseService {
+// a service for communication between different CDS stores
+
+service CooperativeDataService {
 	rpc IsOnline(CDS.TestRequest) returns (CDS.TestReply);
-	rpc CreateDatabase(CDS.CreateDatabaseRequest) returns (CDS.CreateDatabaseResult);
+	rpc CreatePartialDatabase(CDS.CreateDatabaseRequest) returns (CDS.CreateDatabaseResult);
 }

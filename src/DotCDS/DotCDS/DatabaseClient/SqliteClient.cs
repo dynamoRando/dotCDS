@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Data.SQLite;
+using System.Data;
 
 namespace DotCDS.Database
 {
@@ -14,6 +15,11 @@ namespace DotCDS.Database
     /// </summary>
     internal class SqliteClient : IDatabaseClient
     {
+        /*
+         * https://devtut.github.io/csharp/using-sqlite-in-c.html#creating-simple-crud-using-sqlite-in-c
+         * https://docs.microsoft.com/en-us/dotnet/standard/data/sqlite/?tabs=netcore-cli
+         */
+
         #region Private Fields
         private string _connectionString;
         private string _backingDbName;
@@ -46,19 +52,56 @@ namespace DotCDS.Database
         #endregion
 
         #region Public Methods
-        public bool TryExecuteSqlStatement(string sqlStatement)
+        public int ExecuteWrite(string dbName, string query, Dictionary<string, object> args)
         {
-            throw new NotImplementedException();
+            int numberOfRowsAffected;
+
+            //setup the connection to the database
+            using (var con = new SQLiteConnection($"Data Source={dbName}.db"))
+            {
+                con.Open();
+
+                //open a new command
+                using (var cmd = new SQLiteCommand(query, con))
+                {
+                    //set the arguments given in the query
+                    foreach (var pair in args)
+                    {
+                        cmd.Parameters.AddWithValue(pair.Key, pair.Value);
+                    }
+
+                    //execute the query and get the number of row affected
+                    numberOfRowsAffected = cmd.ExecuteNonQuery();
+                }
+
+                return numberOfRowsAffected;
+            }
         }
 
-        public bool TryCreateDatabase(string databaseName)
+        public DataTable ExecuteRead(string dbName, string query, Dictionary<string, object> args)
         {
-            throw new NotImplementedException();
-        }
+            if (string.IsNullOrEmpty(query.Trim()))
+                return null;
 
-        public bool TryCreateTable(string databaseName, string createTableStatement)
-        {
-            throw new NotImplementedException();
+            using (var con = new SQLiteConnection($"Data Source={dbName}.db"))
+            {
+                con.Open();
+                using (var cmd = new SQLiteCommand(query, con))
+                {
+                    foreach (KeyValuePair<string, object> entry in args)
+                    {
+                        cmd.Parameters.AddWithValue(entry.Key, entry.Value);
+                    }
+
+                    var da = new SQLiteDataAdapter(cmd);
+
+                    var dt = new DataTable();
+                    da.Fill(dt);
+
+                    da.Dispose();
+                    return dt;
+                }
+            }
         }
         #endregion
 
@@ -74,6 +117,5 @@ namespace DotCDS.Database
             }
         }
         #endregion
-
     }
 }

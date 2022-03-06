@@ -6,7 +6,7 @@ namespace DotCDS.Client
     public sealed class StoreClient
     {
         #region Private Fields
-        private SQLService.SQLServiceClient _client;
+        private CooperativeSQLService.CooperativeSQLServiceClient _client;
         private GrpcChannel _channel;
         private string _url;
         #endregion
@@ -18,21 +18,28 @@ namespace DotCDS.Client
         #endregion
 
         #region Public Methods
-        public SQLQueryReply ExecuteSQL(string sqlStatement, string databaseName, string userName, string pw)
+        public StatementReply ExecuteSQL(string sqlStatement, string databaseName, string userName, string pw)
         {
             throw new NotImplementedException();
         }
-        #endregion
 
-        #region Private Methods
-        private void InitConnection(string url, int portNumber)
+        public void Configure(string url, int portNumber)
         {
             string completeUrl = url + ":" + portNumber.ToString();
             _url = completeUrl;
 
             _channel = GrpcChannel.ForAddress(completeUrl);
-            _client = new SQLService.SQLServiceClient(_channel);
+            _client = new CooperativeSQLService.CooperativeSQLServiceClient(_channel);
         }
+
+        public bool IsConfigured()
+        {
+            return _url != null;
+        }
+        #endregion
+
+        #region Private Methods
+
         #endregion
 
     }

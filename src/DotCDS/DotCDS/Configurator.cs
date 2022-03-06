@@ -3,6 +3,9 @@ using System;
 
 namespace DotCDS
 {
+    /// <summary>
+    /// Class used to help in building CDS configuration
+    /// </summary>
     internal class Configurator
     {
         #region Private Fields

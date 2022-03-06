@@ -11,7 +11,7 @@ namespace DotCDS.Client
     public static class Store
     {
         #region Private Fields
-        private static SQLService.SQLServiceClient _client;
+        private static CooperativeSQLService.CooperativeSQLServiceClient _client;
         private static GrpcChannel _channel;
         private static string _url;
         #endregion
@@ -34,7 +34,7 @@ namespace DotCDS.Client
             return _url != null;
         }
 
-        public static SQLQueryReply ExecuteSQL(string sqlStatement, string databaseName, string userName, string pw)
+        public static StatementReply ExecuteStatement(string statement, string databaseName, string userName, string pw)
         {
             throw new NotImplementedException();
         }

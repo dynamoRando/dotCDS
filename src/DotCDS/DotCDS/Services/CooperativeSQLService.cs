@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DotCDS.Services
 {
-    internal class SQLService : Common.SQLService.SQLServiceBase
+    internal class CooperativeSQLService : Common.CooperativeSQLService.CooperativeSQLServiceBase
     {
         private SQLServiceHandler _handler;
 
@@ -20,10 +20,10 @@ namespace DotCDS.Services
             return Task.FromResult(reply);
         }
 
-        public override Task<SQLQueryReply> ExecuteSQLQuery(SQLQueryRequest request, ServerCallContext context)
+        public override Task<StatementReply> ExecuteStatement(StatementRequest request, ServerCallContext context)
         {
             throw new NotImplementedException();
-            return base.ExecuteSQLQuery(request, context);
+            return base.ExecuteStatement(request, context);
         }
     }
 }

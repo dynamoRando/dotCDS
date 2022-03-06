@@ -3,6 +3,9 @@ using DotCDS.DatabaseClient;
 
 namespace DotCDS
 {
+    /// <summary>
+    /// Represents the root CDS process
+    /// </summary>
     public class Process
     {
         #region Private Fields
@@ -13,6 +16,7 @@ namespace DotCDS
         private DatabaseClientType _clientType;
         private string _connectionString;
         private IDatabaseClient _cooperativeStore;
+        private NetworkManager _networkManager;
         #endregion
 
         #region Public Properties
@@ -22,9 +26,10 @@ namespace DotCDS
         #region Constructors
         public Process()
         {
+            _networkManager = new NetworkManager();
         }
 
-        public Process(string rootPath)
+        public Process(string rootPath) : this()
         {
             _rootPath = rootPath;
         }

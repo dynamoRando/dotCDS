@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace DotCDS
 {
+    /// <summary>
+    /// Represents a CDS appsettings.json file
+    /// </summary>
     public class Settings
     {
         #region Private Fields

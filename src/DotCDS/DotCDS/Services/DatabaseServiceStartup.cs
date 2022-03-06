@@ -34,7 +34,7 @@ namespace DotCDS.Services
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<DatabaseService>();
+                endpoints.MapGrpcService<CooperativeDatabaseService>();
 
                 endpoints.MapGet("/", async context =>
                 {

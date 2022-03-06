@@ -8,7 +8,7 @@ using Grpc.Core;
 
 namespace DotCDS.Services
 {
-    internal class DatabaseService : Common.DatabaseService.DatabaseServiceBase
+    internal class CooperativeDatabaseService : CooperativeDataService.CooperativeDataServiceBase
     {
         public override Task<TestReply> IsOnline(TestRequest request, ServerCallContext context)
         {
@@ -18,9 +18,5 @@ namespace DotCDS.Services
             return Task.FromResult(reply);
         }
 
-        public override Task<CreateDatabaseResult> CreateDatabase(CreateDatabaseRequest request, ServerCallContext context)
-        {
-            return base.CreateDatabase(request, context);
-        }
     }
 }

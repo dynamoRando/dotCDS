@@ -16,3 +16,7 @@
 /tests/DotCDS.Tests/bin/Debug/net6.0
 /tests/DotCDS.Tests/obj
 /src/DotCDS/.vs/ProjectEvaluation
+/tests/DotCDS.Client.Tests/bin/Debug/net6.0
+/tests/DotCDS.Client.Tests/obj
+/tests/DotCDS.TestHelpers/bin/Debug/net6.0
+/tests/DotCDS.TestHelpers/obj

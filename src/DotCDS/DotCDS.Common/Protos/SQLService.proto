@@ -2,15 +2,15 @@ syntax = "proto3";
 import "CDS.proto";
 import "google/protobuf/timestamp.proto";
 option csharp_namespace = "DotCDS.Common";
-package CDSSQLService;
+package CooperativeSQLService;
 
-service SQLService {
+// a service for passing cooperative SQL statements to a CDS instance
+service CooperativeSQLService {
 	rpc IsOnline(CDS.TestRequest) returns (CDS.TestReply);
-	rpc ExecuteSQLQuery (SQLQueryRequest) returns (SQLQueryReply);  
+	rpc ExecuteStatement (StatementRequest) returns (StatementReply);  
 }
 
-// A SQL Query Request
-message SQLQueryRequest {
+message StatementRequest {
   CDS.AuthRequest authentication = 1;
   string databaseName = 2;
   string sqlStatement = 3;
@@ -19,7 +19,7 @@ message SQLQueryRequest {
 }
 
 // a message representing the results of a SQL query
-message SQLResultset {
+message StatementResultset {
 	bool isError = 1;
 	string resultMessage = 2;
 	uint64 numberOfRowsAffected = 3;
@@ -28,8 +28,8 @@ message SQLResultset {
 }
 
 // A SQL Query Reply
-message SQLQueryReply {
+message StatementReply {
 	CDS.AuthResult authenticationResult = 1;
 	uint64 totalResultsets = 2;
-	repeated SQLResultset results = 3;
+	repeated StatementResultset results = 3;
 }

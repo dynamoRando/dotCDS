@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DotCDS.Services
 {
-    internal class SQLServiceServer
+    internal class AdminServiceServer
     {
         #region Private Fields
         private IHost _server;
@@ -28,7 +28,7 @@ namespace DotCDS.Services
             CreateHostBuilder(args).Build().Run();
         }
 
-        public Task RunAsync(string[] args, string[] url, SQLServiceHandler processor, PortSettings portSettings)
+        public Task RunAsync(string[] args, string[] url, AdminServiceHandler processor, PortSettings portSettings)
         {
             if (_server is null)
             {
@@ -44,15 +44,15 @@ namespace DotCDS.Services
          Host.CreateDefaultBuilder(args)
              .ConfigureWebHostDefaults(webBuilder =>
              {
-                 webBuilder.UseStartup<SQLServiceStartup>();
+                 webBuilder.UseStartup<AdminServiceStartup>();
              });
 
-        private static IHostBuilder CreateHostBuilder(string[] args, string[] url, SQLServiceHandler processor, PortSettings portSettings)
+        private static IHostBuilder CreateHostBuilder(string[] args, string[] url, AdminServiceHandler processor, PortSettings portSettings)
         {
             return Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.UseStartup<SQLServiceStartup>();
+                webBuilder.UseStartup<AdminServiceStartup>();
                 webBuilder.UseUrls(url);
                 webBuilder.ConfigureKestrel(options =>
                 {
@@ -61,7 +61,7 @@ namespace DotCDS.Services
             }).ConfigureServices(
                 foo =>
                 {
-                    foo.Add(new ServiceDescriptor(typeof(SQLServiceHandler), processor));
+                    foo.Add(new ServiceDescriptor(typeof(AdminServiceHandler), processor));
                 });
         }
         #endregion

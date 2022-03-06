@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DotCDS\DotCDS.Client\DotCDS.Client.csproj" />
     <ProjectReference Include="..\..\src\DotCDS\DotCDS\DotCDS.csproj" />
     <ProjectReference Include="..\DotCDS.TestHelpers\DotCDS.TestHelpers.csproj" />
   </ItemGroup>

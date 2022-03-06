@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace DotCDS.Services
 {
-    internal class SQLServiceStartup
+    internal class AdminServiceStartup
     {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<SQLServiceHandler>();
+            services.AddSingleton<AdminServiceHandler>();
             services.AddGrpc();
         }
 
@@ -34,7 +34,7 @@ namespace DotCDS.Services
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<CooperativeSQLService>();
+                endpoints.MapGrpcService<CooperativeDatabaseService>();
 
                 endpoints.MapGet("/", async context =>
                 {

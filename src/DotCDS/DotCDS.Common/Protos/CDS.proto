@@ -71,7 +71,6 @@ message Row {
 	RowRemoteMetadata remoteMetadata = 6;
 }
 
-
 // an object for storing values for a row in a table. used for returning data
 message RowValue {
 	ColumnSchema column = 1;
