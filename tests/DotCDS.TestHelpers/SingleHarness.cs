@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using DotCDS;
+using DotCDS.TestHelpers;
 
 namespace DotCDS.Tests
 {
@@ -14,9 +17,18 @@ namespace DotCDS.Tests
     {
         #region Private Fields
         private string _rootFolder;
+        private Process _process;
+        private int _adminPortNumber;
+        private int _databasePortNumber;
+        private int _sqlPortNumber;
         #endregion
 
         #region Public Properties
+        public string RootFolder => _rootFolder;
+        public int AdminPortNumber => _adminPortNumber;
+        public int DatabasePortNumber => _databasePortNumber;
+        public int SqlPortNumber => _sqlPortNumber;
+        public Process Process => _process;
         #endregion
 
         #region Constructors
@@ -27,6 +39,14 @@ namespace DotCDS.Tests
         public SingleHarness(string rootFolder)
         {
             _rootFolder = rootFolder;
+        }
+
+        public SingleHarness(bool useTempFolder, [CallerMemberName] string memberName = "")
+        {
+            if (useTempFolder)
+            {
+                _rootFolder = Path.Combine(TestConstants.TEST_TEMP_FOLDER, memberName);
+            }
         }
         #endregion
 
@@ -49,6 +69,26 @@ namespace DotCDS.Tests
             {
                 directory.Create();
             }
+        }
+
+        /// <summary>
+        /// Brings online a new instance of DotCDS and configures the root folder 
+        /// and the next available ports for the test
+        /// </summary>
+        /// <remarks>This will default to NOT using HTTPS for the test</remarks>
+        public void BringOnline()
+        {
+            SetupTempFolder();
+            _process = new Process(_rootFolder);
+            _process.Start();
+
+            _adminPortNumber = TestPortManager.GetNextAvailablePortNumber();
+            _databasePortNumber = TestPortManager.GetNextAvailablePortNumber();
+            _sqlPortNumber = TestPortManager.GetNextAvailablePortNumber();
+
+            _process.StartAdminService(_adminPortNumber, false);
+            _process.StartDatabaseService(_databasePortNumber, false);
+            _process.StartSQLService(_sqlPortNumber, false);
         }
 
         #endregion

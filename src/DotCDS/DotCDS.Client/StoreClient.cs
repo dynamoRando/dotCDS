@@ -23,9 +23,9 @@ namespace DotCDS.Client
             throw new NotImplementedException();
         }
 
-        public void Configure(string url, int portNumber)
+        public void Configure(string url, int sqlPortNumber)
         {
-            string completeUrl = url + ":" + portNumber.ToString();
+            string completeUrl = url + ":" + sqlPortNumber.ToString();
             _url = completeUrl;
 
             _channel = GrpcChannel.ForAddress(completeUrl);
@@ -35,6 +35,13 @@ namespace DotCDS.Client
         public bool IsConfigured()
         {
             return _url != null;
+        }
+
+        public bool IsOnline()
+        {
+            var testRequest = new TestRequest();
+            var reply = _client.IsOnline(testRequest);
+            return reply != null;
         }
         #endregion
 

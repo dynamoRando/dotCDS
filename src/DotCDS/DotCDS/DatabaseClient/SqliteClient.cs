@@ -52,6 +52,14 @@ namespace DotCDS.Database
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Executes an INSERT, UPDATE, DELETE statement with the specified values
+        /// </summary>
+        /// <param name="dbName">The name of the db to execute the statement against</param>
+        /// <param name="query">The SQL query statement</param>
+        /// <param name="args">The args to replace</param>
+        /// <returns>The number of rows affected</returns>
+        /// <remarks>Example: "INSERT INTO User(FirstName, LastName) VALUES(@firstName, @lastName)"</remarks>
         public int ExecuteWrite(string dbName, string query, Dictionary<string, object> args)
         {
             int numberOfRowsAffected;
@@ -78,6 +86,40 @@ namespace DotCDS.Database
             }
         }
 
+        /// <summary>
+        /// Executes an INSERT, UPDATE, DELETE statement with the specified values 
+        /// </summary>
+        /// <param name="dbName">The name of the database to execute the query against</param>
+        /// <param name="query">The SQL query statement</param>
+        /// <returns>The number of rows affected</returns>
+        public int ExecuteWrite(string dbName, string query)
+        {
+            int numberOfRowsAffected;
+
+            //setup the connection to the database
+            using (var con = new SQLiteConnection($"Data Source={dbName}.db"))
+            {
+                con.Open();
+
+                //open a new command
+                using (var cmd = new SQLiteCommand(query, con))
+                {
+                    //execute the query and get the number of row affected
+                    numberOfRowsAffected = cmd.ExecuteNonQuery();
+                }
+
+                return numberOfRowsAffected;
+            }
+        }
+
+        /// <summary>
+        /// Executes a SELECT statement with the specified values
+        /// </summary>
+        /// <param name="dbName">The name of the database to execute the query against</param>
+        /// <param name="query">The SELECT statement</param>
+        /// <param name="args">The args to replace</param>
+        /// <remarks>Example: "SELECT * FROM User WHERE Id = @id"</remarks>
+        /// <returns></returns>
         public DataTable ExecuteRead(string dbName, string query, Dictionary<string, object> args)
         {
             if (string.IsNullOrEmpty(query.Trim()))

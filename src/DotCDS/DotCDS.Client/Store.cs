@@ -23,9 +23,9 @@ namespace DotCDS.Client
         #endregion
 
         #region Public Methods
-        public static void Configure(string url, int portNumber)
+        public static void Configure(string url, int sqlPortNumber)
         {
-            string completeUrl = url + ":" + portNumber.ToString();
+            string completeUrl = url + ":" + sqlPortNumber.ToString();
             _url = completeUrl;
         }
 
