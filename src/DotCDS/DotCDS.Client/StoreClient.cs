@@ -43,6 +43,20 @@ namespace DotCDS.Client
             var reply = _client.IsOnline(testRequest);
             return reply != null;
         }
+
+        public bool CreateDatabase(string databaseName, string userName, string pw)
+        {
+            var authRequest = new AuthRequest();
+            authRequest.UserName = userName;
+            authRequest.Pw = pw;
+
+            var request = new CreateUserDatabaseRequest();
+            request.Authentication = authRequest;
+            request.DatabaseName = databaseName;
+
+            var reply = _client.CreateUserDatabase(request);
+            return reply.IsCreated;
+        }
         #endregion
 
         #region Private Methods

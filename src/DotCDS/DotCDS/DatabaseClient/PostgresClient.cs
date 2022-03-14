@@ -10,7 +10,7 @@ namespace DotCDS.Database
     /// <summary>
     /// A backing library for working with a Postgres database
     /// </summary>
-    internal class PostgresClient : IDatabaseClient
+    internal class PostgresClient : ICooperativeStore
     {
         #region Private Fields
         private string _connectionString;

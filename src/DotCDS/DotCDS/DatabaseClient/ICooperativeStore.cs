@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotCDS.DatabaseClient
 {
-    internal interface IDatabaseClient
+    internal interface ICooperativeStore
     {
         string ConnectionString { get; }
     }

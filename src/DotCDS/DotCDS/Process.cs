@@ -15,7 +15,7 @@ namespace DotCDS
         private bool _overrideDefaultDb = false;
         private DatabaseClientType _clientType;
         private string _connectionString;
-        private IDatabaseClient _cooperativeStore;
+        private ICooperativeStore _cooperativeStore;
         private NetworkManager _networkManager;
         #endregion
 
@@ -43,6 +43,16 @@ namespace DotCDS
         {
             LoadConfiguration();
             ConfigureBackingStore();
+        }
+
+        /// <summary>
+        /// Use for testing purposes only. Configures a default admin username and pw for the CDS process.
+        /// </summary>
+        /// <param name="userName">The user name</param>
+        /// <param name="pw">The pw</param>
+        public void Test_SetupAdmin(string userName, string pw)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ package CooperativeSQLService;
 service CooperativeSQLService {
 	rpc IsOnline(CDS.TestRequest) returns (CDS.TestReply);
 	rpc ExecuteStatement (StatementRequest) returns (StatementReply);  
+	rpc CreateUserDatabase(CreateUserDatabaseRequest) returns (CreateUserDatabaseReply);
 }
 
 message StatementRequest {
@@ -32,4 +33,14 @@ message StatementReply {
 	CDS.AuthResult authenticationResult = 1;
 	uint64 totalResultsets = 2;
 	repeated StatementResultset results = 3;
+}
+
+message CreateUserDatabaseRequest {
+	CDS.AuthRequest authentication = 1;
+	string databaseName = 2;
+}
+
+message CreateUserDatabaseReply {
+	CDS.AuthResult authenticationResult = 1;
+	bool isCreated = 2;
 }

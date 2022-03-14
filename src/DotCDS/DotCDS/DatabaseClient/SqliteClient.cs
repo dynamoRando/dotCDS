@@ -13,7 +13,7 @@ namespace DotCDS.Database
     /// <summary>
     /// A backing library for interacting with a Sqlite database
     /// </summary>
-    internal class SqliteClient : IDatabaseClient
+    internal class SqliteClient : ICooperativeStore
     {
         /*
          * https://devtut.github.io/csharp/using-sqlite-in-c.html#creating-simple-crud-using-sqlite-in-c
@@ -24,8 +24,9 @@ namespace DotCDS.Database
         private string _connectionString;
         private string _backingDbName;
         private string _rootFolder;
-        private const string _fileExtension = ".db3";
+        private const string _fileExtension = ".db";
         private string _dbFileLocation;
+        private Crypto _crypt = new Crypto();
         #endregion
 
         #region Public Properties
@@ -52,6 +53,40 @@ namespace DotCDS.Database
         #endregion
 
         #region Public Methods
+        public bool HasLogin(string loginName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasTable(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CreateLogin(string userName, string pw)
+        {
+            if (!HasLogin(userName))
+            {
+                int iterations = _crypt.GetRandomNumber();
+                int length = _crypt.GetByteLength();
+
+                var pwByte = Encoding.ASCII.GetBytes(pw);
+
+                var salt = _crypt.GenerateSalt(length);
+                var hash = _crypt.GenerateHash(pwByte, salt, iterations, length);
+
+                throw new NotImplementedException();
+            }
+
+            return false;
+        }
+
+        public bool IsValidLogin(string userName, string pw)
+        {
+            throw new NotImplementedException();
+        }
+
+
         /// <summary>
         /// Executes an INSERT, UPDATE, DELETE statement with the specified values
         /// </summary>
@@ -143,6 +178,17 @@ namespace DotCDS.Database
                     da.Dispose();
                     return dt;
                 }
+            }
+        }
+
+        public void CreateDatabase(string dbName)
+        {
+            var fileName = dbName += _fileExtension;
+            _dbFileLocation = Path.Combine(_rootFolder, fileName);
+
+            if (!File.Exists(_dbFileLocation))
+            {
+                SQLiteConnection.CreateFile(_dbFileLocation);
             }
         }
         #endregion
