@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Data.SQLite;
 using System.Data;
+using static DotCDS.InternalSQLStatements;
 
 namespace DotCDS.Database
 {
@@ -60,7 +61,10 @@ namespace DotCDS.Database
 
         public bool HasTable(string tableName)
         {
-            throw new NotImplementedException();
+            string sql = InteralSQLLiteStatements.SQL_COUNT_OF_TABLES_WITH_NAME.Replace("table_name", tableName);
+            var dt = ExecuteRead(_backingDbName, sql);
+            int totalRows = Convert.ToInt32(dt.Rows[0]["TABLECOUNT"]);
+            return totalRows > 0;
         }
 
         public bool CreateLogin(string userName, string pw)
@@ -98,9 +102,10 @@ namespace DotCDS.Database
         public int ExecuteWrite(string dbName, string query, Dictionary<string, object> args)
         {
             int numberOfRowsAffected;
+            string path = Path.Combine(_rootFolder, dbName);
 
             //setup the connection to the database
-            using (var con = new SQLiteConnection($"Data Source={dbName}.db"))
+            using (var con = new SQLiteConnection($"Data Source={path}"))
             {
                 con.Open();
 
@@ -132,7 +137,8 @@ namespace DotCDS.Database
             int numberOfRowsAffected;
 
             //setup the connection to the database
-            using (var con = new SQLiteConnection($"Data Source={dbName}.db"))
+            string path = Path.Combine(_rootFolder, dbName);
+            using (var con = new SQLiteConnection($"Data Source={path}"))
             {
                 con.Open();
 
@@ -160,7 +166,8 @@ namespace DotCDS.Database
             if (string.IsNullOrEmpty(query.Trim()))
                 return null;
 
-            using (var con = new SQLiteConnection($"Data Source={dbName}.db"))
+            string path = Path.Combine(_rootFolder, dbName);
+            using (var con = new SQLiteConnection($"Data Source={path}"))
             {
                 con.Open();
                 using (var cmd = new SQLiteCommand(query, con))
@@ -170,6 +177,35 @@ namespace DotCDS.Database
                         cmd.Parameters.AddWithValue(entry.Key, entry.Value);
                     }
 
+                    var da = new SQLiteDataAdapter(cmd);
+
+                    var dt = new DataTable();
+                    da.Fill(dt);
+
+                    da.Dispose();
+                    return dt;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Executes a SELECT statement with the specified values
+        /// </summary>
+        /// <param name="dbName">The name of the database to execute the query against</param>
+        /// <param name="query">The SELECT statement</param>
+        /// <remarks>Example: "SELECT * FROM User</remarks>
+        /// <returns></returns>
+        public DataTable ExecuteRead(string dbName, string query)
+        {
+            if (string.IsNullOrEmpty(query.Trim()))
+                return null;
+
+            string path = Path.Combine(_rootFolder, dbName);
+            using (var con = new SQLiteConnection($"Data Source={path}"))
+            {
+                con.Open();
+                using (var cmd = new SQLiteCommand(query, con))
+                {
                     var da = new SQLiteDataAdapter(cmd);
 
                     var dt = new DataTable();
@@ -194,6 +230,14 @@ namespace DotCDS.Database
         #endregion
 
         #region Private Methods
+        private void CreateUserTable()
+        {
+            if (!HasTable("CDS_USER"))
+            {
+                ExecuteWrite(_backingDbName, InteralSQLLiteStatements.SQL_CREATE_USER_TABLE);
+            }
+        }
+
         private void ConfigureBackingDb()
         {
             _backingDbName += _fileExtension;
@@ -203,6 +247,8 @@ namespace DotCDS.Database
             {
                 SQLiteConnection.CreateFile(_dbFileLocation);
             }
+
+            CreateUserTable();
         }
         #endregion
     }

@@ -20,7 +20,7 @@ namespace DotCDS.Tests.DatabaseClient
             string rootFolder = Path.Combine(TestConstants.TEST_TEMP_FOLDER, "Test_CreateNewDb");
             var testHarness = new SingleHarness(rootFolder);
             testHarness.SetupTempFolder();
-            string dbName = "dotCDS.db3";
+            string dbName = "dotCDS.db";
             string dbLocation = Path.Combine(rootFolder, dbName);
 
             // ACT
@@ -29,6 +29,6 @@ namespace DotCDS.Tests.DatabaseClient
 
             // ASSERT
             Assert.True(File.Exists(dbLocation));
-        }
+        }  
     }
 }
