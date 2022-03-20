@@ -38,9 +38,7 @@ namespace DotCDS.Tests.DatabaseClient
             string rootFolder = Path.Combine(TestConstants.TEST_TEMP_FOLDER, "Test_SetupAdmin");
             var testHarness = new SingleHarness(rootFolder);
             testHarness.SetupTempFolder();
-            string dbName = "dotCDS.db";
-            string dbLocation = Path.Combine(rootFolder, dbName);
-
+        
             // ACT
             Process _process = new Process(rootFolder);
             _process.Start();
