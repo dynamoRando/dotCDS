@@ -57,7 +57,7 @@ namespace DotCDS
             internal const string COUNT_OF_USER_WITH_ROLE = $"SELECT count(*) AS TOTALCOUNT FROM {TableNames.CDS_USER_ROLE} WHERE USERNAME = @username AND ROLENAME = @rolename;";
 
             internal const string ADD_LOGIN = $"INSERT INTO {TableNames.CDS_USER} (USERNAME, BYTELENGTH, SALT, HASH, WORKFACTOR) VALUES (@username, @bytelength, @salt, @hash, @workfactor);";
-            internal const string GET_LOGIN = $"SELECT USERNAME, BYTELENGTH, SALT, HASH, WORKFACTOR FROM {TableNames.CDS_USER} WHERE USERNAME = '@username'";
+            internal const string GET_LOGIN = $"SELECT USERNAME, BYTELENGTH, SALT, HASH, WORKFACTOR FROM {TableNames.CDS_USER} WHERE USERNAME = @username;";
         }
 
     }

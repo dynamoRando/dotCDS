@@ -47,5 +47,22 @@ namespace DotCDS.Tests.DatabaseClient
             // ASSERT
             Assert.True(_process.IsAdminLogin("tester"));
         }
+
+        [Fact]
+        public void Test_AdminIsValid()
+        {
+            // ARRANGE
+            string rootFolder = Path.Combine(TestConstants.TEST_TEMP_FOLDER, "Test_AdminIsValid");
+            var testHarness = new SingleHarness(rootFolder);
+            testHarness.SetupTempFolder();
+
+            // ACT
+            Process _process = new Process(rootFolder);
+            _process.Start();
+            _process.Test_SetupAdmin("tester", "1234");
+
+            // ASSERT
+            Assert.True(_process.IsValidLogin("tester", "1234"));
+        }
     }
 }
