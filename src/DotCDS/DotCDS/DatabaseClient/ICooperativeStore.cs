@@ -8,6 +8,5 @@ namespace DotCDS.DatabaseClient
 {
     internal interface ICooperativeStore
     {
-        string ConnectionString { get; }
     }
 }

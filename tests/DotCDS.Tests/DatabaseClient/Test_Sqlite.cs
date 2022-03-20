@@ -29,6 +29,25 @@ namespace DotCDS.Tests.DatabaseClient
 
             // ASSERT
             Assert.True(File.Exists(dbLocation));
-        }  
+        }
+        
+        [Fact]
+        public void Test_SetupAdmin()
+        {
+            // ARRANGE
+            string rootFolder = Path.Combine(TestConstants.TEST_TEMP_FOLDER, "Test_SetupAdmin");
+            var testHarness = new SingleHarness(rootFolder);
+            testHarness.SetupTempFolder();
+            string dbName = "dotCDS.db";
+            string dbLocation = Path.Combine(rootFolder, dbName);
+
+            // ACT
+            Process _process = new Process(rootFolder);
+            _process.Start();
+            _process.Test_SetupAdmin("tester", "1234");
+
+            // ASSERT
+            Assert.True(_process.IsAdminLogin("tester"));
+        }
     }
 }

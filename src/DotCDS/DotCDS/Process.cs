@@ -1,5 +1,6 @@
 ﻿using DotCDS.Database;
 using DotCDS.DatabaseClient;
+using DotCDS.Services;
 
 namespace DotCDS
 {
@@ -15,7 +16,7 @@ namespace DotCDS
         private bool _overrideDefaultDb = false;
         private DatabaseClientType _clientType;
         private string _connectionString;
-        private ICooperativeStore _cooperativeStore;
+        private SqliteCDSStore _cooperativeStore;
         private NetworkManager _networkManager;
         #endregion
 
@@ -52,7 +53,15 @@ namespace DotCDS
         /// <param name="pw">The pw</param>
         public void Test_SetupAdmin(string userName, string pw)
         {
-            throw new NotImplementedException();
+            if (!_cooperativeStore.HasLogin(userName))
+            {
+                _cooperativeStore.CreateLogin(userName, pw);
+            }
+
+            if (!_cooperativeStore.UserIsInRole(userName, InternalSQLStatements.RoleNames.SYS_ADMIN))
+            {
+                _cooperativeStore.AddUserToRole(userName, InternalSQLStatements.RoleNames.SYS_ADMIN);
+            }
         }
 
         /// <summary>
@@ -133,6 +142,21 @@ namespace DotCDS
 
             _networkManager.StartServerForAdminService(settings, overrideSettingsUseHttps);
         }
+
+        public bool HasLogin(string userName)
+        {
+            return _cooperativeStore.HasLogin(userName);
+        }
+
+        public bool IsValidLogin(string username, string pw)
+        {
+            return _cooperativeStore.IsValidLogin(username, pw);    
+        }
+
+        public bool IsAdminLogin(string userName)
+        {
+            return _cooperativeStore.UserIsInRole(userName, InternalSQLStatements.RoleNames.SYS_ADMIN);
+        }
         #endregion
 
         #region Private Methods
@@ -181,13 +205,15 @@ namespace DotCDS
                 case DatabaseClientType.Unknown:
                     throw new InvalidOperationException(unknownDbType);
                 case DatabaseClientType.SQLServer:
-                    _cooperativeStore = new SQLServerClient();
+                    //_cooperativeStore = new SQLServerClient();
+                    throw new NotImplementedException();
                     break;
                 case DatabaseClientType.Postgres:
-                    _cooperativeStore = new PostgresClient();
+                    //_cooperativeStore = new PostgresClient();
+                    throw new NotImplementedException();
                     break;
                 case DatabaseClientType.Sqlite:
-                    _cooperativeStore = new SqliteClient(_connectionString, Settings.BackingDatabaseName, _rootPath);
+                    _cooperativeStore = new SqliteCDSStore(Settings.BackingDatabaseName, _rootPath);
                     break;
                 default:
                     throw new InvalidOperationException(unknownDbType);
