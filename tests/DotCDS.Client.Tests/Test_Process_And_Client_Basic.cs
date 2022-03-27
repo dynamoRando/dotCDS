@@ -48,9 +48,9 @@ namespace DotCDS.Client.Tests
             COLUMN2 VARCHAR(25) NOT NULL
             ); ";
 
-            var createTableResult = client.ExecuteSQL(sqlDbType, createTable, testDb, un, pw);
-            var isSuccessful = createTableResult.Results.FirstOrDefault().IsError;
-            
+            var createTableResult = client.ExecuteSQLWrite(sqlDbType, createTable, testDb, un, pw);
+            var isSuccessful = createTableResult.IsSuccessful;
+
             // ASSERT
             Assert.True(clientIsOnline);
             Assert.True(databaseCreated);

@@ -44,6 +44,7 @@ namespace DotCDS
         {
             LoadConfiguration();
             ConfigureBackingStore();
+            _networkManager.SetRootFolder(_rootPath);
         }
 
         /// <summary>
@@ -78,6 +79,7 @@ namespace DotCDS
 
             LoadConfiguration();
             ConfigureBackingStore();
+            
         }
 
         /// <summary>
@@ -200,6 +202,8 @@ namespace DotCDS
                 Directory.CreateDirectory(_rootPath);
             }
 
+            _networkManager.SetRootFolder(_rootPath);
+
             switch (_clientType)
             {
                 case DatabaseClientType.Unknown:
@@ -214,6 +218,10 @@ namespace DotCDS
                     break;
                 case DatabaseClientType.Sqlite:
                     _cooperativeStore = new SqliteCDSStore(Settings.BackingDatabaseName, _rootPath);
+                    
+                    _networkManager.SetCooperativeStore(_cooperativeStore);
+                    _networkManager.SetClientType(_clientType);
+                    
                     break;
                 default:
                     throw new InvalidOperationException(unknownDbType);

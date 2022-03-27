@@ -12,6 +12,11 @@ namespace DotCDS.Services
     {
         private SQLServiceHandler _handler;
 
+        public CooperativeSQLService(SQLServiceHandler handler)
+        {
+            _handler = handler;
+        }
+
         public override Task<TestReply> IsOnline(TestRequest request, ServerCallContext context)
         {
             var reply = new TestReply();
@@ -22,14 +27,16 @@ namespace DotCDS.Services
 
         public override Task<CreateUserDatabaseReply> CreateUserDatabase(CreateUserDatabaseRequest request, ServerCallContext context)
         {
+            var result = new CreateDatabaseResult();
+            var authResult = new AuthResult();
+            authResult.IsAuthenticated = _handler.IsValidLogin(request.Authentication.UserName, request.Authentication.Pw);
+
+            result.AuthenticationResult = authResult;
+            result.IsSuccessful = _handler.HandleCreateDatabase(request.Authentication.UserName, request.Authentication.Pw, request.DatabaseName);
+
             throw new NotImplementedException();
-            return base.CreateUserDatabase(request, context);
         }
 
-        public override Task<StatementReply> ExecuteStatement(StatementRequest request, ServerCallContext context)
-        {
-            throw new NotImplementedException();
-            return base.ExecuteStatement(request, context);
-        }
+
     }
 }

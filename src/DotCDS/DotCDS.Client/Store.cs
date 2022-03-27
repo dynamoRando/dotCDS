@@ -34,10 +34,6 @@ namespace DotCDS.Client
             return _url != null;
         }
 
-        public static StatementReply ExecuteStatement(string statement, string databaseName, string userName, string pw)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
 
         #region Private Methods

@@ -18,19 +18,34 @@ namespace DotCDS.Client
         #endregion
 
         #region Public Methods
-        public StatementReply ExecuteSQL(uint dbType, string sqlStatement, string databaseName, string userName, string pw)
+        public ExecuteReadReply ExecuteSQLRead(uint dbType, string sqlStatement, string databaseName, string userName, string pw)
         {
             var auth = new AuthRequest();
             auth.UserName = userName;
             auth.Pw = pw;
 
-            var statement = new StatementRequest();
+            var statement = new ExecuteReadRequest();
             statement.Authentication = auth;
             statement.DatabaseName = databaseName;
             statement.SqlStatement = sqlStatement;
             statement.DatabaseType = dbType;
 
-            return _client.ExecuteStatement(statement);
+            return _client.ExecuteRead(statement);
+        }
+
+        public ExecuteWriteReply ExecuteSQLWrite(uint dbType, string sqlStatement, string databaseName, string userName, string pw)
+        {
+            var auth = new AuthRequest();
+            auth.UserName = userName;
+            auth.Pw = pw;
+
+            var statement = new ExecuteWriteRequest();
+            statement.Authentication = auth;
+            statement.DatabaseName = databaseName;
+            statement.SqlStatement = sqlStatement;
+            statement.DatabaseType = dbType;
+
+            return _client.ExecuteWrite(statement);
         }
 
         public void Configure(string url, int sqlPortNumber)

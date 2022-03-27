@@ -1,4 +1,5 @@
-﻿using DotCDS.Services;
+﻿using DotCDS.Database;
+using DotCDS.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,15 +25,39 @@ namespace DotCDS
         private SQLServiceServer _sqlServiceServer;
         private SQLServiceHandler _sqlServiceHandler;
         private PortSettings _sqlServicePort;
+
+        private string _rootFolder = string.Empty;
+        private DatabaseClientType _clientType;
+        private SqliteClient _sqliteClient;
+        private SqliteCDSStore _store;
         #endregion
 
         #region Public Properties
         #endregion
 
         #region Constructors
+        public NetworkManager()
+        {
+
+        }
         #endregion
 
         #region Public Methods
+        public void SetRootFolder(string rootFolder)
+        {
+            _rootFolder = rootFolder;
+        }
+
+        public void SetClientType(DatabaseClientType type)
+        {
+            _clientType = type;
+        }
+
+        public void SetCooperativeStore(SqliteCDSStore store)
+        {
+            _store = store;
+        }
+
         /// <summary>
         /// Starts the Database Service with the supplied parameters
         /// </summary>
@@ -92,6 +117,24 @@ namespace DotCDS
             if (_sqlServiceHandler is null)
             {
                 _sqlServiceHandler = new SQLServiceHandler();
+                _sqlServiceHandler.SetCooperativeStore(_store);
+
+                switch (_clientType)
+                {
+                    case DatabaseClientType.Unknown:
+                        throw new InvalidOperationException();
+                    case DatabaseClientType.SQLServer:
+                        throw new NotImplementedException();
+                        break;
+                    case DatabaseClientType.Postgres:
+                        throw new NotImplementedException();
+                        break;
+                    case DatabaseClientType.Sqlite:
+                        _sqlServiceHandler.SetSqliteClient(new SqliteClient(_rootFolder));
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
 
             if (useHttps)

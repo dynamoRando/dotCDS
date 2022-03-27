@@ -7,15 +7,9 @@ package CooperativeSQLService;
 // a service for passing cooperative SQL statements to a CDS instance
 service CooperativeSQLService {
 	rpc IsOnline(CDS.TestRequest) returns (CDS.TestReply);
-	rpc ExecuteStatement (StatementRequest) returns (StatementReply);  
 	rpc CreateUserDatabase(CreateUserDatabaseRequest) returns (CreateUserDatabaseReply);
-}
-
-message StatementRequest {
-  CDS.AuthRequest authentication = 1;
-  string databaseName = 2;
-  string sqlStatement = 3;
-  uint32 databaseType = 4;
+	rpc ExecuteRead(ExecuteReadRequest) returns (ExecuteReadReply);
+	rpc ExecuteWrite(ExecuteWriteRequest) returns (ExecuteWriteReply);
 }
 
 // a message representing the results of a SQL query
@@ -27,12 +21,6 @@ message StatementResultset {
 	string executionErrorMessage = 5;
 }
 
-// A SQL Query Reply
-message StatementReply {
-	CDS.AuthResult authenticationResult = 1;
-	uint64 totalResultsets = 2;
-	repeated StatementResultset results = 3;
-}
 
 message CreateUserDatabaseRequest {
 	CDS.AuthRequest authentication = 1;
@@ -42,4 +30,30 @@ message CreateUserDatabaseRequest {
 message CreateUserDatabaseReply {
 	CDS.AuthResult authenticationResult = 1;
 	bool isCreated = 2;
+}
+
+message ExecuteReadRequest {
+  CDS.AuthRequest authentication = 1;
+  string databaseName = 2;
+  string sqlStatement = 3;
+  uint32 databaseType = 4;
+}
+
+message ExecuteReadReply {
+	CDS.AuthResult authenticationResult = 1;
+	uint64 totalResultsets = 2;
+	repeated StatementResultset results = 3;
+}
+
+message ExecuteWriteRequest {
+  CDS.AuthRequest authentication = 1;
+  string databaseName = 2;
+  string sqlStatement = 3;
+  uint32 databaseType = 4;
+}
+
+message ExecuteWriteReply {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	uint32 totalRowsAffected = 3;
 }
