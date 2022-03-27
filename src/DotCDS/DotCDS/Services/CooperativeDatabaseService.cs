@@ -18,5 +18,10 @@ namespace DotCDS.Services
             return Task.FromResult(reply);
         }
 
+        public override Task<CreateDatabaseResult> CreatePartialDatabase(CreateDatabaseRequest request, ServerCallContext context)
+        {
+            return base.CreatePartialDatabase(request, context);
+        }
+
     }
 }

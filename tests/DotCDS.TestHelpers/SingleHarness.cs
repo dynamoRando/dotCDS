@@ -91,6 +91,22 @@ namespace DotCDS.Tests
             _process.StartSQLService(_sqlPortNumber, false);
         }
 
+        public void BringOnline(string adminUn, string adminPw)
+        {
+            SetupTempFolder();
+            _process = new Process(_rootFolder);
+            _process.Start();
+            _process.Test_SetupAdmin(adminUn, adminPw);
+
+            _adminPortNumber = TestPortManager.GetNextAvailablePortNumber();
+            _databasePortNumber = TestPortManager.GetNextAvailablePortNumber();
+            _sqlPortNumber = TestPortManager.GetNextAvailablePortNumber();
+
+            _process.StartAdminService(_adminPortNumber, false);
+            _process.StartDatabaseService(_databasePortNumber, false);
+            _process.StartSQLService(_sqlPortNumber, false);
+        }
+
         #endregion
 
         #region Private Methods

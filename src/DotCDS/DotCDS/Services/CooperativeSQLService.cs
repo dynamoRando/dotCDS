@@ -20,6 +20,12 @@ namespace DotCDS.Services
             return Task.FromResult(reply);
         }
 
+        public override Task<CreateUserDatabaseReply> CreateUserDatabase(CreateUserDatabaseRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+            return base.CreateUserDatabase(request, context);
+        }
+
         public override Task<StatementReply> ExecuteStatement(StatementRequest request, ServerCallContext context)
         {
             throw new NotImplementedException();
