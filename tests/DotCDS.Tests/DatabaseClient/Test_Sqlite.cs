@@ -64,5 +64,6 @@ namespace DotCDS.Tests.DatabaseClient
             // ASSERT
             Assert.True(_process.IsValidLogin("tester", "1234"));
         }
+
     }
 }

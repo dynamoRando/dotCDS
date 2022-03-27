@@ -15,8 +15,7 @@ message StatementRequest {
   CDS.AuthRequest authentication = 1;
   string databaseName = 2;
   string sqlStatement = 3;
-  string userSessionId = 4;
-  uint32 databaseType = 5;
+  uint32 databaseType = 4;
 }
 
 // a message representing the results of a SQL query
