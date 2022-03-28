@@ -49,12 +49,16 @@ namespace DotCDS.Client.Tests
             ); ";
 
             var createTableResult = client.ExecuteSQLWrite(sqlDbType, createTable, testDb, un, pw);
-            var isSuccessful = createTableResult.IsSuccessful;
+            int totalRows = (int)createTableResult.TotalRowsAffected;
+
+            var hasTableResult = client.HasTable(sqlDbType, testTableName, testDb, un, pw);
+            bool hasTable = hasTableResult.HasTable;
 
             // ASSERT
             Assert.True(clientIsOnline);
             Assert.True(databaseCreated);
-            Assert.True(isSuccessful);
+            Assert.InRange(totalRows, 0, 0);
+            Assert.True(hasTable);
         }
     }
 }

@@ -48,6 +48,20 @@ namespace DotCDS.Client
             return _client.ExecuteWrite(statement);
         }
 
+        public HasTableReply HasTable(uint dbType, string tableName, string databaseName, string userName, string pw)
+        {
+            var auth = new AuthRequest();
+            auth.UserName = userName;
+            auth.Pw = pw;
+
+            var statement = new HasTableRequest();
+            statement.Authentication = auth;
+            statement.DatabaseName = databaseName;
+            statement.TableName = tableName;
+
+            return _client.HasTable(statement);
+        }
+
         public void Configure(string url, int sqlPortNumber)
         {
             string completeUrl = url + ":" + sqlPortNumber.ToString();

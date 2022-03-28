@@ -10,6 +10,7 @@ service CooperativeSQLService {
 	rpc CreateUserDatabase(CreateUserDatabaseRequest) returns (CreateUserDatabaseReply);
 	rpc ExecuteRead(ExecuteReadRequest) returns (ExecuteReadReply);
 	rpc ExecuteWrite(ExecuteWriteRequest) returns (ExecuteWriteReply);
+	rpc HasTable(HasTableRequest) returns (HasTableReply);
 }
 
 // a message representing the results of a SQL query
@@ -56,4 +57,16 @@ message ExecuteWriteReply {
 	CDS.AuthResult authenticationResult = 1;
 	bool isSuccessful = 2;
 	uint32 totalRowsAffected = 3;
+}
+
+message HasTableRequest{
+  CDS.AuthRequest authentication = 1;
+  string databaseName = 2;
+  string tableName = 3;
+  
+}
+
+message HasTableReply {
+	CDS.AuthResult authenticationResult = 1;
+	bool hasTable = 2;
 }

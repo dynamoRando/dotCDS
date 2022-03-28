@@ -58,6 +58,11 @@ namespace DotCDS.Database
             int numberOfRowsAffected;
             string path = Path.Combine(_rootFolder, dbName);
 
+            if (!path.EndsWith(_fileExtension))
+            {
+                path += _fileExtension;
+            }
+
             //setup the connection to the database
             using (var con = new SQLiteConnection($"Data Source={path}"))
             {
@@ -94,6 +99,12 @@ namespace DotCDS.Database
 
             //setup the connection to the database
             string path = Path.Combine(_rootFolder, dbName);
+
+            if (!path.EndsWith(_fileExtension))
+            {
+                path += _fileExtension;
+            }
+
             using (var con = new SQLiteConnection($"Data Source={path}"))
             {
                 con.Open();
@@ -107,6 +118,14 @@ namespace DotCDS.Database
 
                 return numberOfRowsAffected;
             }
+        }
+
+        public bool HasTable(string databaseName, string tableName)
+        {
+            string sql = SQLLite.COUNT_OF_TABLES_WITH_NAME.Replace("table_name", tableName);
+            var dt = ExecuteRead(databaseName, sql);
+            int totalRows = Convert.ToInt32(dt.Rows[0]["TABLECOUNT"]);
+            return totalRows > 0;
         }
 
         /// <summary>
@@ -123,6 +142,12 @@ namespace DotCDS.Database
                 return null;
 
             string path = Path.Combine(_rootFolder, dbName);
+
+            if (!path.EndsWith(_fileExtension))
+            {
+                path += _fileExtension;
+            }
+
             using (var con = new SQLiteConnection($"Data Source={path}"))
             {
                 con.Open();
@@ -157,6 +182,12 @@ namespace DotCDS.Database
                 return null;
 
             string path = Path.Combine(_rootFolder, dbName);
+
+            if (!path.EndsWith(_fileExtension))
+            {
+                path += _fileExtension;
+            }
+
             using (var con = new SQLiteConnection($"Data Source={path}"))
             {
                 con.Open();
@@ -186,7 +217,7 @@ namespace DotCDS.Database
         #endregion
 
         #region Private Methods
-      
+
         #endregion
     }
 }

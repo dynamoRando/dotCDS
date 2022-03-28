@@ -50,16 +50,26 @@ namespace DotCDS.Services
             return false;
         }
 
-        public bool ExecuteStatement(string un, string pw, string dbName, string statement)
+        public bool HandleHasTable(string un, string pw, string databaseName, string tableName)
         {
             if (_cooperativeStore.IsValidLogin(un, pw))
             {
                 if (_cooperativeStore.UserIsInRole(un, InternalSQLStatements.RoleNames.SYS_ADMIN))
                 {
-
+                    return _sqliteClient.HasTable(databaseName, tableName);
                 }
             }
 
+            return false;
+        }
+
+        public uint ExecuteWrite(string un, string pw, string databaseName, string statement)
+        {
+            return (uint)_sqliteClient.ExecuteWrite(databaseName, statement);
+        }
+
+        public bool ExecuteRead(string un, string pw, string databaseName, string statement)
+        {
             throw new NotImplementedException();
         }
         #endregion
