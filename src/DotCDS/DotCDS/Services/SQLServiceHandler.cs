@@ -1,4 +1,5 @@
-﻿using DotCDS.Database;
+﻿using DotCDS.Common;
+using DotCDS.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,9 +69,30 @@ namespace DotCDS.Services
             return (uint)_sqliteClient.ExecuteWrite(databaseName, statement);
         }
 
-        public bool ExecuteRead(string un, string pw, string databaseName, string statement)
+        public StatementResultset ExecuteRead(string un, string pw, string databaseName, string statement)
         {
-            throw new NotImplementedException();
+            var errorResult = new StatementResultset();
+            if (_cooperativeStore.IsValidLogin(un, pw))
+            {
+                if (_cooperativeStore.UserIsInRole(un, InternalSQLStatements.RoleNames.SYS_ADMIN))
+                {
+                    var result = _sqliteClient.ExecuteRead(databaseName, statement);
+                    return Resultset.ToStatementResultset(result);
+
+                }
+                else
+                {
+                    errorResult.IsError = true;
+                    errorResult.ResultMessage = "Login does not have permission";
+                }
+            }
+            else
+            {
+                errorResult.IsError = true;
+                errorResult.ResultMessage = "Incorrect login";
+            }
+
+            return errorResult;
         }
         #endregion
 
