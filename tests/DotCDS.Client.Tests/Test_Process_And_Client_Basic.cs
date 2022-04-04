@@ -3,6 +3,7 @@ using Xunit;
 using System.IO;
 using System.Linq;
 using System;
+using DotCDS.Common;
 
 namespace DotCDS.Client.Tests
 {
@@ -104,6 +105,11 @@ namespace DotCDS.Client.Tests
             var getDataResult = client.ExecuteSQLRead(sqlDbType, getData, testDb, un, pw);
             int totalRowsReturned = getDataResult.Results.First().Rows.Count();
 
+            var returnedValue = getDataResult.Results.First().Rows[0].Values[0];
+            byte[] binaryValue = returnedValue.Value.ToArray();
+
+            var actualValue = DbBinaryConvert.BinaryToInt(binaryValue);
+
             // ASSERT
             Assert.True(clientIsOnline);
             Assert.True(databaseCreated);
@@ -111,6 +117,7 @@ namespace DotCDS.Client.Tests
             Assert.True(hasTable);
             Assert.InRange(totalRowsInsert, 1, 1);
             Assert.InRange(totalRowsReturned, 1, 1);
+            Assert.Equal(testValue, actualValue);
 
         }
     }
