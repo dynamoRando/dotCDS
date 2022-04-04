@@ -95,7 +95,7 @@ message RowRemoteMetadata {
 message ColumnSchema {
 	// the name of the column. Max length of 50 characters
 	string columnName = 1;
-	// The ENUM data type of the column. See Drummersoft.DrummerDB.Common.SQLColumnType
+	// The ENUM data type of the column. See DotCDS.Common.SQLColumnType
 	uint32 columnType = 2; 
 	// the max or fixed length of the column, if applicable
 	uint32 columnLength = 3; 

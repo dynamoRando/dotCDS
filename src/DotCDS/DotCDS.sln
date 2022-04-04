@@ -17,9 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotCDS.Common", "DotCDS.Com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotCDS.Client", "DotCDS.Client\DotCDS.Client.csproj", "{9A955B88-0BD8-48E4-BE2E-03E69EA88623}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCDS.Client.Tests", "..\..\tests\DotCDS.Client.Tests\DotCDS.Client.Tests.csproj", "{4F9CCD83-A46D-48CD-8F65-2837EF96D110}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotCDS.Client.Tests", "..\..\tests\DotCDS.Client.Tests\DotCDS.Client.Tests.csproj", "{4F9CCD83-A46D-48CD-8F65-2837EF96D110}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCDS.TestHelpers", "..\..\tests\DotCDS.TestHelpers\DotCDS.TestHelpers.csproj", "{9B3D7FD0-E9E7-4A68-B6F9-8461B61E38AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotCDS.TestHelpers", "..\..\tests\DotCDS.TestHelpers\DotCDS.TestHelpers.csproj", "{9B3D7FD0-E9E7-4A68-B6F9-8461B61E38AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
