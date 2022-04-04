@@ -60,6 +60,11 @@ namespace DotCDS.Common
             }
         }
 
+        public static byte[] DateTimeToBinary(DateTime dateTime)
+        {
+            return BitConverter.GetBytes(dateTime.ToBinary());
+        }
+
         public static byte[] DateTimeToBinary(string value)
         {
             DateTime item;
@@ -74,6 +79,11 @@ namespace DotCDS.Common
             }
 
             return result;
+        }
+
+        public static byte[] DecimalToBinary(double value)
+        {
+            return BitConverter.GetBytes(value);
         }
 
         /// <summary>
@@ -267,11 +277,55 @@ namespace DotCDS.Common
             throw new NotImplementedException();
         }
 
-        public static byte[] Convert(SQLColumnType dataType, object data)
+        public static byte[] Convert(SQLColumnType dataType, object data, int length = 0)
         {
-            throw new NotImplementedException();
+            List<byte[]> arrays;
+            byte[] stringData;
+            byte[] lengthData;
+
+            switch (dataType)
+            {
+                case SQLColumnType.Binary:
+                    return (byte[])data;
+
+                case SQLColumnType.Bit:
+                    return DbBinaryConvert.BooleanToBinary((bool)data);
+
+                case SQLColumnType.Char:
+                    stringData = DbBinaryConvert.StringToBinary((string)data);
+                    lengthData = DbBinaryConvert.IntToBinary(length);
+                    arrays = new List<byte[]>(2);
+
+                    arrays.Add(lengthData);
+                    arrays.Add(stringData);
+
+                    return DbBinaryConvert.ArrayStitch(arrays);
+
+                case SQLColumnType.DateTime:
+                    return DbBinaryConvert.DateTimeToBinary((DateTime)data);
+
+                case SQLColumnType.Decimal:
+                    return DbBinaryConvert.DecimalToBinary((double)data);
+
+                case SQLColumnType.Int:
+                    return DbBinaryConvert.IntToBinary((int)data);
+
+                case SQLColumnType.Varbinary:
+                    return (byte[])data;
+
+                case SQLColumnType.Varchar:
+                    stringData = DbBinaryConvert.StringToBinary((string)data);
+                    lengthData = DbBinaryConvert.IntToBinary(length);
+                    arrays = new List<byte[]>(2);
+
+                    arrays.Add(lengthData);
+                    arrays.Add(stringData);
+
+                    return DbBinaryConvert.ArrayStitch(arrays);
+
+                default:
+                    throw new ArgumentException("Unknown data type");
+            }
         }
-
-
     }
 }

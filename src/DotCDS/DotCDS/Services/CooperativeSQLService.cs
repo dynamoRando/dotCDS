@@ -47,7 +47,14 @@ namespace DotCDS.Services
 
         public override Task<ExecuteReadReply> ExecuteRead(ExecuteReadRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new ExecuteReadReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+
+            result.AuthenticationResult = authResult;
+            var queryResult = _handler.ExecuteRead(request.Authentication.UserName, request.Authentication.Pw, request.DatabaseName, request.SqlStatement);
+            result.Results.Add(queryResult);
+
+            return Task.FromResult(result);
         }
 
         public override Task<ExecuteWriteReply> ExecuteWrite(ExecuteWriteRequest request, ServerCallContext context)
@@ -55,7 +62,7 @@ namespace DotCDS.Services
             var result = new ExecuteWriteReply();
             AuthResult authResult = GetAuthResult(request.Authentication);
             result.AuthenticationResult = authResult;
-            result.TotalRowsAffected = _handler.ExecuteWrite(request.Authentication.UserName, request.Authentication.Pw, request.DatabaseName, request.SqlStatement); 
+            result.TotalRowsAffected = _handler.ExecuteWrite(request.Authentication.UserName, request.Authentication.Pw, request.DatabaseName, request.SqlStatement);
 
             return Task.FromResult(result);
         }
