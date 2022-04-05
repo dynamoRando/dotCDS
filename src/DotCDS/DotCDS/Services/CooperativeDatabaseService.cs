@@ -20,7 +20,7 @@ namespace DotCDS.Services
 
         public override Task<CreateDatabaseResult> CreatePartialDatabase(CreateDatabaseRequest request, ServerCallContext context)
         {
-            return base.CreatePartialDatabase(request, context);
+            throw new NotImplementedException();
         }
 
     }
