@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotCDS.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,6 @@ namespace DotCDS.TestHelpers
         public int AdminPortNumber;
         public int DatabasePortNumber;
         public int SqlPortNumber;
+        public StoreClient Client;
     }
 }

@@ -1,4 +1,5 @@
-﻿using DotCDS.Tests;
+﻿using DotCDS.Client;
+using DotCDS.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,12 +51,19 @@ namespace DotCDS.TestHelpers
             foreach (var processContainer in _processContainers)
             {
                 var process = processContainer.Process;
+                var client = processContainer.Client;
+
                 var path = Path.Combine(_rootFolder, processContainer.Index.ToString());
                 SetupTempFolder(path);
 
                 if (process is null)
                 {
                     process = new Process(path);
+                }
+
+                if (client is null)
+                {
+                    client = new StoreClient();
                 }
 
                 process.Start();
@@ -72,6 +80,8 @@ namespace DotCDS.TestHelpers
                 process.StartAdminService(adminPortNumber, false);
                 process.StartDatabaseService(databasePortNumber, false);
                 process.StartSQLService(sqlPortNumber, false);
+
+                client.Configure("http://localhost", sqlPortNumber);
             }
         }
 
@@ -109,6 +119,11 @@ namespace DotCDS.TestHelpers
             }
 
             return null;
+        }
+
+        public StoreClient GetClient(string name)
+        {
+            return GetProcessContainer(name).Client;
         }
         #endregion
 
