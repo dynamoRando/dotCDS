@@ -10,9 +10,43 @@ namespace DotCDS
     {
         internal static class TableNames
         {
-            internal const string CDS_USER = "CDS_USER";
-            internal const string CDS_ROLE = "CDS_ROLE";
-            internal const string CDS_USER_ROLE = "CDS_USER_ROLE";
+            // anything in CDS is in the cooperative data store
+            internal static class CDS
+            {
+                // users in this CDS 
+                internal const string USER = "CDS_USER";
+                // roles in this CDS
+                internal const string ROLE = "CDS_ROLE";
+                // xref users to roles
+                internal const string USER_ROLE = "CDS_USER_ROLE";
+
+                // ----------
+                // the tables below are for holding our identifier information to other participants
+                // ----------
+
+                // holds our unique identifiers to participants
+                internal const string HOST_INFO = "CDS_HOST_INFO";
+
+                // ----------
+                // the tables below are for partial databases and their contracts
+                // ----------
+
+                // hosts that this CDS is cooperating with
+                internal const string HOSTS = "CDS_HOSTS";
+                // holds schema information for partial databases participating with a remote host
+                internal const string CONTRACTS = "CDS_CONTRACTS";
+                // holds the tables information for the partial databases 
+                internal const string CONTRACTS_TABLES = "CDS_CONTRACTS_TABLES";
+                // holds the schema information for the tables in partial databases
+                internal const string CONTRACTS_TABLE_SCHEMAS = "CDS_CONTRACTS_TABLES_SCHEMAS";
+            }
+
+            // anything in COOP are tables stored in the user database used to enable cooperative functions with participants
+            internal static class COOP
+            {
+                internal const string PARTICIPANT = "COOP_PARTICIPANT";
+                internal const string DATABASE_CONTRACT = "COOP_DATABASE_CONTRACT";
+            }
         }
 
         internal static class RoleNames
@@ -23,7 +57,7 @@ namespace DotCDS
         internal static class SQLLite
         {
             internal const string CREATE_USER_TABLE = $@"
-        CREATE TABLE IF NOT EXISTS {TableNames.CDS_USER} 
+        CREATE TABLE IF NOT EXISTS {TableNames.CDS.USER} 
         (
             USERNAME VARCHAR(25) UNIQUE,
             BYTELENGTH INT NOT NULL,
@@ -33,31 +67,56 @@ namespace DotCDS
         );";
 
             internal const string CREATE_ROLE_TABLE = $@"
-        CREATE TABLE IF NOT EXISTS {TableNames.CDS_ROLE} 
+        CREATE TABLE IF NOT EXISTS {TableNames.CDS.ROLE} 
         (
             ROLENAME VARCHAR(25) UNIQUE
         );";
 
             internal const string CREATE_USER_ROLE_TABLE = $@"
-        CREATE TABLE IF NOT EXISTS {TableNames.CDS_USER_ROLE} 
+        CREATE TABLE IF NOT EXISTS {TableNames.CDS.USER_ROLE} 
         (
             USERNAME VARCHAR(25) NOT NULL,
             ROLENAME VARCHAR(25) NOT NULL   
         );";
 
-            internal const string ADD_ADMIN_ROLE = $"INSERT INTO {TableNames.CDS_ROLE} (ROLENAME) VALUES ('{RoleNames.SYS_ADMIN}');";
-            internal const string ADD_USER_TO_ROLE = $"INSERT INTO {TableNames.CDS_USER_ROLE} (USERNAME, ROLENAME) VALUES (@username, @rolename);";
+            internal const string CREATE_PARTICIPANT_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.COOP.PARTICIPANT} 
+        (
+            INTERNAL_PARTICIPANT_ID CHAR(36) NOT NULL,
+            ALIAS VARCHAR(50) NOT NULL,
+            IP4ADDRESS VARCHAR(25),
+            IP6ADDRESS VARCHAR(25),
+            PORT INT,
+            CONTRACT_STATUS INT,
+            ACCEPTED_CONTRACT_VERSION_ID CHAR(36),
+            TOKEN BLOB NOT NULL,
+            PARTICIPANT_ID CHAR(36)
+        )";
+
+            internal const string CREATE_DATABASE_CONTRACT_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.COOP.DATABASE_CONTRACT}
+        (
+            CONTRACT_ID CHAR(36) NOT NULL,
+            GENERATED_DATE_UTC DATETIME NOT NULL,
+            DESCRIPTION VARCHAR(255),
+            RETIRED_DATE_UTC DATETIME,
+            VERSION_ID CHAR(36) NOT NULL,
+            REMOTE_DELETE_BEHAVIOR INT
+        )";
+
+            internal const string ADD_ADMIN_ROLE = $"INSERT INTO {TableNames.CDS.ROLE} (ROLENAME) VALUES ('{RoleNames.SYS_ADMIN}');";
+            internal const string ADD_USER_TO_ROLE = $"INSERT INTO {TableNames.CDS.USER_ROLE} (USERNAME, ROLENAME) VALUES (@username, @rolename);";
 
             internal const string COUNT_OF_TABLES_WITH_NAME = @"
             SELECT count(*) AS TABLECOUNT FROM sqlite_master WHERE type='table' AND name='table_name';
             ";
 
-            internal const string COUNT_OF_USERS_WITH_NAME = $"SELECT count(*) AS USERCOUNT FROM {TableNames.CDS_USER} WHERE USERNAME = 'user_name';";
-            internal const string COUNT_OF_ROLES_WITH_NAME = $"SELECT count(*) AS ROLECOUNT FROM {TableNames.CDS_ROLE} WHERE ROLENAME = 'role_name';";
-            internal const string COUNT_OF_USER_WITH_ROLE = $"SELECT count(*) AS TOTALCOUNT FROM {TableNames.CDS_USER_ROLE} WHERE USERNAME = @username AND ROLENAME = @rolename;";
+            internal const string COUNT_OF_USERS_WITH_NAME = $"SELECT count(*) AS USERCOUNT FROM {TableNames.CDS.USER} WHERE USERNAME = 'user_name';";
+            internal const string COUNT_OF_ROLES_WITH_NAME = $"SELECT count(*) AS ROLECOUNT FROM {TableNames.CDS.ROLE} WHERE ROLENAME = 'role_name';";
+            internal const string COUNT_OF_USER_WITH_ROLE = $"SELECT count(*) AS TOTALCOUNT FROM {TableNames.CDS.USER_ROLE} WHERE USERNAME = @username AND ROLENAME = @rolename;";
 
-            internal const string ADD_LOGIN = $"INSERT INTO {TableNames.CDS_USER} (USERNAME, BYTELENGTH, SALT, HASH, WORKFACTOR) VALUES (@username, @bytelength, @salt, @hash, @workfactor);";
-            internal const string GET_LOGIN = $"SELECT USERNAME, BYTELENGTH, SALT, HASH, WORKFACTOR FROM {TableNames.CDS_USER} WHERE USERNAME = @username;";
+            internal const string ADD_LOGIN = $"INSERT INTO {TableNames.CDS.USER} (USERNAME, BYTELENGTH, SALT, HASH, WORKFACTOR) VALUES (@username, @bytelength, @salt, @hash, @workfactor);";
+            internal const string GET_LOGIN = $"SELECT USERNAME, BYTELENGTH, SALT, HASH, WORKFACTOR FROM {TableNames.CDS.USER} WHERE USERNAME = @username;";
         }
 
     }

@@ -167,7 +167,7 @@ namespace DotCDS
         #region Private Methods
         private void CreateUserTable()
         {
-            if (!HasTable(TableNames.CDS_USER))
+            if (!HasTable(TableNames.CDS.USER))
             {
                 _client.ExecuteWrite(_backingDbName, SQLLite.CREATE_USER_TABLE);
             }
@@ -175,7 +175,7 @@ namespace DotCDS
 
         private void CreateRoleTable()
         {
-            if (!HasTable(TableNames.CDS_ROLE))
+            if (!HasTable(TableNames.CDS.ROLE))
             {
                 _client.ExecuteWrite(_backingDbName, SQLLite.CREATE_ROLE_TABLE);
             }
@@ -183,7 +183,7 @@ namespace DotCDS
 
         private void CreateUserRoleTable()
         {
-            if (!HasTable(TableNames.CDS_USER_ROLE))
+            if (!HasTable(TableNames.CDS.USER_ROLE))
             {
                 _client.ExecuteWrite(_backingDbName, SQLLite.CREATE_USER_ROLE_TABLE);
             }
