@@ -10,40 +10,69 @@ namespace DotCDS
     {
         internal static class TableNames
         {
-            // anything in CDS is in the cooperative data store
+            /// <summary>
+            /// anything in CDS is in the cooperative data store
+            /// </summary>
             internal static class CDS
             {
-                // users in this CDS 
+                /// <summary>
+                /// users in this CDS 
+                /// </summary>
                 internal const string USER = "CDS_USER";
-                // roles in this CDS
+
+                /// <summary>
+                /// roles in this CDS
+                /// </summary>
                 internal const string ROLE = "CDS_ROLE";
-                // xref users to roles
+
+                /// <summary>
+                /// xref users to roles
+                /// </summary>
                 internal const string USER_ROLE = "CDS_USER_ROLE";
 
                 // ----------
                 // the tables below are for holding our identifier information to other participants
                 // ----------
 
-                // holds our unique identifiers to participants
+                /// <summary>
+                /// holds our unique identifiers to participants
+                /// </summary>
                 internal const string HOST_INFO = "CDS_HOST_INFO";
 
                 // ----------
                 // the tables below are for partial databases and their contracts
                 // ----------
 
-                // hosts that this CDS is cooperating with
+                /// <summary>
+                /// hosts that this CDS is cooperating with
+                /// </summary>
                 internal const string HOSTS = "CDS_HOSTS";
-                // holds schema information for partial databases participating with a remote host
+
+                /// <summary>
+                /// holds schema information for partial databases participating with a remote host
+                /// </summary>
                 internal const string CONTRACTS = "CDS_CONTRACTS";
-                // holds the tables information for the partial databases 
+
+                /// <summary>
+                /// holds the tables information for the partial databases 
+                /// </summary>
                 internal const string CONTRACTS_TABLES = "CDS_CONTRACTS_TABLES";
-                // holds the schema information for the tables in partial databases
+
+                /// <summary>
+                /// holds the schema information for the tables in partial databases
+                /// </summary>
                 internal const string CONTRACTS_TABLE_SCHEMAS = "CDS_CONTRACTS_TABLES_SCHEMAS";
             }
 
-            // anything in COOP are tables stored in the user database used to enable cooperative functions with participants
+            /// <summary>
+            /// anything in COOP are tables stored in the user database used to enable cooperative functions with participants
+            /// </summary>
             internal static class COOP
             {
+                // ----------
+                // the tables below are for data hosts
+                // ----------
+
                 // a list of participants for this user database
                 internal const string PARTICIPANT = "COOP_PARTICIPANT";
 
@@ -60,6 +89,16 @@ namespace DotCDS
                 // this tells CDS that rather than actually sending the request to Sqlite to query that table, 
                 // to instead look at the corresponding shadow table and request data from the participant(s)
                 internal const string REMOTES = "COOP_REMOTES";
+
+                // ----------
+                // the tables below are for partial databases (data participants)
+                // ----------
+
+                // the naming convention prefix for any table that is in a partial database
+                // this table holds references back to the host for the rows
+                // e.g. a table in a partial database named "EMPLOYEE_ADDRESS" would also have a table 
+                // named "COOP_PARENT_EMPLOYEE_ADDRESS" which would point back to the host that had a reference to this table
+                internal const string PARENT = "COOP_PARENT";
             }
         }
 
@@ -105,7 +144,7 @@ namespace DotCDS
             ACCEPTED_CONTRACT_VERSION_ID CHAR(36),
             TOKEN BLOB NOT NULL,
             PARTICIPANT_ID CHAR(36)
-        )";
+        );";
 
             internal const string CREATE_DATABASE_CONTRACT_TABLE = $@"
         CREATE TABLE IF NOT EXISTS {TableNames.COOP.DATABASE_CONTRACT}
@@ -116,7 +155,94 @@ namespace DotCDS
             RETIRED_DATE_UTC DATETIME,
             VERSION_ID CHAR(36) NOT NULL,
             REMOTE_DELETE_BEHAVIOR INT
-        )";
+        );";
+
+            internal const string CREATE_SHADOW_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.COOP.SHADOWS} 
+        (
+            PARTICIPANT_ID CHAR(36) NOT NULL,
+            IS_PARTICIPANT_DELETED INT,
+            PARTICIPANT_DELETE_DATE_UTC DATETIME,
+            DATA_HASH_LENGTH INT,
+            DATA_HASH BLOB
+        );
+        ";
+
+            internal const string CREATE_REMOTE_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.COOP.REMOTES}
+        (
+            TABLENAME VARCHAR(255) NOT NULL
+        );
+        ";
+
+            internal const string CREATE_PARENT_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.COOP.PARENT} 
+        (
+            PARENT_ID CHAR(36) NOT NULL,
+            IS_PARENT_DELETED INT,
+            PARENT_DELETE_DATE_UTC DATETIME,
+            DATA_HASH_LENGTH INT,
+            DATA_HASH BLOB
+        );
+        ";
+
+            internal const string CREATE_HOST_INTO_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.CDS.HOST_INFO}
+        (
+            HOST_ID CHAR(36) NOT NULL,
+            HOST_NAME VARCHAR(50) NOT NULL
+            TOKEN BLOB NOT NULL
+        );
+        ";
+            internal const string CREATE_HOSTS_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.CDS.HOSTS}
+        (
+            HOST_ID CHAR(36) NOT NULL,
+            HOST_NAME VARCHAR(50)
+            TOKEN BLOB,
+            IP4ADDRESS VARCHAR(25),
+            IP6ADDRESS VARCHAR(25),
+            PORT INT,
+            LAST_COMMUNICATION_UTC DATETIME
+        );
+        ";
+
+            internal const string CREATE_CDS_CONTRACTS_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.CDS.CONTRACTS}
+        (
+            HOST_ID CHAR(36) NOT NULL,
+            CONTRACT_ID CHAR(36) NOT NULL,
+            CONTRACT_VERSION_ID CHAR(36) NOT NULL,
+            DATABASE_NAME VARCHAR(50) NOT NULL,
+            DATABASE_ID CHAR(36) NOT NULL,
+            DESCRIPTION VARCHAR(255),
+            GENERATED_DATE_UTC DATETIME,
+            CONTRACT_STATUS INT
+        );
+        ";
+
+            internal const string CREATE_CDS_CONTRACTS_TABLE_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.CDS.CONTRACTS_TABLES}
+        (
+            DATABASE_ID CHAR(36) NOT NULL,
+            DATABASE_NAME VARCHAR(50 NOT NULL,
+            TABLE_ID CHAR(36) NOT NULL,
+            TABLE_NAME VARCHAR(50) NOT NULL
+        );
+        ";
+
+            internal const string CREATE_CDS_CONTRACTS_TABLE_SCHEMA_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.CDS.CONTRACTS_TABLE_SCHEMAS}
+        (
+            TABLE_ID CHAR(36) NOT NULL,
+            COLUMN_ID CHAR(36) NOT NULL,
+            COLUMN_NAME VARCHAR(50) NOT NULL,
+            COLUMN_TYPE INT NOT NULL,
+            COLUMN_LENGTH INT NOT NULL,
+            COLUMN_ORDINAL INT NOT NULL,
+            IS_NULLABLE INT
+        );
+        ";
 
             internal const string ADD_ADMIN_ROLE = $"INSERT INTO {TableNames.CDS.ROLE} (ROLENAME) VALUES ('{RoleNames.SYS_ADMIN}');";
             internal const string ADD_USER_TO_ROLE = $"INSERT INTO {TableNames.CDS.USER_ROLE} (USERNAME, ROLENAME) VALUES (@username, @rolename);";
