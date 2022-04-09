@@ -214,6 +214,25 @@ namespace DotCDS.Database
                 SQLiteConnection.CreateFile(_dbFileLocation);
             }
         }
+
+        public bool HasDatabase(string dbName)
+        {
+            var fileName = dbName += _fileExtension;
+            _dbFileLocation = Path.Combine(_rootFolder, fileName);
+
+            return File.Exists(_dbFileLocation);
+        }
+
+        public void DeleteDatabase(string dbName)
+        {
+            var fileName = dbName += _fileExtension;
+            _dbFileLocation = Path.Combine(_rootFolder, fileName);
+
+            if (File.Exists(_dbFileLocation))
+            {
+                File.Delete(_dbFileLocation);
+            }
+        }
         #endregion
 
         #region Private Methods
