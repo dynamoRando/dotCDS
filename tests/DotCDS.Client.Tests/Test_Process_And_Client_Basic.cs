@@ -118,7 +118,6 @@ namespace DotCDS.Client.Tests
             Assert.InRange(totalRowsInsert, 1, 1);
             Assert.InRange(totalRowsReturned, 1, 1);
             Assert.Equal(testValue, actualValue);
-
         }
     }
 }
