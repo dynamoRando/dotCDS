@@ -76,6 +76,56 @@ namespace DotCDS.Services
 
             return Task.FromResult(result);
         }
+
+        public override Task<AcceptPendingContractReply> AcceptPendingContract(AcceptPendingContractRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<ExecuteCooperativeReadReply> ExecuteCooperativeRead(ExecuteCooperativeReadRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<GenerateContractReply> GenerateContract(GenerateContractRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<GetLogicalStoragePolicyReply> GetLogicalStoragePolicy(GetLogicalStoragePolicyRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<AddParticipantReply> AddParticipant(AddParticipantRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<ExecuteCooperativeWriteReply> ExecuteCooperativeWrite(ExecuteCooperativeWriteRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<RejectPendingContractReply> RejectPendingContract(RejectPendingContractRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<ViewPendingContractsReply> ReviewPendingContracts(ViewPendingContractsRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<SetLogicalStoragePolicyReply> SetLogicalStoragePolicy(SetLogicalStoragePolicyRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<EnableCoooperativeFeaturesReply> EnableCoooperativeFeatures(EnableCoooperativeFeaturesRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Private Methods

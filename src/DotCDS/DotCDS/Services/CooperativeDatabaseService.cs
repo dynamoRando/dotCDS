@@ -23,5 +23,55 @@ namespace DotCDS.Services
             throw new NotImplementedException();
         }
 
+        public override Task<ParticipantAcceptsContractResult> AcceptContract(ParticipantAcceptsContractRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<CreateTableResult> CreateTableInDatabase(CreateTableRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<GetRowFromPartialDatabaseResult> GetRowFromPartialDatabase(GetRowFromPartialDatabaseRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<GetRowsFromTableResult> GetRowsFromTable(GetRowsFromTableRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<InsertRowResult> InsertRowIntoTable(InsertRowRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<NotifyHostOfRemovedRowResponse> NotifyHostOfRemovedRow(NotifyHostOfRemovedRowRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<RemoveRowFromPartialDatabaseResult> RemoveRowFromPartialDatabase(RemoveRowFromPartialDatabaseRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<SaveContractResult> SaveContract(SaveContractRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<UpdateRowDataHashForHostResponse> UpdateRowDataHashForHost(UpdateRowDataHashForHostRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<UpdateRowInTableResult> UpdateRowInTable(UpdateRowInTableRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

@@ -8,6 +8,7 @@ package CooperativeSQLService;
 service CooperativeSQLService {
 	rpc IsOnline(CDS.TestRequest) returns (CDS.TestReply);
 	rpc CreateUserDatabase(CreateUserDatabaseRequest) returns (CreateUserDatabaseReply);
+	rpc EnableCoooperativeFeatures(EnableCoooperativeFeaturesRequest) returns (EnableCoooperativeFeaturesReply);
 	rpc ExecuteRead(ExecuteReadRequest) returns (ExecuteReadReply);
 	rpc ExecuteCooperativeRead(ExecuteCooperativeReadRequest) returns (ExecuteCooperativeReadReply);
 	rpc ExecuteWrite(ExecuteWriteRequest) returns (ExecuteWriteReply);
@@ -183,4 +184,15 @@ message RejectPendingContractRequest {
 
 message RejectPendingContractReply {
 	CDS.AuthResult authenticationResult = 1;
+}
+
+message EnableCoooperativeFeaturesRequest {
+	CDS.AuthRequest authentication = 1;
+	string databaseName = 2;
+}
+
+message EnableCoooperativeFeaturesReply {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	string errorMessage = 3;
 }
