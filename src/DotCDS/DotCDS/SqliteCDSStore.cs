@@ -189,6 +189,15 @@ namespace DotCDS
             }
         }
 
+        private void CreateHostInfoTable()
+        {
+            if (!HasTable(TableNames.CDS.HOST_INFO))
+            {
+                _client.ExecuteWrite(_backingDbName, SQLLite.CREATE_HOST_INTO_TABLE);
+            }
+        }
+
+
         private void ConfigureBackingDb()
         {
             _backingDbName += _fileExtension;
@@ -202,6 +211,7 @@ namespace DotCDS
             CreateUserTable();
             CreateRoleTable();
             CreateUserRoleTable();
+            CreateHostInfoTable();
 
             if (!HasRole(RoleNames.SYS_ADMIN))
             {

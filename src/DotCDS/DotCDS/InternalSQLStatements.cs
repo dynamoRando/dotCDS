@@ -190,7 +190,7 @@ namespace DotCDS
         CREATE TABLE IF NOT EXISTS {TableNames.CDS.HOST_INFO}
         (
             HOST_ID CHAR(36) NOT NULL,
-            HOST_NAME VARCHAR(50) NOT NULL
+            HOST_NAME VARCHAR(50) NOT NULL,
             TOKEN BLOB NOT NULL
         );
         ";
@@ -198,7 +198,7 @@ namespace DotCDS
         CREATE TABLE IF NOT EXISTS {TableNames.CDS.HOSTS}
         (
             HOST_ID CHAR(36) NOT NULL,
-            HOST_NAME VARCHAR(50)
+            HOST_NAME VARCHAR(50),
             TOKEN BLOB,
             IP4ADDRESS VARCHAR(25),
             IP6ADDRESS VARCHAR(25),
@@ -225,7 +225,7 @@ namespace DotCDS
         CREATE TABLE IF NOT EXISTS {TableNames.CDS.CONTRACTS_TABLES}
         (
             DATABASE_ID CHAR(36) NOT NULL,
-            DATABASE_NAME VARCHAR(50 NOT NULL,
+            DATABASE_NAME VARCHAR(50) NOT NULL,
             TABLE_ID CHAR(36) NOT NULL,
             TABLE_NAME VARCHAR(50) NOT NULL
         );
