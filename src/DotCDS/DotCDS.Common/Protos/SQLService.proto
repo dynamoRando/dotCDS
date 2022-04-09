@@ -15,7 +15,7 @@ service CooperativeSQLService {
 	rpc HasTable(HasTableRequest) returns (HasTableReply);
 	rpc SetLogicalStoragePolicy(SetLogicalStoragePolicyRequest) returns (SetLogicalStoragePolicyReply);
 	rpc GetLogicalStoragePolicy(GetLogicalStoragePolicyRequest) returns (GetLogicalStoragePolicyReply);
-	rpc GenerateContract(ContractRequest) returns (ContractReply);
+	rpc GenerateContract(GenerateContractRequest) returns (GenerateContractReply);
 	rpc AddParticipant(AddParticipantRequest) returns (AddParticipantReply);
 	rpc ReviewPendingContracts(ViewPendingContractsRequest) returns (ViewPendingContractsReply);
 	rpc AcceptPendingContract(AcceptPendingContractRequest) returns (AcceptPendingContractReply);
@@ -78,13 +78,13 @@ message HasTableReply {
 	bool hasTable = 2;
 }
 
-message ContractRequest {
+message GenerateContractRequest {
 	CDS.AuthRequest authentication = 1;
 	string hostName = 2;
 	string description = 3;
 }
 
-message ContractReply {
+message GenerateContractReply {
 	CDS.AuthResult authenticationResult = 1;
 	bool isSuccessful = 2;
 	string errorMessage = 3;
