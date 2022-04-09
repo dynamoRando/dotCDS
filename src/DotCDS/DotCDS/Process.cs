@@ -48,6 +48,17 @@ namespace DotCDS
         }
 
         /// <summary>
+        /// Starts the process with the supplied settings object
+        /// </summary>
+        /// <param name="settings"></param>
+        public void Start(Settings settings)
+        {
+            _settings = settings;
+            ConfigureBackingStore();
+            _networkManager.SetRootFolder(_rootPath);
+        }
+
+        /// <summary>
         /// Use for testing purposes only. Configures a default admin username and pw for the CDS process.
         /// </summary>
         /// <param name="userName">The user name</param>
@@ -63,23 +74,6 @@ namespace DotCDS
             {
                 _cooperativeStore.AddUserToRole(userName, InternalSQLStatements.RoleNames.SYS_ADMIN);
             }
-        }
-
-        /// <summary>
-        /// Loads the appsettings.json file starts the services and overrides the 
-        /// appsettings.json backing database type with the supplied connection string. Used in testing.
-        /// </summary>
-        /// <param name="connectionString">The connection string to the database</param>
-        /// <param name="databaseType">The type of database conection string</param>
-        public void Start(string connectionString, DatabaseClientType databaseType)
-        {
-            _connectionString = connectionString;
-            _clientType = databaseType;
-            _overrideDefaultDb = true;
-
-            LoadConfiguration();
-            ConfigureBackingStore();
-            
         }
 
         /// <summary>

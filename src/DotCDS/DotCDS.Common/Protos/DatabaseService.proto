@@ -9,4 +9,194 @@ package CooperativeDataService;
 service CooperativeDataService {
 	rpc IsOnline(CDS.TestRequest) returns (CDS.TestReply);
 	rpc CreatePartialDatabase(CDS.CreateDatabaseRequest) returns (CDS.CreateDatabaseResult);
+	rpc CreateTableInDatabase(CreateTableRequest) returns (CreateTableResult);
+	rpc InsertRowIntoTable(InsertRowRequest) returns (InsertRowResult);
+	rpc UpdateRowInTable(UpdateRowInTableRequest) returns (UpdateRowInTableResult);
+	rpc GetRowsFromTable(GetRowsFromTableRequest) returns (GetRowsFromTableResult);
+	rpc GetRowFromPartialDatabase(GetRowFromPartialDatabaseRequest) returns (GetRowFromPartialDatabaseResult);
+	rpc SaveContract(SaveContractRequest) returns (SaveContractResult);
+	rpc AcceptContract(ParticipantAcceptsContractRequest) returns (ParticipantAcceptsContractResult);
+	rpc RemoveRowFromPartialDatabase(RemoveRowFromPartialDatabaseRequest) returns (RemoveRowFromPartialDatabaseResult);
+	rpc UpdateRowDataHashForHost(UpdateRowDataHashForHostRequest) returns (UpdateRowDataHashForHostResponse);
+	rpc NotifyHostOfRemovedRow(NotifyHostOfRemovedRowRequest) returns (NotifyHostOfRemovedRowResponse);
+}
+
+
+// a message for creating a table in a database
+message CreateTableRequest {
+	// The user requesting the table creation
+	CDS.AuthRequest authentication = 1;
+	// The database in which to create the table
+	string databaseName = 2;
+	// The database GUID in which to create the table
+	string databaseGUID = 3;
+	// The name of the table to create
+	string tableName = 4;
+	// a list of columns for the table
+	repeated CDS.ColumnSchema columns = 5;
+}
+
+// a message for describing the result of a CreateTableRequest
+message CreateTableResult {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	string databaseName = 3;
+	string resultMessage = 4;
+	string databaseId = 5;
+	string tableName = 6;
+	string tableId = 7;
+}
+
+// a message for inserting a row into a table in a database
+message InsertRowRequest {
+	CDS.AuthRequest authentication = 1;
+	CDS.TableSchema table = 2;
+	repeated CDS.RowValue values = 3;
+	CDS.MessageInfo messageInfo = 4; 
+	CDS.TransactionInfo transaction = 5;
+	uint32 rowId = 6;
+	CDS.Host hostInfo = 7;
+}
+
+// a message for describing the result of a InsertRowRequest
+message InsertRowResult {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	string databaseName = 3;
+	string resultMessage = 4;
+	string databaseId = 5;
+	string tableName = 6;
+	string tableId = 7;
+	uint32 rowId = 8;
+}
+
+message UpdateRowInTableRequest{
+	CDS.AuthRequest authentication = 1;
+	CDS.MessageInfo messageInfo = 2;
+	string databaseName = 3;
+	string databaseId = 4;
+	string tableName = 5;
+	uint32 tableId = 6;
+	uint32 whereRowId = 7;
+	string updateColumn = 8;
+	string updateValue = 9; 
+	bytes existingDataHash = 10;
+}
+
+message UpdateRowInTableResult {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	string databaseName = 3;
+	string databaseId = 4;
+	string tableName = 5;
+	string tableId = 6;
+	uint32 numberOfRowsAffected = 7;
+	string resultMessage = 8;
+	bytes newDataHash = 9;
+}
+
+message GetRowsFromTableRequest {
+	CDS.AuthRequest authentication = 1;
+	string databaseName = 2;
+	string databaseId = 3;
+	string tableName = 4;
+	string tableId = 5;
+	string columnNames = 6;
+	repeated CDS.RowValue rowsWithValue = 7; // WHERE columnName = value
+	string operation = 8; // AND, OR, EQUAL, GREATER THAN, LESS THAN, ETC.
+}
+
+message GetRowsFromTableResult {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	string databaseName = 3;
+	string databaseId = 4;
+	string tableName = 5;
+	string tableId = 6;
+	uint32 numberOfRowsAffected = 7;
+	string resultMessage = 8;
+	repeated CDS.Row rows = 9;
+}
+
+message GetRowFromPartialDatabaseRequest {
+	CDS.AuthRequest authentication = 1;
+	CDS.RowParticipantAddress rowAddress = 2;
+	CDS.MessageInfo MessageInfo = 3;
+}
+
+message GetRowFromPartialDatabaseResult {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	string resultMessage = 3;
+	CDS.Row row = 4;
+}
+
+// a message from a host to a participant to save a contract
+message SaveContractRequest {
+	//CDS.AuthRequest authentication = 1;
+	CDS.Contract contract = 1;
+	CDS.MessageInfo messageInfo = 2;
+}
+
+message SaveContractResult {
+	//CDS.AuthResult authenticationResult = 1;
+	bool isSaved = 1;
+	string errorMessage = 2;
+}
+
+message ParticipantAcceptsContractRequest {
+	CDS.Participant participant = 1;
+	string contractGUID = 2;
+	string databaseName = 3;
+	CDS.MessageInfo messageInfo = 4;
+}
+
+message ParticipantAcceptsContractResult {
+	bool contractAcceptanceIsAcknowledged = 1;
+	string errorMessage = 2;
+}
+
+message RemoveRowFromPartialDatabaseRequest {
+	CDS.AuthRequest authentication = 1;
+	CDS.MessageInfo MessageInfo = 2;
+	CDS.RowParticipantAddress rowAddress = 3;
+}
+
+message RemoveRowFromPartialDatabaseResult {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	string resultMessage = 3;
+}
+
+message UpdateRowDataHashForHostRequest {
+	CDS.AuthRequest authentication = 1;
+	CDS.MessageInfo MessageInfo = 2;
+	CDS.Host hostInfo = 3;
+	string databaseName = 4;
+	string databaseId = 5;
+	string tableName = 6;
+	uint32 tableId = 7;
+	uint32 rowId = 8;
+	bytes updatedHashValue = 9;
+}
+
+message UpdateRowDataHashForHostResponse {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+}
+
+message NotifyHostOfRemovedRowRequest{
+	CDS.AuthRequest authentication = 1;
+	CDS.MessageInfo MessageInfo = 2;
+	CDS.Host hostInfo = 3;
+	string databaseName = 4;
+	string databaseId = 5;
+	string tableName = 6;
+	uint32 tableId = 7;
+	uint32 rowId = 8;
+}
+
+message NotifyHostOfRemovedRowResponse {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
 }

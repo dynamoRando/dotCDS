@@ -7,7 +7,7 @@ using DotCDS.Common;
 
 namespace DotCDS.Client.Tests
 {
-    public class Test_Process_And_Client_Basic
+    public class Test_Sqlite_Process_And_Client_Basic
     {
         [Fact]
         public void Test_Process_And_Client_Connection()

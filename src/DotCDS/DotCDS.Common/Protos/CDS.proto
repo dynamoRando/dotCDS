@@ -89,7 +89,6 @@ message RowRemoteMetadata {
 	bool isLocalDeleted = 5;
 }
 
-
 // a message for describing schema information of a column in a database table
 // see Drummersoft.DrummerDB.Core.Structures.Version.SystemSchemaConstants100 for more information
 message ColumnSchema {
@@ -111,4 +110,71 @@ message ColumnSchema {
 	string columnGUID = 8;
 	// if the column is the primary key of the table. If this is part of a list of columns, it is implied to be a composite primary key
 	bool isPrimaryKey = 9;
+}
+
+message Contract {
+	// the unique contract id
+	string contractGUID = 1;
+	// the date the contract was generated
+	google.protobuf.Timestamp generatedDate = 2;
+	// a description of the rights in the contract 
+	string description = 3;
+	// the schema of the entire database
+	DatabaseSchema schema = 4;
+	// a GUID representing the version of the contract
+	string contractVersion = 5;
+	Host hostInfo = 6;
+	// the status of the contract, if applicable
+	uint32 status = 7;
+}
+
+// a message representing information about a participant in the system
+message Participant {
+	string participantGUID = 1;
+	string alias = 2;
+	string ip4Address = 3;
+	string ip6Address = 4;
+	uint32 databasePortNumber = 5;
+	bytes token = 6;
+}
+
+message Host{
+	string hostGUID = 1;
+	string hostName = 2;
+	string ip4Address = 3;
+	string ip6Address = 4;
+	uint32 databasePortNumber = 5;
+	bytes token = 6;
+}
+
+// a message for describing the schema of a database
+message DatabaseSchema {
+	string databaseName = 1;
+	string databaseId = 2;
+	repeated TableSchema tables = 3;
+}
+
+// a message for describing the schema information of a table in a database 
+message TableSchema {
+	string tableName = 1;
+	uint32 tableId = 2;
+	string databaseName = 3;
+	string databaseId = 4;
+	repeated ColumnSchema columns = 5;
+	// Drummersoft.DrummerDB.Core.Structures.Enum.LogicalStoragePolicy
+	uint32 logicalStoragePolicy = 6;
+}
+
+message TransactionInfo {
+	string TransactionBatchId = 1;
+	uint32 TransactionMode = 2;
+}
+
+// a message for identifying the location of a row in a partial database
+message RowParticipantAddress {
+	uint32 rowId = 1;
+	uint32 tableId = 2;
+	string databaseId = 3;
+	string databaseName = 4;
+	string tableName = 5;
 }
