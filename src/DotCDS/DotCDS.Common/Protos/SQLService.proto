@@ -176,6 +176,8 @@ message AcceptPendingContractRequest {
 
 message AcceptPendingContractReply {
 	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	string errorMessage = 3;
 }
 
 message RejectPendingContractRequest {

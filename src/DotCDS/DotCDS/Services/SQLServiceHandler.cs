@@ -1,4 +1,5 @@
 ﻿using DotCDS.Common;
+using DotCDS.Common.Enum;
 using DotCDS.Database;
 using System;
 using System.Collections.Generic;
@@ -93,6 +94,21 @@ namespace DotCDS.Services
             }
 
             return errorResult;
+        }
+
+        public bool HandleAcceptPendingContract(string hostAlias)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HandleGenerateContract(string hostName, string description, string databaseName)
+        {       
+            throw new NotImplementedException();
+        }
+
+        public LogicalStoragePolicy HandleGetLogicalStoragePolicy(string databaseName, string tableName)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 

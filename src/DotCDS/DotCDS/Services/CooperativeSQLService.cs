@@ -79,7 +79,12 @@ namespace DotCDS.Services
 
         public override Task<AcceptPendingContractReply> AcceptPendingContract(AcceptPendingContractRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new AcceptPendingContractReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+            result.AuthenticationResult = authResult;
+            result.IsSuccessful = _handler.HandleAcceptPendingContract(request.HostAlias);
+
+            return Task.FromResult(result);
         }
 
         public override Task<ExecuteCooperativeReadReply> ExecuteCooperativeRead(ExecuteCooperativeReadRequest request, ServerCallContext context)
@@ -89,12 +94,22 @@ namespace DotCDS.Services
 
         public override Task<GenerateContractReply> GenerateContract(GenerateContractRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new GenerateContractReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+            result.AuthenticationResult = authResult;
+            result.IsSuccessful = _handler.HandleGenerateContract(request.DatabaseName, request.Description, request.DatabaseName);
+
+            return Task.FromResult(result);
         }
 
         public override Task<GetLogicalStoragePolicyReply> GetLogicalStoragePolicy(GetLogicalStoragePolicyRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new GetLogicalStoragePolicyReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+            result.AuthenticationResult = authResult;
+            result.PolicyMode = (uint)_handler.HandleGetLogicalStoragePolicy(request.DatabaseName, request.TableName);
+
+            return Task.FromResult(result);
         }
 
         public override Task<AddParticipantReply> AddParticipant(AddParticipantRequest request, ServerCallContext context)
