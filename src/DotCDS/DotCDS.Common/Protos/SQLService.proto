@@ -83,6 +83,7 @@ message GenerateContractRequest {
 	CDS.AuthRequest authentication = 1;
 	string hostName = 2;
 	string description = 3;
+	string databaseName = 4;
 }
 
 message GenerateContractReply {

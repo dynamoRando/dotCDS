@@ -131,7 +131,11 @@ namespace DotCDS.Client
         /// <exception cref="NotImplementedException"></exception>
         public EnableCoooperativeFeaturesReply EnableCooperativeFeatures(string databaseName, string userName, string pw)
         {
-            throw new NotImplementedException();
+            var request = new EnableCoooperativeFeaturesRequest();
+            request.Authentication = GetAuthRequest(userName, pw);
+            request.DatabaseName = databaseName;
+
+            return _client.EnableCoooperativeFeatures(request);
         }
 
         /// <summary>
@@ -146,7 +150,13 @@ namespace DotCDS.Client
         /// <exception cref="NotImplementedException"></exception>
         public SetLogicalStoragePolicyReply SetLogicalStoragePolicy(string databaseName, string tableName, uint policyMode, string userName, string pw)
         {
-            throw new NotImplementedException();
+            var request = new SetLogicalStoragePolicyRequest();
+            request.Authentication = GetAuthRequest(userName, pw);
+            request.DatabaseName = databaseName;
+            request.TableName = tableName;
+            request.PolicyMode = policyMode;
+
+            return _client.SetLogicalStoragePolicy(request);
         }
 
         /// <summary>
@@ -160,7 +170,12 @@ namespace DotCDS.Client
         /// <exception cref="NotImplementedException"></exception>
         public GetLogicalStoragePolicyReply GetLogicalStoragePolicy(string databaseName, string tableName, string userName, string pw)
         {
-            throw new NotImplementedException();
+            var request = new GetLogicalStoragePolicyRequest();
+            request.Authentication = GetAuthRequest(userName, pw);
+            request.DatabaseName = databaseName;
+            request.TableName = tableName;
+
+            return _client.GetLogicalStoragePolicy(request);
         }
 
         /// <summary>
@@ -177,7 +192,13 @@ namespace DotCDS.Client
         /// and cooperative features enabled on the database</remarks>
         public GenerateContractReply GenerateContract(string hostName, string description, string databaseName, string userName, string pw)
         {
-            throw new NotImplementedException();
+            var request = new GenerateContractRequest();
+            request.Authentication = GetAuthRequest(userName, pw);
+            request.HostName = hostName;
+            request.Description = description;
+            request.DatabaseName = databaseName;
+
+            return _client.GenerateContract(request);
         }
 
         /// <summary>
@@ -189,9 +210,12 @@ namespace DotCDS.Client
         /// <exception cref="NotImplementedException"></exception>
         public ViewPendingContractsReply ViewPendingContracts(string userName, string pw)
         {
-            throw new NotImplementedException();
+            var request = new ViewPendingContractsRequest();
+            request.Authentication = GetAuthRequest(userName, pw);
+
+            return _client.ReviewPendingContracts(request);
         }
-       
+
         /// <summary>
         /// Adds a participant to a host database at this CDS
         /// </summary>
@@ -206,12 +230,23 @@ namespace DotCDS.Client
         /// <exception cref="NotImplementedException"></exception>
         public AddParticipantReply AddParticipant(string name, string ip4address, string ip6address, uint portNumber, string databaseName, string userName, string pw)
         {
-            throw new NotImplementedException();
+            var request = new AddParticipantRequest();
+            request.Authentication = GetAuthRequest(userName, pw);
+            request.Alias = name;
+            request.DatabaseName = databaseName;
+            request.Ip4Address = ip4address;
+            request.Port = portNumber;
+
+            return _client.AddParticipant(request);
         }
 
         public AcceptPendingContractReply AcceptPendingContract(string hostAlias, string userName, string pw)
         {
-            throw new NotImplementedException();
+            var request = new AcceptPendingContractRequest();
+            request.Authentication = GetAuthRequest(userName, pw);
+            request.HostAlias = hostAlias;
+
+            return _client.AcceptPendingContract(request);
         }
         #endregion
 
