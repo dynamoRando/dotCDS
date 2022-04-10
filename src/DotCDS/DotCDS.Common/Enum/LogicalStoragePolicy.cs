@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotCDS.Enum
+namespace DotCDS.Common.Enum
 {
-    internal enum LogicalStoragePolicy
+    public enum LogicalStoragePolicy
     {
         // default - this is when there are no participants in a database
         None,

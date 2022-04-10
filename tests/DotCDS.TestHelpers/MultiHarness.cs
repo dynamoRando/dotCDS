@@ -43,6 +43,7 @@ namespace DotCDS.TestHelpers
             ProcessContainer processContainer = new ProcessContainer();
             processContainer.Name = name;
             processContainer.Index = _processContainers.Count + 1;
+            processContainer.Address = "http://localhost";
             _processContainers.Add(processContainer);
         }
 
@@ -81,7 +82,7 @@ namespace DotCDS.TestHelpers
                 process.StartDatabaseService(databasePortNumber, false);
                 process.StartSQLService(sqlPortNumber, false);
 
-                client.Configure("http://localhost", sqlPortNumber);
+                client.Configure(processContainer.Address, sqlPortNumber);
             }
         }
 

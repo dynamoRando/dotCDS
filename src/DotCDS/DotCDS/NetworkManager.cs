@@ -1,4 +1,5 @@
-﻿using DotCDS.Database;
+﻿using DotCDS.Common.Enum;
+using DotCDS.Database;
 using DotCDS.Services;
 using System;
 using System.Collections.Generic;

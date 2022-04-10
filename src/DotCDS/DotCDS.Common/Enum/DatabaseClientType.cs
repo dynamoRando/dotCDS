@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotCDS
+namespace DotCDS.Common.Enum
 {
     /// <summary>
     /// Represents the primary database that is backing dotCDS. This db has the dotCDS database 

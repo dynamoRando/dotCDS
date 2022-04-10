@@ -209,7 +209,10 @@ namespace DotCDS.Client
             throw new NotImplementedException();
         }
 
-      
+        public AcceptPendingContractReply AcceptPendingContract(string hostAlias, string userName, string pw)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Private Methods

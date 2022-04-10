@@ -12,6 +12,7 @@ namespace DotCDS.TestHelpers
         public Process Process;
         public string Name;
         public string Folder;
+        public string Address;
         public int Index;
         public int AdminPortNumber;
         public int DatabasePortNumber;
