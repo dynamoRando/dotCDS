@@ -29,7 +29,6 @@ namespace DotCDS
 
         private string _rootFolder = string.Empty;
         private DatabaseClientType _clientType;
-        private SqliteClient _sqliteClient;
         private SqliteCDSStore _store;
         #endregion
 

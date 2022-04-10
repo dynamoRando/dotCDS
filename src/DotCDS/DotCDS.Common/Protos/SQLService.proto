@@ -121,8 +121,7 @@ message ExecuteCooperativeReadRequest {
   string databaseName = 2;
   string sqlStatement = 3;
   uint32 databaseType = 4;
-  string alias = 5;
-  string participantId = 6;
+  repeated string tables = 5;
 }
 
 message ExecuteCooperativeReadReply {

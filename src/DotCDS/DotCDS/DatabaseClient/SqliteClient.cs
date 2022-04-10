@@ -128,6 +128,11 @@ namespace DotCDS.Database
             return totalRows > 0;
         }
 
+        public SqliteUserDatabase GetSqliteUserDatabase(string databaseName)
+        {
+            return new SqliteUserDatabase(_rootFolder, databaseName);
+        }
+
         /// <summary>
         /// Executes a SELECT statement with the specified values
         /// </summary>
