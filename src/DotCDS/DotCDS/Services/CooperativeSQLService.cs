@@ -114,32 +114,67 @@ namespace DotCDS.Services
 
         public override Task<AddParticipantReply> AddParticipant(AddParticipantRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new AddParticipantReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+            result.AuthenticationResult = authResult;
+            result.IsSuccessful = _handler.HandleAddParticipant(request.DatabaseName, request.Alias, request.Ip4Address, request.Port);
+
+            return Task.FromResult(result);
         }
 
         public override Task<ExecuteCooperativeWriteReply> ExecuteCooperativeWrite(ExecuteCooperativeWriteRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new ExecuteCooperativeWriteReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+            result.AuthenticationResult = authResult;
+
+            result.TotalRowsAffected = _handler.HandleCooperativeWrite(request.Authentication.UserName,
+                request.Authentication.Pw, request.Alias, Guid.Parse(request.ParticipantId),
+                request.DatabaseName, request.SqlStatement);
+
+            return Task.FromResult(result);
         }
 
         public override Task<RejectPendingContractReply> RejectPendingContract(RejectPendingContractRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new RejectPendingContractReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+            result.AuthenticationResult = authResult;
+            result.IsSuccessful = _handler.HandleRejectPendingContract(request.HostAlias);
+
+            return Task.FromResult(result);
         }
 
         public override Task<ViewPendingContractsReply> ReviewPendingContracts(ViewPendingContractsRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new ViewPendingContractsReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+            result.AuthenticationResult = authResult;
+            result.Contracts.AddRange(_handler.HandleViewPendingContracts());
+
+            return Task.FromResult(result);
         }
 
         public override Task<SetLogicalStoragePolicyReply> SetLogicalStoragePolicy(SetLogicalStoragePolicyRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new SetLogicalStoragePolicyReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+            result.AuthenticationResult = authResult;
+            result.IsSuccessful = _handler.HandleSetLogicalStoragePolicy(request.Authentication.UserName,
+                request.Authentication.Pw, request.DatabaseName, request.TableName);
+
+            return Task.FromResult(result);
         }
 
         public override Task<EnableCoooperativeFeaturesReply> EnableCoooperativeFeatures(EnableCoooperativeFeaturesRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new EnableCoooperativeFeaturesReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+            result.AuthenticationResult = authResult;
+            result.IsSuccessful = _handler.HandleEnableCooperativeFeatures(request.Authentication.UserName,
+                request.Authentication.Pw, request.DatabaseName);
+
+            return Task.FromResult(result);
         }
         #endregion
 

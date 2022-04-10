@@ -187,6 +187,8 @@ message RejectPendingContractRequest {
 
 message RejectPendingContractReply {
 	CDS.AuthResult authenticationResult = 1;
+	bool isSuccessful = 2;
+	string errorMessage = 3;
 }
 
 message EnableCoooperativeFeaturesRequest {

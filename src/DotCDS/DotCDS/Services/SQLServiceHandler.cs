@@ -102,11 +102,62 @@ namespace DotCDS.Services
         }
 
         public bool HandleGenerateContract(string hostName, string description, string databaseName)
-        {       
+        {
             throw new NotImplementedException();
         }
 
         public LogicalStoragePolicy HandleGetLogicalStoragePolicy(string databaseName, string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HandleAddParticipant(string databaseName, string alias, string ipAddress, uint portNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public uint HandleCooperativeWrite(string un, string pw, string alias, Guid participantId, string databaseName, string statement)
+        {
+            var errorResult = new StatementResultset();
+            if (_cooperativeStore.IsValidLogin(un, pw))
+            {
+                if (_cooperativeStore.UserIsInRole(un, InternalSQLStatements.RoleNames.SYS_ADMIN))
+                {
+                    //var result = _sqliteClient.ExecuteRead(databaseName, statement);
+                    //return Resultset.ToStatementResultset(result);
+
+                }
+                else
+                {
+                    errorResult.IsError = true;
+                    errorResult.ResultMessage = "Login does not have permission";
+                }
+            }
+            else
+            {
+                errorResult.IsError = true;
+                errorResult.ResultMessage = "Incorrect login";
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public bool HandleRejectPendingContract(string alias)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Contract[] HandleViewPendingContracts()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HandleSetLogicalStoragePolicy(string un, string pw, string databaseName, string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HandleEnableCooperativeFeatures(string un, string pw, string databaseName)
         {
             throw new NotImplementedException();
         }
