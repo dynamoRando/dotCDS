@@ -30,6 +30,7 @@ namespace DotCDS
         private string _rootFolder = string.Empty;
         private DatabaseClientType _clientType;
         private SqliteCDSStore _store;
+        private SqliteUserDatabaseManager _userDatabaseManager;
         #endregion
 
         #region Public Properties
@@ -43,6 +44,11 @@ namespace DotCDS
         #endregion
 
         #region Public Methods
+        public void SetSqliteUserDatabaseManager(SqliteUserDatabaseManager manager)
+        {
+            _userDatabaseManager = manager;
+        }
+
         public void SetRootFolder(string rootFolder)
         {
             _rootFolder = rootFolder;
@@ -131,6 +137,7 @@ namespace DotCDS
                         break;
                     case DatabaseClientType.Sqlite:
                         _sqlServiceHandler.SetSqliteClient(new SqliteClient(_rootFolder));
+                        _sqlServiceHandler.SetSqliteUserDatabaseManager(_userDatabaseManager);
                         break;
                     default:
                         throw new InvalidOperationException();

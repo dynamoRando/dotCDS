@@ -12,8 +12,10 @@ namespace DotCDS.Services
     internal class SQLServiceHandler
     {
         #region Private Fields
+        // this is deprecated in favor of having a reference to SqliteUserDatabaseManager
         private SqliteClient _sqliteClient;
         private SqliteCDSStore _cooperativeStore;
+        private SqliteUserDatabaseManager _userDatabaseManager;
         #endregion
 
         #region Public Properties
@@ -23,6 +25,11 @@ namespace DotCDS.Services
         #endregion
 
         #region Public Methods
+        public void SetSqliteUserDatabaseManager(SqliteUserDatabaseManager manager)
+        {
+            _userDatabaseManager = manager;
+        }
+
         public void SetSqliteClient(SqliteClient client)
         {
             _sqliteClient = client;
@@ -38,18 +45,29 @@ namespace DotCDS.Services
             return _cooperativeStore.IsValidLogin(un, pw);
         }
 
-        public bool HandleCreateDatabase(string un, string pw, string databaseName)
+        public ActionResult HandleCreateDatabase(string un, string pw, string databaseName)
         {
+            ActionResult result = new ActionResult();
+
             if (_cooperativeStore.IsValidLogin(un, pw))
             {
                 if (_cooperativeStore.UserIsInRole(un, InternalSQLStatements.RoleNames.SYS_ADMIN))
                 {
-                    _sqliteClient.CreateDatabase(databaseName);
-                    return true;
+                    result = _userDatabaseManager.CreateUserDatabase(databaseName);
+                }
+                else
+                {
+                    result.IsSuccessful = false;
+                    result.Message = "User does not have sufficent permissions";
                 }
             }
+            else
+            {
+                result.IsSuccessful = false;
+                result.Message = "Login failed";
+            }
 
-            return false;
+            return result;
         }
 
         public bool HandleHasTable(string un, string pw, string databaseName, string tableName)

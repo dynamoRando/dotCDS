@@ -40,7 +40,9 @@ namespace DotCDS.Services
             AuthResult authResult = GetAuthResult(request.Authentication);
 
             result.AuthenticationResult = authResult;
-            result.IsCreated = _handler.HandleCreateDatabase(request.Authentication.UserName, request.Authentication.Pw, request.DatabaseName);
+            var actionResult = _handler.HandleCreateDatabase(request.Authentication.UserName, request.Authentication.Pw, request.DatabaseName);
+            result.IsCreated = actionResult.IsSuccessful;
+            result.Message = actionResult.Message;
 
             return Task.FromResult(result);
         }
@@ -87,6 +89,13 @@ namespace DotCDS.Services
             return Task.FromResult(result);
         }
 
+        /// <summary>
+        /// This may be deprecated - in theory shouldn't we only do reads, and CDS figures out if it's cooperative or not?
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public override Task<ExecuteCooperativeReadReply> ExecuteCooperativeRead(ExecuteCooperativeReadRequest request, ServerCallContext context)
         {
             throw new NotImplementedException();

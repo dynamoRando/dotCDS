@@ -40,6 +40,7 @@ message CreateUserDatabaseRequest {
 message CreateUserDatabaseReply {
 	CDS.AuthResult authenticationResult = 1;
 	bool isCreated = 2;
+	string message = 3;
 }
 
 message ExecuteReadRequest {
@@ -89,7 +90,7 @@ message GenerateContractRequest {
 message GenerateContractReply {
 	CDS.AuthResult authenticationResult = 1;
 	bool isSuccessful = 2;
-	string errorMessage = 3;
+	string message = 3;
 }
 
 message SetLogicalStoragePolicyRequest {
@@ -102,7 +103,7 @@ message SetLogicalStoragePolicyRequest {
 message SetLogicalStoragePolicyReply {
 	CDS.AuthResult authenticationResult  = 1;
 	bool isSuccessful = 2;
-	string errorMessage = 3;
+	string message = 3;
 }
 
 message GetLogicalStoragePolicyRequest {
@@ -156,7 +157,7 @@ message AddParticipantRequest{
 message AddParticipantReply{
 	CDS.AuthResult authenticationResult = 1;
 	bool isSuccessful = 2;
-	string errorMessage = 3;
+	string message = 3;
 }
 
 message ViewPendingContractsRequest{
@@ -176,7 +177,7 @@ message AcceptPendingContractRequest {
 message AcceptPendingContractReply {
 	CDS.AuthResult authenticationResult = 1;
 	bool isSuccessful = 2;
-	string errorMessage = 3;
+	string message = 3;
 }
 
 message RejectPendingContractRequest {
@@ -187,7 +188,7 @@ message RejectPendingContractRequest {
 message RejectPendingContractReply {
 	CDS.AuthResult authenticationResult = 1;
 	bool isSuccessful = 2;
-	string errorMessage = 3;
+	string message = 3;
 }
 
 message EnableCoooperativeFeaturesRequest {
@@ -198,5 +199,5 @@ message EnableCoooperativeFeaturesRequest {
 message EnableCoooperativeFeaturesReply {
 	CDS.AuthResult authenticationResult = 1;
 	bool isSuccessful = 2;
-	string errorMessage = 3;
+	string message = 3;
 }

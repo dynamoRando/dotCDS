@@ -19,6 +19,7 @@ namespace DotCDS
         private string _connectionString;
         private SqliteCDSStore _cooperativeStore;
         private NetworkManager _networkManager;
+        private SqliteUserDatabaseManager _userDatabaseManager;
         #endregion
 
         #region Public Properties
@@ -213,7 +214,9 @@ namespace DotCDS
                     break;
                 case DatabaseClientType.Sqlite:
                     _cooperativeStore = new SqliteCDSStore(Settings.BackingDatabaseName, _rootPath);
-                    
+                    _userDatabaseManager = new SqliteUserDatabaseManager(_rootPath);
+
+                    _networkManager.SetSqliteUserDatabaseManager(_userDatabaseManager);
                     _networkManager.SetCooperativeStore(_cooperativeStore);
                     _networkManager.SetClientType(_clientType);
                     
