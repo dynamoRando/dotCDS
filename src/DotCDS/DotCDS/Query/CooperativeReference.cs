@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace DotCDS.Query
 {
+    /// <summary>
+    /// Represents a remote data table and the columns referenced by it
+    /// </summary>
     internal record struct CooperativeReference
     {
-        public string DatbaseName { get; init; }
+        public string DatabaseName { get; init; }
         public string TableName { get; init; }
         public List<string> Columns { get; init; }
     }
