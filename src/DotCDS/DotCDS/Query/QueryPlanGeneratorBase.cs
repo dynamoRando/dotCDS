@@ -25,7 +25,8 @@ namespace DotCDS.Query
         public CommonTokenStream TokenStream { get; set; }
         public SqliteUserDatabaseManager UserDatabaseManager { get; set; }
         public CooperativeReferenceCollection CooperativeReferenceCollection { get; set; }
-        public bool HasCooperativeReferences { get; set; }
+        public CooperativeReferenceCheckResult HasCooperativeReferencesCheck { get; set; }
+        public string DatabaseName { get; set; }
         #endregion
 
         #region Constructors
@@ -62,6 +63,8 @@ namespace DotCDS.Query
         {
             base.EnterColumn_name_list(context);
             DebugContext(context);
+
+            throw new NotImplementedException();
         }
 
         public override void EnterCreate_database([NotNull] TSqlParser.Create_databaseContext context)
@@ -120,10 +123,7 @@ namespace DotCDS.Query
         public override void EnterExpression([NotNull] TSqlParser.ExpressionContext context)
         {
             base.EnterExpression(context);
-
-            string debug = context.GetText();
-            Debug.WriteLine("EnterExpression");
-            Debug.WriteLine(debug);
+            DebugContext(context);
 
             throw new NotImplementedException();
         }
@@ -132,9 +132,7 @@ namespace DotCDS.Query
         {
             base.EnterExpression_list(context);
 
-            string debug = context.GetText();
-            Debug.WriteLine("EnterExpression_list");
-            Debug.WriteLine(debug);
+            DebugContext(context);
 
             throw new NotImplementedException();
         }
@@ -155,7 +153,14 @@ namespace DotCDS.Query
             base.EnterFull_table_name(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
+            var db = GetCurrentDatabase();
+            if (db is not null)
+            {
+                var tableName = new ContextWrapper(context, _charStream).FullText.Trim();
+                bool isCooperating = db.IsTableCooperative(tableName);
+                HasCooperativeReferencesCheck.References.Add
+                    (new CooperativeReferenceCheck { DatabaseName = db.DatabaseName, TableName = tableName, IsCooperating = isCooperating });
+            }
         }
 
         public override void EnterId_([NotNull] TSqlParser.Id_Context context)
@@ -170,8 +175,7 @@ namespace DotCDS.Query
             base.EnterInsert_column_id(context);
 
             string debug = context.GetText();
-            Debug.WriteLine("EnterInsert_column_id");
-            Debug.WriteLine(debug);
+            DebugContext(context);
 
             throw new NotImplementedException();
         }
@@ -203,7 +207,8 @@ namespace DotCDS.Query
         public override void EnterSearch_condition([NotNull] TSqlParser.Search_conditionContext context)
         {
             base.EnterSearch_condition(context);
-            Debug.WriteLine("EnterSearch_condition");
+            DebugContext(context);
+
             throw new NotImplementedException();
         }
 
@@ -326,10 +331,8 @@ namespace DotCDS.Query
         public override void ExitExpression([NotNull] TSqlParser.ExpressionContext context)
         {
             base.ExitExpression(context);
+            DebugContext(context);
 
-            string debug = context.GetText();
-            Debug.WriteLine("EnterExpression");
-            Debug.WriteLine(debug);
             throw new NotImplementedException();
         }
 
@@ -337,9 +340,7 @@ namespace DotCDS.Query
         {
             base.ExitExpression_list(context);
 
-            string debug = context.GetText();
-            Debug.WriteLine("ExitExpression_list");
-            Debug.WriteLine(debug);
+            DebugContext(context);
 
             throw new NotImplementedException();
         }
@@ -355,9 +356,7 @@ namespace DotCDS.Query
             base.ExitSearch_condition(context);
 
             string debug = context.GetText();
-
-            Debug.WriteLine("ExitSearch_condition");
-            Debug.WriteLine(debug);
+            DebugContext(context);
 
             throw new NotImplementedException();
         }
@@ -434,6 +433,16 @@ namespace DotCDS.Query
             a.Interval interval = new a.Interval(a, b);
             _charStream = context.Start.InputStream;
             return _charStream.GetText(interval);
+        }
+
+        private SqliteUserDatabase? GetCurrentDatabase()
+        {
+            if (DatabaseName is null)
+            {
+                return null;
+            }
+
+            return UserDatabaseManager.GetSqliteUserDatabase(DatabaseName);
         }
 
         #endregion

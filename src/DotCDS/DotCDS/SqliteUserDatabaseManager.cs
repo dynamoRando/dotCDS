@@ -29,6 +29,19 @@ namespace DotCDS
         #endregion
 
         #region Public Methods
+        public SqliteUserDatabase? GetSqliteUserDatabase(string databaseName)
+        {
+            foreach (var database in _userDatabases)
+            {
+                if (string.Equals(database.DatabaseName, databaseName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return database;
+                }
+            }
+
+            return null;
+        }
+
         public bool HasDatabase(string databaseName)
         {
             bool hasDatabase;

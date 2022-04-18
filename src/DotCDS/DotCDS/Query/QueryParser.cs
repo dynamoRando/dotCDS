@@ -29,15 +29,26 @@ namespace DotCDS.Query
             _databaseManger = manager;
         }
 
+        public ActionResult<bool> IsReadStatement(string statement, string databaseName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult<bool> IsWriteStatement(string statement, string databaseName)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Walks the SQL Statement and determines if any of the objects in the statement reference a cooperative object
         /// </summary>
         /// <param name="statement">The SQL Statement to parse</param>
+        /// <param name="databaseName">The name of the database the statement is for</param>
         /// <returns><c>TRUE</c> if any objects are cooperative, otherwise <c>FALSE</c></returns>
-        public ActionResult<bool> HasCooperativeObjects(string statement)
+        public ActionResult<bool> HasCooperativeObjects(string statement, string databaseName)
         {
-            var actionResult = new ActionResult<bool>();
-            actionResult.IsSuccessful = true;
+            var action = new ActionResult<bool>();
+            action.IsSuccessful = true;
 
             if (_walker is null)
             {
@@ -57,17 +68,27 @@ namespace DotCDS.Query
             IParseTree tree = null;
             var type = GetStatementType(statement);
 
-            if (type == StatementType.DML)
+            switch (type)
             {
-                tree = parser.dml_clause();
-            }
-            else if (type == StatementType.DDL)
-            {
-                tree = parser.ddl_clause();
+                case StatementType.DML:
+                    tree = parser.dml_clause();
+                    break;
+                case StatementType.DDL:
+                    tree = parser.ddl_clause();
+                    break;
+                case StatementType.Unknown:
+                default:
+                    action.IsSuccessful = false;
+                    action.Message = "Unable to determine type of statement";
+                    action.Result = false;
+                    return action;
             }
 
             _generator.TokenStream = tokens;
             _generator.UserDatabaseManager = _databaseManger;
+            _generator.DatabaseName = databaseName;
+            _generator.HasCooperativeReferencesCheck = new CooperativeReferenceCheckResult();
+            _generator.HasCooperativeReferencesCheck.DatabaseName = databaseName;
 
             _walker.Walk(_generator, tree);
 
@@ -76,27 +97,31 @@ namespace DotCDS.Query
 
             if (errorHandler.Errors.Count > 0)
             {
-                actionResult.IsSuccessful = false;
+                action.IsSuccessful = false;
 
                 var error = errorHandler.Errors.First();
                 string errorMesage = $"Syntax Error: {error.Message} at {error.Line}:{error.CharPositionInLine}";
-                actionResult.Message = errorMesage;
+                action.Message = errorMesage;
             }
 
-            actionResult.Result = _generator.HasCooperativeReferences;
-
-            return actionResult;
+            var checkResults = _generator.HasCooperativeReferencesCheck;
+            if (checkResults.References.Any(reference => reference.IsCooperating))
+            {
+                action.Result = true;
+            }
+            return action;
         }
 
         /// <summary>
         /// Walks the SQL Statement and returns a collection of objects that are cooperating and the columns needed
         /// </summary>
         /// <param name="statement">The SQL Statement to parse</param>
+        /// <param name="databaseName">The name of the database the statement is for</param>
         /// <returns>A collection of cooperative objects and their columns</returns>
-        public ActionResult<CooperativeReferenceCollection> GetCooperativeReferences(string statement)
+        public ActionResult<CooperativeReferenceCollection> GetCooperativeReferences(string statement, string databaseName)
         {
-            var actionResult = new ActionResult<CooperativeReferenceCollection>();
-            actionResult.IsSuccessful = true;
+            var action = new ActionResult<CooperativeReferenceCollection>();
+            action.IsSuccessful = true;
 
             if (_walker is null)
             {
@@ -128,6 +153,7 @@ namespace DotCDS.Query
             _generator.TokenStream = tokens;
             _generator.UserDatabaseManager = _databaseManger;
             _generator.CooperativeReferenceCollection = new CooperativeReferenceCollection();
+            _generator.DatabaseName = databaseName;
 
             _walker.Walk(_generator, tree);
 
@@ -136,15 +162,15 @@ namespace DotCDS.Query
 
             if (errorHandler.Errors.Count > 0)
             {
-                actionResult.IsSuccessful = false;
+                action.IsSuccessful = false;
 
                 var error = errorHandler.Errors.First();
                 string errorMesage = $"Syntax Error: {error.Message} at {error.Line.ToString()}:{error.CharPositionInLine.ToString()}";
-                actionResult.Message = errorMesage;
+                action.Message = errorMesage;
             }
 
-            actionResult.Result = _generator.CooperativeReferenceCollection;
-            return actionResult;
+            action.Result = _generator.CooperativeReferenceCollection;
+            return action;
         }
         #endregion
 
@@ -164,7 +190,7 @@ namespace DotCDS.Query
 
             return StatementType.DML;
         }
-       
+
         #endregion
     }
 }

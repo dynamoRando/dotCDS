@@ -1,6 +1,7 @@
 ﻿using DotCDS.Common.Enum;
 using DotCDS.Database;
 using DotCDS.DatabaseClient;
+using DotCDS.Query;
 using DotCDS.Services;
 
 namespace DotCDS
@@ -20,6 +21,7 @@ namespace DotCDS
         private SqliteCDSStore _cooperativeStore;
         private NetworkManager _networkManager;
         private SqliteUserDatabaseManager _userDatabaseManager;
+        private QueryParser _queryParser;
         #endregion
 
         #region Public Properties
@@ -215,6 +217,9 @@ namespace DotCDS
                 case DatabaseClientType.Sqlite:
                     _cooperativeStore = new SqliteCDSStore(Settings.BackingDatabaseName, _rootPath);
                     _userDatabaseManager = new SqliteUserDatabaseManager(_rootPath);
+
+                    _queryParser = new QueryParser();
+                    _queryParser.SetSqliteDatabaseManager(_userDatabaseManager);
 
                     _networkManager.SetSqliteUserDatabaseManager(_userDatabaseManager);
                     _networkManager.SetCooperativeStore(_cooperativeStore);
