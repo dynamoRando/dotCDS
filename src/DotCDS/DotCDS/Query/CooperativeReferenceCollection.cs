@@ -14,16 +14,24 @@ namespace DotCDS.Query
     {
         #region Private Fields
         private List<CooperativeReference> _CooperativeReferences;
+        private string _databaseName;
         #endregion
 
         #region Public Properties
         public int Count => _CooperativeReferences.Count;
         public bool IsReadOnly => false;
+        public CooperativeReference CurrentReference { get; set; }
         #endregion
 
         #region Constructors
         public CooperativeReferenceCollection()
         {
+            _CooperativeReferences = new List<CooperativeReference>();
+        }
+
+        public CooperativeReferenceCollection(string databaseName)
+        {
+            _databaseName = databaseName;
             _CooperativeReferences = new List<CooperativeReference>();
         }
 

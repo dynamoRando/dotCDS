@@ -87,6 +87,7 @@ namespace DotCDS.Query
             _generator.TokenStream = tokens;
             _generator.UserDatabaseManager = _databaseManger;
             _generator.DatabaseName = databaseName;
+            _generator.CooperativeReferenceCollection = null;
             _generator.HasCooperativeReferencesCheck = new CooperativeReferenceCheckResult();
             _generator.HasCooperativeReferencesCheck.DatabaseName = databaseName;
 
@@ -152,7 +153,8 @@ namespace DotCDS.Query
 
             _generator.TokenStream = tokens;
             _generator.UserDatabaseManager = _databaseManger;
-            _generator.CooperativeReferenceCollection = new CooperativeReferenceCollection();
+            _generator.CooperativeReferenceCollection = new CooperativeReferenceCollection(databaseName);
+            _generator.HasCooperativeReferencesCheck = null;
             _generator.DatabaseName = databaseName;
 
             _walker.Walk(_generator, tree);

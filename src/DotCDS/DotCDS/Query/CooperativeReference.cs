@@ -9,10 +9,30 @@ namespace DotCDS.Query
     /// <summary>
     /// Represents a remote data table and the columns referenced by it
     /// </summary>
-    internal record struct CooperativeReference
+    internal record CooperativeReference
     {
-        public string DatabaseName { get; init; }
-        public string TableName { get; init; }
-        public List<string> Columns { get; init; }
+        public string DatabaseName { get; set; }
+        public string TableName { get; set; }
+        public List<string> Columns { get; set; }
+
+        public bool IsDatabaseNameSet()
+        {
+            return string.IsNullOrEmpty(DatabaseName);
+        }
+
+        public bool IsTableNameSet()
+        {
+            return string.IsNullOrEmpty(TableName);
+        }
+
+        public bool AreColumnsSet()
+        {
+            return Columns != null && Columns.Count > 0;
+        }
+
+        public bool IsSet()
+        {
+            return AreColumnsSet() && IsTableNameSet() && IsDatabaseNameSet();
+        }
     }
 }

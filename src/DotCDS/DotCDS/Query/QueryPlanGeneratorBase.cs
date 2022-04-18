@@ -140,10 +140,7 @@ namespace DotCDS.Query
         public override void EnterFull_column_name([NotNull] TSqlParser.Full_column_nameContext context)
         {
             base.EnterFull_column_name(context);
-
-            string debug = context.GetText();
-            Debug.WriteLine("EnterFull_column_name");
-            Debug.WriteLine(debug);
+            DebugContext(context);
 
             throw new NotImplementedException();
         }
@@ -158,8 +155,36 @@ namespace DotCDS.Query
             {
                 var tableName = new ContextWrapper(context, _charStream).FullText.Trim();
                 bool isCooperating = db.IsTableCooperative(tableName);
-                HasCooperativeReferencesCheck.References.Add
-                    (new CooperativeReferenceCheck { DatabaseName = db.DatabaseName, TableName = tableName, IsCooperating = isCooperating });
+
+                if (HasCooperativeReferencesCheck is not null)
+                {
+                    HasCooperativeReferencesCheck.References.Add
+                    (new CooperativeReferenceCheck
+                    {
+                        DatabaseName = db.DatabaseName,
+                        TableName = tableName,
+                        IsCooperating = isCooperating
+                    });
+                }
+
+                if (CooperativeReferenceCollection is not null)
+                {
+                    if (CooperativeReferenceCollection.CurrentReference is null)
+                    {
+                        var reference = new CooperativeReference();
+                        reference.DatabaseName = DatabaseName;
+                        reference.TableName = tableName;
+                        CooperativeReferenceCollection.CurrentReference = reference;
+                    }
+                    else
+                    {
+                        var reference = CooperativeReferenceCollection.CurrentReference;
+                        if (!reference.IsTableNameSet())
+                        {
+                            reference.TableName = tableName;
+                        }
+                    }
+                }
             }
         }
 
@@ -224,6 +249,41 @@ namespace DotCDS.Query
             base.EnterSelect_list_elem(context);
             DebugContext(context);
 
+            var conWrapper = new ContextWrapper(context, _charStream);
+
+            if (CooperativeReferenceCollection is not null)
+            {
+                if (CooperativeReferenceCollection.CurrentReference is not null)
+                {
+                    var reference = CooperativeReferenceCollection.CurrentReference;
+                    if (!reference.IsDatabaseNameSet())
+                    {
+                        reference.DatabaseName = DatabaseName;
+                    }
+
+                    if (reference.Columns is null)
+                    {
+                        reference.Columns = new List<string>();
+                    }
+
+                    reference.Columns.Add(conWrapper.Debug.Trim());
+                }
+                else
+                {
+                    var reference = new CooperativeReference();
+                    reference.DatabaseName = DatabaseName;
+
+                    if (reference.Columns is null)
+                    {
+                        reference.Columns = new List<string>();
+                    }
+
+                    reference.Columns.Add(conWrapper.Debug.Trim());
+
+                    CooperativeReferenceCollection.CurrentReference = reference;
+                }
+            }
+
             throw new NotImplementedException();
         }
 
@@ -266,10 +326,7 @@ namespace DotCDS.Query
         public override void EnterUpdate_elem([NotNull] TSqlParser.Update_elemContext context)
         {
             base.EnterUpdate_elem(context);
-
-            string debug = context.GetText();
-            Debug.WriteLine("EnterUpdate_elem");
-            Debug.WriteLine(debug);
+            DebugContext(context);
 
             throw new NotImplementedException();
         }
@@ -354,8 +411,6 @@ namespace DotCDS.Query
         public override void ExitSearch_condition([NotNull] TSqlParser.Search_conditionContext context)
         {
             base.ExitSearch_condition(context);
-
-            string debug = context.GetText();
             DebugContext(context);
 
             throw new NotImplementedException();
@@ -386,14 +441,25 @@ namespace DotCDS.Query
             DebugContext(context);
         }
 
-        // this needs to be refactored and documented
         public override void ExitTable_name([NotNull] TSqlParser.Table_nameContext context)
         {
             base.ExitTable_name(context);
             DebugContext(context);
+
+            if (CooperativeReferenceCollection is not null)
+            {
+                var reference = CooperativeReferenceCollection.CurrentReference;
+                if (reference is not null)
+                {
+                    if (reference.IsSet())
+                    {
+                        CooperativeReferenceCollection.Add(reference);
+                        CooperativeReferenceCollection.CurrentReference = null;
+                    }
+                }
+            }
+
             throw new NotImplementedException();
-
-
         }
 
         public override void ExitUpdate_elem([NotNull] TSqlParser.Update_elemContext context)
