@@ -31,12 +31,39 @@ namespace DotCDS.Query
 
         public ActionResult<bool> IsReadStatement(string statement, string databaseName)
         {
-            throw new NotImplementedException();
+            var action = new ActionResult<bool>();
+            action.IsSuccessful = true;
+
+            if (statement.Contains(InternalSQLStatements.SQLKeywords.CRUD.SELECT, StringComparison.OrdinalIgnoreCase))
+            {
+                action.Result = true;
+            }
+            else
+            {
+                action.Result = false;
+            }
+
+            return action;
         }
 
         public ActionResult<bool> IsWriteStatement(string statement, string databaseName)
         {
-            throw new NotImplementedException();
+            var action = new ActionResult<bool>();
+            action.IsSuccessful = true;
+
+            if (statement.Contains(InternalSQLStatements.SQLKeywords.CRUD.INSERT, StringComparison.OrdinalIgnoreCase) ||
+                statement.Contains(InternalSQLStatements.SQLKeywords.CRUD.UPDATE, StringComparison.OrdinalIgnoreCase) ||
+                statement.Contains(InternalSQLStatements.SQLKeywords.CRUD.DELETE, StringComparison.OrdinalIgnoreCase)
+                )
+            {
+                action.Result = true;
+            }
+            else
+            {
+                action.Result = false;
+            }
+
+            return action;
         }
 
         /// <summary>
@@ -82,6 +109,11 @@ namespace DotCDS.Query
                     action.Message = "Unable to determine type of statement";
                     action.Result = false;
                     return action;
+            }
+
+            if (_generator is null)
+            {
+                _generator = new QueryPlanGeneratorBase();
             }
 
             _generator.TokenStream = tokens;
@@ -149,6 +181,11 @@ namespace DotCDS.Query
             else if (type == StatementType.DDL)
             {
                 tree = parser.ddl_clause();
+            }
+
+            if (_generator is null)
+            {
+                _generator = new QueryPlanGeneratorBase();
             }
 
             _generator.TokenStream = tokens;

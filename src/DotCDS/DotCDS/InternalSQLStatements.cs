@@ -8,6 +8,17 @@ namespace DotCDS
 {
     internal static class InternalSQLStatements
     {
+        internal static class SQLKeywords
+        {
+            internal static class CRUD
+            {
+                internal const string SELECT = "SELECT";
+                internal const string INSERT = "INSERT";
+                internal const string UPDATE = "UPDATE";
+                internal const string DELETE = "DELETE";
+            }
+        }
+
         internal static class TableNames
         {
             /// <summary>

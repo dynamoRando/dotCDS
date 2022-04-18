@@ -42,21 +42,20 @@ namespace DotCDS.Query
             base.EnterDrop_table(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         public override void ExitDrop_table([NotNull] TSqlParser.Drop_tableContext context)
         {
             base.ExitDrop_table(context);
 
-            throw new NotImplementedException();
+            
         }
 
         public override void EnterColumn_definition([NotNull] TSqlParser.Column_definitionContext context)
         {
             base.EnterColumn_definition(context);
 
-            throw new NotImplementedException();
+            
         }
 
         public override void EnterColumn_name_list(TSqlParser.Column_name_listContext context)
@@ -64,16 +63,13 @@ namespace DotCDS.Query
             base.EnterColumn_name_list(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
+            
         }
 
         public override void EnterCreate_database([NotNull] TSqlParser.Create_databaseContext context)
         {
             base.EnterCreate_database(context);
             DebugContext(context);
-
-            string fullText = GetWhiteSpaceFromCurrentContext(context);
-            throw new NotImplementedException();
         }
 
         public override void EnterCreate_schema([NotNull] TSqlParser.Create_schemaContext context)
@@ -81,7 +77,6 @@ namespace DotCDS.Query
             base.EnterCreate_schema(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         public override void EnterCreate_table([NotNull] TSqlParser.Create_tableContext context)
@@ -89,7 +84,6 @@ namespace DotCDS.Query
             base.EnterCreate_table(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
 
         }
 
@@ -98,7 +92,6 @@ namespace DotCDS.Query
             base.EnterData_type(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         public override void EnterDelete_statement([NotNull] TSqlParser.Delete_statementContext context)
@@ -106,18 +99,13 @@ namespace DotCDS.Query
             base.EnterDelete_statement(context);
             DebugContext(context);
 
-            string fullText = GetWhiteSpaceFromCurrentContext(context);
-
-            throw new NotImplementedException();
 
         }
 
         public override void EnterDrop_database([NotNull] TSqlParser.Drop_databaseContext context)
         {
             base.EnterDrop_database(context);
-
-            string fullText = GetWhiteSpaceFromCurrentContext(context);
-            throw new NotImplementedException();
+            DebugContext(context);
         }
 
         public override void EnterExpression([NotNull] TSqlParser.ExpressionContext context)
@@ -125,24 +113,19 @@ namespace DotCDS.Query
             base.EnterExpression(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
+            
         }
 
         public override void EnterExpression_list([NotNull] TSqlParser.Expression_listContext context)
         {
             base.EnterExpression_list(context);
-
             DebugContext(context);
-
-            throw new NotImplementedException();
         }
 
         public override void EnterFull_column_name([NotNull] TSqlParser.Full_column_nameContext context)
         {
             base.EnterFull_column_name(context);
             DebugContext(context);
-
-            throw new NotImplementedException();
         }
 
         public override void EnterFull_table_name([NotNull] TSqlParser.Full_table_nameContext context)
@@ -192,7 +175,6 @@ namespace DotCDS.Query
         {
             base.EnterId_(context);
             DebugContext(context);
-            throw new NotImplementedException();
         }
 
         public override void EnterInsert_column_id([NotNull] TSqlParser.Insert_column_idContext context)
@@ -202,7 +184,6 @@ namespace DotCDS.Query
             string debug = context.GetText();
             DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         public override void EnterInsert_statement([NotNull] TSqlParser.Insert_statementContext context)
@@ -210,8 +191,6 @@ namespace DotCDS.Query
             base.EnterInsert_statement(context);
             DebugContext(context);
 
-            string fullText = GetWhiteSpaceFromCurrentContext(context);
-            throw new NotImplementedException();
         }
 
         public override void EnterNull_notnull([NotNull] TSqlParser.Null_notnullContext context)
@@ -219,7 +198,6 @@ namespace DotCDS.Query
             base.EnterNull_notnull(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         // will need to adjust this code to handle multiple predicates
@@ -234,7 +212,6 @@ namespace DotCDS.Query
             base.EnterSearch_condition(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         public override void EnterSelect_list([NotNull] TSqlParser.Select_listContext context)
@@ -283,8 +260,6 @@ namespace DotCDS.Query
                     CooperativeReferenceCollection.CurrentReference = reference;
                 }
             }
-
-            throw new NotImplementedException();
         }
 
         public override void EnterSelect_statement([NotNull] TSqlParser.Select_statementContext context)
@@ -292,7 +267,6 @@ namespace DotCDS.Query
             base.EnterSelect_statement(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         public override void EnterSimple_name([NotNull] TSqlParser.Simple_nameContext context)
@@ -312,7 +286,6 @@ namespace DotCDS.Query
             base.EnterTable_alias(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         public override void EnterTable_name([NotNull] TSqlParser.Table_nameContext context)
@@ -320,7 +293,6 @@ namespace DotCDS.Query
             base.EnterTable_name(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         public override void EnterUpdate_elem([NotNull] TSqlParser.Update_elemContext context)
@@ -328,7 +300,6 @@ namespace DotCDS.Query
             base.EnterUpdate_elem(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         public override void EnterUpdate_statement([NotNull] TSqlParser.Update_statementContext context)
@@ -336,38 +307,31 @@ namespace DotCDS.Query
             base.EnterUpdate_statement(context);
             DebugContext(context);
 
-            string fullText = GetWhiteSpaceFromCurrentContext(context);
-
-            throw new NotImplementedException();
         }
 
         public override void ExitColumn_definition([NotNull] TSqlParser.Column_definitionContext context)
         {
             base.ExitColumn_definition(context);
+            DebugContext(context);
 
-            throw new NotImplementedException();
         }
 
         public override void ExitCreate_database([NotNull] TSqlParser.Create_databaseContext context)
         {
             base.ExitCreate_database(context);
-
-            throw new NotImplementedException();
-
+            DebugContext(context);
         }
 
         public override void ExitCreate_schema([NotNull] TSqlParser.Create_schemaContext context)
         {
             base.ExitCreate_schema(context);
-
-            throw new NotImplementedException();
+            DebugContext(context);
         }
 
         public override void ExitCreate_table([NotNull] TSqlParser.Create_tableContext context)
         {
             base.ExitCreate_table(context);
-
-            throw new NotImplementedException();
+            DebugContext(context);
         }
 
         public override void ExitDelete_statement([NotNull] TSqlParser.Delete_statementContext context)
@@ -375,45 +339,36 @@ namespace DotCDS.Query
             base.ExitDelete_statement(context);
             DebugContext(context);
 
-            throw new NotImplementedException();
-
         }
 
         public override void ExitDrop_database([NotNull] TSqlParser.Drop_databaseContext context)
         {
             base.ExitDrop_database(context);
-            throw new NotImplementedException();
+            DebugContext(context);
         }
 
         public override void ExitExpression([NotNull] TSqlParser.ExpressionContext context)
         {
             base.ExitExpression(context);
             DebugContext(context);
-
-            throw new NotImplementedException();
         }
 
         public override void ExitExpression_list([NotNull] TSqlParser.Expression_listContext context)
         {
             base.ExitExpression_list(context);
-
             DebugContext(context);
-
-            throw new NotImplementedException();
         }
 
         public override void ExitInsert_statement([NotNull] TSqlParser.Insert_statementContext context)
         {
             base.ExitInsert_statement(context);
-            throw new NotImplementedException();
+            DebugContext(context);
         }
 
         public override void ExitSearch_condition([NotNull] TSqlParser.Search_conditionContext context)
         {
             base.ExitSearch_condition(context);
             DebugContext(context);
-
-            throw new NotImplementedException();
         }
 
         public override void ExitSelect_list([NotNull] TSqlParser.Select_listContext context)
@@ -458,22 +413,18 @@ namespace DotCDS.Query
                     }
                 }
             }
-
-            throw new NotImplementedException();
         }
 
         public override void ExitUpdate_elem([NotNull] TSqlParser.Update_elemContext context)
         {
             base.ExitUpdate_elem(context);
-
-            throw new NotImplementedException();
+            DebugContext(context);
         }
 
         public override void ExitUpdate_statement([NotNull] TSqlParser.Update_statementContext context)
         {
             base.ExitUpdate_statement(context);
-
-            throw new NotImplementedException();
+            DebugContext(context);
         }
 
 
