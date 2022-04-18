@@ -52,6 +52,50 @@ namespace DotCDS.Tests
 
         #region Public Methods
         /// <summary>
+        /// Returns a path to the temp folder iwth the calling function name as the name of the folder.
+        /// If the folder already exists, it will clear all files in it.
+        /// </summary>
+        /// <param name="memberName">The name of the calling function</param>
+        /// <returns>A path to an empty test directory</returns>
+        public static string GetAndConfigureTempFolder([CallerMemberName] string memberName = "")
+        {
+            string rootFolder = Path.Combine(TestConstants.TEST_TEMP_FOLDER, memberName);
+            SetupTemporaryFolder(rootFolder);
+
+            return rootFolder;
+        }
+
+        /// <summary>
+        /// Returns a path to the temp folder with the calling function name as the name of the folder
+        /// </summary>
+        /// <param name="memberName">The name of the calling function</param>
+        /// <returns>A path to an empty test directory</returns>
+        public static string GetTestTempFolder([CallerMemberName] string memberName = "")
+        {
+            return Path.Combine(TestConstants.TEST_TEMP_FOLDER, memberName);
+        }
+
+        /// <summary>
+        /// Deletes all files in the specified directory
+        /// </summary>
+        /// <param name="rootFolder">The folder to clear out</param>
+        public static void SetupTemporaryFolder(string rootFolder)
+        {
+            var directory = new DirectoryInfo(rootFolder);
+            if (directory.Exists)
+            {
+                foreach (var file in directory.GetFiles())
+                {
+                    file.Delete();
+                }
+            }
+            else
+            {
+                directory.Create();
+            }
+        }
+
+        /// <summary>
         /// Configures the root folder for testing. If there are any files in the root folder, it will delete them. Otherwise, if the directory does 
         /// not exist, it will create it.
         /// </summary>

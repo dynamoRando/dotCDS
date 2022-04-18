@@ -2,7 +2,7 @@ using Xunit;
 
 namespace DotCDS.Tests
 {
-    public class Test_Startup
+    public class Test_Process
     {
         /// <summary>
         /// Tests that we can read the config file correctly

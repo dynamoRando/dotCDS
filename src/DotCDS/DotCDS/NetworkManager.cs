@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DotCDS.Query;
 
 namespace DotCDS
 {
@@ -31,6 +32,7 @@ namespace DotCDS
         private DatabaseClientType _clientType;
         private SqliteCDSStore _store;
         private SqliteUserDatabaseManager _userDatabaseManager;
+        private QueryParser _queryParser;
         #endregion
 
         #region Public Properties
@@ -44,6 +46,11 @@ namespace DotCDS
         #endregion
 
         #region Public Methods
+        public void SetQueryParser(QueryParser parser)
+        {
+            _queryParser = parser;
+        }
+
         public void SetSqliteUserDatabaseManager(SqliteUserDatabaseManager manager)
         {
             _userDatabaseManager = manager;
@@ -138,6 +145,7 @@ namespace DotCDS
                     case DatabaseClientType.Sqlite:
                         _sqlServiceHandler.SetSqliteClient(new SqliteClient(_rootFolder));
                         _sqlServiceHandler.SetSqliteUserDatabaseManager(_userDatabaseManager);
+                        _sqlServiceHandler.SetQueryParser(_queryParser);
                         break;
                     default:
                         throw new InvalidOperationException();

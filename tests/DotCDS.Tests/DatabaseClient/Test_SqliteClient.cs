@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DotCDS.Tests.DatabaseClient
 {
-    public class Test_Sqlite
+    public class Test_SqliteClient
     {
         /// <summary>
         /// Tests the creation of a new SQLite db
@@ -31,6 +31,9 @@ namespace DotCDS.Tests.DatabaseClient
             Assert.True(File.Exists(dbLocation));
         }
         
+        /// <summary>
+        /// Tests setting up an administrator login
+        /// </summary>
         [Fact]
         public void Test_SetupAdmin()
         {
@@ -48,6 +51,9 @@ namespace DotCDS.Tests.DatabaseClient
             Assert.True(_process.IsAdminLogin("tester"));
         }
 
+        /// <summary>
+        /// Tests setting up an admin login and that the pw is correct
+        /// </summary>
         [Fact]
         public void Test_AdminIsValid()
         {

@@ -221,6 +221,7 @@ namespace DotCDS
                     _queryParser = new QueryParser();
                     _queryParser.SetSqliteDatabaseManager(_userDatabaseManager);
 
+                    _networkManager.SetQueryParser(_queryParser);
                     _networkManager.SetSqliteUserDatabaseManager(_userDatabaseManager);
                     _networkManager.SetCooperativeStore(_cooperativeStore);
                     _networkManager.SetClientType(_clientType);
