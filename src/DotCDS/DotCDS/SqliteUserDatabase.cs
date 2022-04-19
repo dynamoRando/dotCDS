@@ -5,9 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
+using System.Data.SQLite;
+using DotCDS.Common.Enum;
 
 namespace DotCDS
 {
+    /// <summary>
+    /// Represents a Sqlite database created by the user and provides 
+    /// CDS related functions/activities 
+    /// </summary>
     internal class SqliteUserDatabase
     {
         #region Private Fields
@@ -29,40 +36,81 @@ namespace DotCDS
 
             _client = new SqliteClient(_rootFolder);
             _remoteClients = new CooperativeDatabaseClientCollection();
+            CreateIfNotExists();
         }
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Checks to see if the database has any tables configured for cooperation
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public bool IsCooperative()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Checks to see if the database has a participant with the specified alias
+        /// </summary>
+        /// <param name="participantAlias"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public bool HasParticipant(string participantAlias)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Checks to see if the database has a participant with the specified id
+        /// </summary>
+        /// <param name="participantId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public bool HasParticipant(Guid participantId)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns the participant with the specified alias
+        /// </summary>
+        /// <param name="participantAlias"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public Participant GetParticipant(string participantAlias)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns the participant with the specified id
+        /// </summary>
+        /// <param name="participantId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public Participant GetParticipant(Guid participantId)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns the list of all database contracts
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public Contract[] GetContracts()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Checks to see if the specified table has a logical storage policy
+        /// that is configured for cooperation with participants
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
         public bool IsTableCooperative(string tableName)
         {
             bool result = false;
@@ -80,10 +128,41 @@ namespace DotCDS
 
             return result;
         }
+
+        public DataTable ExecuteRead(string query)
+        {
+            return _client.ExecuteRead(_databaseName, query);
+        }
+
+        public int ExecuteWrite(string query)
+        {
+            return _client.ExecuteWrite(_databaseName, query);
+        }
+
+        public bool HasTable(string tableName)
+        {
+            return _client.HasTable(_databaseName, tableName);
+        }
+
+        public bool EnableCooperativeFeatures()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SetLogicalStoragePolicy(string tableName, LogicalStoragePolicy policy)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Private Methods
-
+        private void CreateIfNotExists()
+        {
+            if (!_client.HasDatabase(_databaseName))
+            {
+                _client.CreateDatabase(_databaseName);
+            }
+        }
         #endregion
 
     }

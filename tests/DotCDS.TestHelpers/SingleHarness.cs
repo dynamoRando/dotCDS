@@ -52,7 +52,7 @@ namespace DotCDS.Tests
 
         #region Public Methods
         /// <summary>
-        /// Returns a path to the temp folder iwth the calling function name as the name of the folder.
+        /// Returns a path to the temp folder with the calling function name as the name of the folder.
         /// If the folder already exists, it will clear all files in it.
         /// </summary>
         /// <param name="memberName">The name of the calling function</param>
