@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SQLite;
 using DotCDS.Common.Enum;
+using DotCDS.Enum;
 
 namespace DotCDS
 {
@@ -36,7 +37,7 @@ namespace DotCDS
 
             _client = new SqliteClient(_rootFolder);
             _remoteClients = new CooperativeDatabaseClientCollection();
-            CreateIfNotExists();
+            CreateDbIfNotExists();
         }
         #endregion
 
@@ -144,8 +145,14 @@ namespace DotCDS
             return _client.HasTable(_databaseName, tableName);
         }
 
-        public bool EnableCooperativeFeatures()
+        public ActionOptionalResult EnableCooperativeFeatures()
         {
+            ActionOptionalResult actionResult;
+
+            CreateRemotesTableIfNotExists();
+            CreateContractTableIfNotExists();
+            CreateParticipantTableIfNotExists();
+
             throw new NotImplementedException();
         }
 
@@ -153,17 +160,117 @@ namespace DotCDS
         {
             throw new NotImplementedException();
         }
-        #endregion
 
-        #region Private Methods
-        private void CreateIfNotExists()
+        public LogicalStoragePolicy GetLogicalStoragePolicy(string tableName)
         {
-            if (!_client.HasDatabase(_databaseName))
+
+            string query = InternalSQLStatements.SQLLite.GET_REMOTE_STATUS_TABLE;
+            query = query.Replace("table_name", tableName);
+
+            DataTable dt = ExecuteRead(query);
+
+            if (dt.Rows.Count > 0)
             {
-                _client.CreateDatabase(_databaseName);
+
             }
+
+            throw new NotImplementedException();
         }
         #endregion
 
+        #region Private Methods
+        private ActionOptionalResult CreateDbIfNotExists()
+        {
+            ActionOptionalResult actionResult = new ActionOptionalResult();
+
+            if (!_client.HasDatabase(_databaseName))
+            {
+                _client.CreateDatabase(_databaseName);
+                actionResult.Status = ActionOptionalResultStatus.Success;
+            }
+            else
+            {
+                actionResult.Status = ActionOptionalResultStatus.Information;
+                actionResult.Message = $"Database {_databaseName} already exists";
+            }
+
+            return actionResult;
+        }
+
+        private ActionOptionalResult CreateParticipantTableIfNotExists()
+        {
+            ActionOptionalResult actionResult = new ActionOptionalResult();
+
+            if (!HasTable(InternalSQLStatements.TableNames.COOP.PARTICIPANT))
+            {
+                _client.ExecuteWrite
+                    (_databaseName,
+                    InternalSQLStatements.SQLLite.CREATE_PARTICIPANT_TABLE
+                    );
+                actionResult.Status = ActionOptionalResultStatus.Success;
+            }
+            else
+            {
+                actionResult.Status = ActionOptionalResultStatus.Information;
+                actionResult.Message = $"Table " +
+                    $"{InternalSQLStatements.TableNames.COOP.PARTICIPANT} already exists";
+            }
+
+            return actionResult;
+
+            throw new NotImplementedException();
+        }
+
+        private ActionOptionalResult CreateContractTableIfNotExists()
+        {
+            ActionOptionalResult actionResult = new ActionOptionalResult();
+
+            if (!HasTable(InternalSQLStatements.TableNames.COOP.DATABASE_CONTRACT))
+            {
+                _client.ExecuteWrite
+                    (_databaseName,
+                    InternalSQLStatements.SQLLite.CREATE_DATABASE_CONTRACT_TABLE
+                    );
+                actionResult.Status = ActionOptionalResultStatus.Success;
+            }
+            else
+            {
+                actionResult.Status = ActionOptionalResultStatus.Information;
+                actionResult.Message = $"Table " +
+                    $"{InternalSQLStatements.TableNames.COOP.DATABASE_CONTRACT} already exists";
+            }
+
+            return actionResult;
+        }
+
+        private ActionOptionalResult CreateShadowTablesIfNotExists()
+        {
+            // for each table in the database, we need to create a "shadow"
+            // if the logical storage policy defines it
+            throw new NotImplementedException();
+        }
+
+        private ActionOptionalResult CreateRemotesTableIfNotExists()
+        {
+            ActionOptionalResult actionResult = new ActionOptionalResult();
+
+            if (!HasTable(InternalSQLStatements.TableNames.COOP.REMOTES))
+            {
+                _client.ExecuteWrite
+                    (_databaseName,
+                    InternalSQLStatements.SQLLite.CREATE_REMOTE_TABLE
+                    );
+                actionResult.Status = ActionOptionalResultStatus.Success;
+            }
+            else
+            {
+                actionResult.Status = ActionOptionalResultStatus.Information;
+                actionResult.Message = $"Table " +
+                    $"{InternalSQLStatements.TableNames.COOP.REMOTES} already exists";
+            }
+
+            return actionResult;
+        }
+        #endregion
     }
 }

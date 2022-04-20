@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 using System.IO;
 using DotCDS.Common.Enum;
+using DotCDS.Enum;
 
 namespace DotCDS.Tests.UserDatabase
 {
@@ -38,6 +39,7 @@ namespace DotCDS.Tests.UserDatabase
             bool hasTable = false;
             bool enableCooperativeFeatures = false;
             bool lspConfigured = false;
+            LogicalStoragePolicy returnedPolicy = LogicalStoragePolicy.None;
 
             string sqlCreateTable = @$"CREATE TABLE IF NOT EXISTS {tableName} 
             (
@@ -59,17 +61,24 @@ namespace DotCDS.Tests.UserDatabase
 
             if (hasTable)
             {
-                enableCooperativeFeatures = db.EnableCooperativeFeatures();
+                var status = db.EnableCooperativeFeatures().Status;
+                if (status == ActionOptionalResultStatus.Success)
+                {
+                    enableCooperativeFeatures = true;
+                }
             }
 
             if (enableCooperativeFeatures)
             {
-                lspConfigured = db.SetLogicalStoragePolicy(tableName, policy);  
+                lspConfigured = db.SetLogicalStoragePolicy(tableName, policy);
+                returnedPolicy = db.GetLogicalStoragePolicy(tableName);
             }
 
             // ASSERT
             Assert.True(dbExists);
             Assert.True(hasTable);
+            Assert.True(lspConfigured);
+            Assert.Equal(policy, returnedPolicy);
 
             throw new NotImplementedException();
         }

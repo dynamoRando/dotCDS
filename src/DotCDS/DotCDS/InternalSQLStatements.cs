@@ -182,7 +182,8 @@ namespace DotCDS
             internal const string CREATE_REMOTE_TABLE = $@"
         CREATE TABLE IF NOT EXISTS {TableNames.COOP.REMOTES}
         (
-            TABLENAME VARCHAR(255) NOT NULL
+            TABLENAME VARCHAR(255) NOT NULL,
+            LOGICAL_STORAGE_POLICY INT NOT NULL
         );
         ";
 
@@ -254,6 +255,26 @@ namespace DotCDS
             IS_NULLABLE INT
         );
         ";
+
+            internal const string GET_REMOTE_STATUS = $@"
+            SELECT
+                TABLENAME,
+                LOGICAL_STORAGE_POLICY  
+            FROM
+                {TableNames.COOP.REMOTES}
+            ;
+            ";
+
+            internal const string GET_REMOTE_STATUS_TABLE = $@"
+            SELECT
+                TABLENAME,
+                LOGICAL_STORAGE_POLICY  
+            FROM
+                {TableNames.COOP.REMOTES} 
+            WHERE
+                TABLENAME = 'table_name'
+            ;
+            ";
 
             internal const string ADD_ADMIN_ROLE = $"INSERT INTO {TableNames.CDS.ROLE} (ROLENAME) VALUES ('{RoleNames.SYS_ADMIN}');";
             internal const string ADD_USER_TO_ROLE = $"INSERT INTO {TableNames.CDS.USER_ROLE} (USERNAME, ROLENAME) VALUES (@username, @rolename);";
