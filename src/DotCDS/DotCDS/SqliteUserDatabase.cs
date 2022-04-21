@@ -163,6 +163,7 @@ namespace DotCDS
 
         public LogicalStoragePolicy GetLogicalStoragePolicy(string tableName)
         {
+            LogicalStoragePolicy policy = LogicalStoragePolicy.None;
 
             string query = InternalSQLStatements.SQLLite.GET_REMOTE_STATUS_TABLE;
             query = query.Replace("table_name", tableName);
@@ -171,10 +172,25 @@ namespace DotCDS
 
             if (dt.Rows.Count > 0)
             {
+                foreach (DataRow row in dt.Rows)
+                {
+                    string? dtName = Convert.ToString(row["TABLENAME"]);
 
+                    if (dtName is null)
+                    {
+                        dtName = string.Empty;
+                    }
+
+                    if (string.Equals(dtName, tableName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        int iPolicy = Convert.ToInt32(row["LOGICAL_STORAGE_POLICY"]);
+                        policy = (LogicalStoragePolicy)iPolicy;
+                        break;
+                    }
+                }
             }
 
-            throw new NotImplementedException();
+            return policy;
         }
         #endregion
 
