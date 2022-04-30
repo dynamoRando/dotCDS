@@ -8,6 +8,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DotCDS.Enum;
 
 namespace DotCDS.Services
 {
@@ -92,7 +93,7 @@ namespace DotCDS.Services
         }
 
         public uint ExecuteWrite(string un, string pw, string databaseName, string statement)
-        {            
+        {
             if (_cooperativeStore.IsValidLogin(un, pw))
             {
                 if (_cooperativeStore.UserIsInRole(un, InternalSQLStatements.RoleNames.SYS_ADMIN))
@@ -224,14 +225,46 @@ namespace DotCDS.Services
             throw new NotImplementedException();
         }
 
-        public bool HandleSetLogicalStoragePolicy(string un, string pw, string databaseName, string tableName)
+        public bool HandleSetLogicalStoragePolicy(string un, string pw, string databaseName, string tableName, LogicalStoragePolicy policy)
         {
-            throw new NotImplementedException();
+            bool isSuccessful = false;
+            if (_cooperativeStore.IsValidLogin(un, pw))
+            {
+                if (_cooperativeStore.UserIsInRole(un, InternalSQLStatements.RoleNames.SYS_ADMIN))
+                {
+                    if (_userDatabaseManager.HasDatabase(databaseName))
+                    {
+                        var db = _userDatabaseManager.GetSqliteUserDatabase(databaseName);
+                        isSuccessful = db.SetLogicalStoragePolicy(tableName, policy);
+                    }
+                }
+            }
+
+            return isSuccessful;
         }
 
         public bool HandleEnableCooperativeFeatures(string un, string pw, string databaseName)
         {
-            throw new NotImplementedException();
+            bool isSuccessful = false;
+
+            if (_cooperativeStore.IsValidLogin(un, pw))
+            {
+                if (_cooperativeStore.UserIsInRole(un, InternalSQLStatements.RoleNames.SYS_ADMIN))
+                {
+                    if (_userDatabaseManager.HasDatabase(databaseName))
+                    {
+                        var db = _userDatabaseManager.GetSqliteUserDatabase(databaseName);
+                        var result = db.EnableCooperativeFeatures();
+                        if (result.Status == ActionOptionalResultStatus.Success ||
+                            result.Status == ActionOptionalResultStatus.Information)
+                        {
+                            isSuccessful = true;
+                        }
+                    }
+                }
+            }
+
+            return isSuccessful;
         }
         #endregion
 

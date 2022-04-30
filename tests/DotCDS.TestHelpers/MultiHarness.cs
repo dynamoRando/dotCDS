@@ -83,6 +83,9 @@ namespace DotCDS.TestHelpers
                 process.StartSQLService(sqlPortNumber, false);
 
                 client.Configure(processContainer.Address, sqlPortNumber);
+
+                processContainer.Process = process;
+                processContainer.Client = client;
             }
         }
 

@@ -12,7 +12,7 @@ namespace DotCDS.Client.Tests
 {
     public class Test_Sqlite_Multi_Process
     {
-        [Fact(Skip = "code not written yet")]
+        [Fact]
         public void Test_Generate_Contract()
         {
             // ARRANGE

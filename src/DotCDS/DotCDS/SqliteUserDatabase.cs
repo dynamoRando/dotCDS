@@ -140,6 +140,11 @@ namespace DotCDS
             return _client.ExecuteWrite(_databaseName, query);
         }
 
+        public int ExecuteWrite(string query, Dictionary<string, object> values)
+        {
+            return _client.ExecuteWrite(_databaseName, query, values);
+        }
+
         public bool HasTable(string tableName)
         {
             return _client.HasTable(_databaseName, tableName);
@@ -147,18 +152,78 @@ namespace DotCDS
 
         public ActionOptionalResult EnableCooperativeFeatures()
         {
-            ActionOptionalResult actionResult;
+            ActionOptionalResult actionResult = new ActionOptionalResult();
 
-            CreateRemotesTableIfNotExists();
-            CreateContractTableIfNotExists();
-            CreateParticipantTableIfNotExists();
+            ActionOptionalResult resultRemote = CreateRemotesTableIfNotExists();
+            if (resultRemote.Status == ActionOptionalResultStatus.Information ||
+                resultRemote.Status == ActionOptionalResultStatus.Success)
+            {
+                ActionOptionalResult resultParticipant = CreateParticipantTableIfNotExists();
+                if (resultParticipant.Status == ActionOptionalResultStatus.Success ||
+                    resultParticipant.Status == ActionOptionalResultStatus.Information)
+                {
+                    actionResult.Status = ActionOptionalResultStatus.Success;
+                }
+                else
+                {
+                    actionResult = resultParticipant;
+                }
+            }
+            else
+            {
+                actionResult = resultRemote;
+            }
 
-            throw new NotImplementedException();
+            return actionResult;
         }
 
         public bool SetLogicalStoragePolicy(string tableName, LogicalStoragePolicy policy)
         {
-            throw new NotImplementedException();
+            bool isSuccessful = false;
+
+            if (HasTable(tableName))
+            {
+                if (policy == GetLogicalStoragePolicy(tableName))
+                {
+                    isSuccessful = true;
+                }
+                else
+                {
+                    var values = new Dictionary<string, object>();
+                    values.Add("@tableName", tableName);
+                    values.Add("@policy", (int)policy);
+
+                    // insert or update
+                    string query = InternalSQLStatements.SQLLite.HAS_REMOTE_STATUS_TABLE.Replace("table_name", tableName);
+                    DataTable dt = ExecuteRead(query);
+                    if (dt.Rows.Count > 0)
+                    {
+                        int totalRows = Convert.ToInt32(dt.Rows[0]["TOTALCOUNT"]);
+
+                        // is insert
+                        if (totalRows == 0)
+                        {
+                            var result = ExecuteWrite(InternalSQLStatements.SQLLite.INSERT_REMOTE_STATUS_TABLE, values);
+                            if (result > 0)
+                            {
+                                isSuccessful = true;
+                            }
+                        }
+
+                        // is update
+                        if (totalRows > 0)
+                        {
+                            var result = ExecuteWrite(InternalSQLStatements.SQLLite.UPDATE_REMOTE_STATUS_TABLE, values);
+                            if (result > 0)
+                            {
+                                isSuccessful = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return isSuccessful;
         }
 
         public LogicalStoragePolicy GetLogicalStoragePolicy(string tableName)

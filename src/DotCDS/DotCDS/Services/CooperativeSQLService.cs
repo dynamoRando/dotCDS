@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DotCDS.Common.Enum;
 
 namespace DotCDS.Services
 {
@@ -169,8 +170,31 @@ namespace DotCDS.Services
             var result = new SetLogicalStoragePolicyReply();
             AuthResult authResult = GetAuthResult(request.Authentication);
             result.AuthenticationResult = authResult;
+
+            LogicalStoragePolicy policy;
+            switch (request.PolicyMode)
+            {
+                case 0:
+                    policy = LogicalStoragePolicy.None;
+                    break;
+                case 1:
+                    policy = LogicalStoragePolicy.HostOnly;
+                    break;
+                case 2:
+                    policy = LogicalStoragePolicy.ParticipantOwned;
+                    break;
+                case 3:
+                    policy = LogicalStoragePolicy.Shared;
+                    break;
+                case 4:
+                    policy = LogicalStoragePolicy.Mirror;
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
+
             result.IsSuccessful = _handler.HandleSetLogicalStoragePolicy(request.Authentication.UserName,
-                request.Authentication.Pw, request.DatabaseName, request.TableName);
+                request.Authentication.Pw, request.DatabaseName, request.TableName, policy);
 
             return Task.FromResult(result);
         }

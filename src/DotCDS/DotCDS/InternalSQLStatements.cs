@@ -276,6 +276,35 @@ namespace DotCDS
             ;
             ";
 
+            internal const string HAS_REMOTE_STATUS_TABLE = $@"
+            SELECT
+                COUNT(*) TOTALCOUNT
+            FROM
+                {TableNames.COOP.REMOTES}
+            WHERE
+                TABLENAME = 'table_name'
+            ;
+            ";
+
+            internal const string INSERT_REMOTE_STATUS_TABLE = $@"
+            INSERT INTO {TableNames.COOP.REMOTES}
+            (
+                TABLENAME,
+                LOGICAL_STORAGE_POLICY  
+            )
+            VALUES
+            (
+                @tableName,
+                @policy
+            );
+            ";
+
+            internal const string UPDATE_REMOTE_STATUS_TABLE = $@"
+            UPDATE {TableNames.COOP.REMOTES}
+            SET LOGICAL_STORAGE_POLICY = @policy
+            WHERE TABLENAME = @tableName
+            ";
+
             internal const string ADD_ADMIN_ROLE = $"INSERT INTO {TableNames.CDS.ROLE} (ROLENAME) VALUES ('{RoleNames.SYS_ADMIN}');";
             internal const string ADD_USER_TO_ROLE = $"INSERT INTO {TableNames.CDS.USER_ROLE} (USERNAME, ROLENAME) VALUES (@username, @rolename);";
 
