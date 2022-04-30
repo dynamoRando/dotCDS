@@ -305,6 +305,15 @@ namespace DotCDS
             WHERE TABLENAME = @tableName
             ";
 
+            internal const string GET_HOST_INFO = $@"
+            SELECT
+                HOST_ID,
+                HOST_NAME,
+                TOKEN
+            FROM
+                {TableNames.CDS.HOST_INFO}
+            ";
+
             internal const string ADD_ADMIN_ROLE = $"INSERT INTO {TableNames.CDS.ROLE} (ROLENAME) VALUES ('{RoleNames.SYS_ADMIN}');";
             internal const string ADD_USER_TO_ROLE = $"INSERT INTO {TableNames.CDS.USER_ROLE} (USERNAME, ROLENAME) VALUES (@username, @rolename);";
 

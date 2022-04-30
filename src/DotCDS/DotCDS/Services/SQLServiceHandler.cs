@@ -175,8 +175,23 @@ namespace DotCDS.Services
             throw new NotImplementedException();
         }
 
-        public bool HandleGenerateContract(string hostName, string description, string databaseName)
+        public bool HandleGenerateContract(string un, string pw, string hostName, string description, string databaseName)
         {
+            bool isSuccessful = false;
+            if (_cooperativeStore.IsValidLogin(un, pw))
+            {
+                if (_cooperativeStore.UserIsInRole(un, InternalSQLStatements.RoleNames.SYS_ADMIN))
+                {
+                    _cooperativeStore.GenerateHostInformation(hostName);
+
+                    if (_userDatabaseManager.HasDatabase(databaseName))
+                    {
+                        var db = _userDatabaseManager.GetSqliteUserDatabase(databaseName);
+                        db.GenerateContract(description);
+                    }
+                }
+            }
+
             throw new NotImplementedException();
         }
 

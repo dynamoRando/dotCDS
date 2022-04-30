@@ -257,6 +257,11 @@ namespace DotCDS
 
             return policy;
         }
+
+        public bool GenerateContract(string description)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Private Methods

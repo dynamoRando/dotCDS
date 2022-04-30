@@ -15,7 +15,7 @@ using System.IO;
 using System.Data.SQLite;
 using System.Data;
 using static DotCDS.InternalSQLStatements;
-
+using DotCDS.Model;
 
 namespace DotCDS
 {
@@ -98,8 +98,8 @@ namespace DotCDS
             var result = _client.ExecuteWrite(_backingDbName, SQLLite.ADD_USER_TO_ROLE, dict);
 
             if (result > 0)
-            { 
-                return true; 
+            {
+                return true;
             }
 
             return false;
@@ -162,6 +162,36 @@ namespace DotCDS
             return totalRows > 0;
         }
 
+        public bool GenerateHostInformation(string hostName)
+        {
+            bool isSucessful = true;
+
+            HostInfo info = GetHostInformation();
+
+            if (info.Id == Guid.Empty)
+            {
+                // need to generate
+                throw new NotImplementedException();
+            }
+
+            return isSucessful;
+        }
+
+        public HostInfo GetHostInformation()
+        {
+            HostInfo hostInfo = new HostInfo();
+            DataTable dt = _client.ExecuteRead(_backingDbName, InternalSQLStatements.SQLLite.GET_HOST_INFO);
+            foreach (DataRow row in dt.Rows)
+            {
+                hostInfo.Name = Convert.ToString(row["HOST_NAME"]) ?? String.Empty;
+                string id = Convert.ToString(row["HOST_ID"]) ?? string.Empty;
+                hostInfo.Id = id == string.Empty ? Guid.Empty : Guid.Parse(id);
+                hostInfo.Token = (byte[])row["TOKEN"];
+                break;
+            }
+
+            return hostInfo; ;
+        }
         #endregion
 
         #region Private Methods

@@ -107,7 +107,7 @@ namespace DotCDS.Services
             var result = new GenerateContractReply();
             AuthResult authResult = GetAuthResult(request.Authentication);
             result.AuthenticationResult = authResult;
-            result.IsSuccessful = _handler.HandleGenerateContract(request.DatabaseName, request.Description, request.DatabaseName);
+            result.IsSuccessful = _handler.HandleGenerateContract(request.Authentication.UserName, request.Authentication.Pw, request.DatabaseName, request.Description, request.DatabaseName);
 
             return Task.FromResult(result);
         }
