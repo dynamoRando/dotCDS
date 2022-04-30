@@ -314,6 +314,89 @@ namespace DotCDS
                 {TableNames.CDS.HOST_INFO}
             ";
 
+            internal const string ADD_HOST_INFO = $@"
+            INSERT INTO {TableNames.CDS.HOST_INFO}
+            (
+                HOST_ID,
+                HOST_NAME,
+                TOKEN
+            )
+            VALUES
+            (
+                @hostId,
+                @hostName,
+                @token
+            )
+            ;
+            ";
+
+            internal const string GET_DB_CONTRACTS = $@"
+            SELECT
+                CONTRACT_ID,
+                GENERATED_DATE_UTC,
+                DESCRIPTION,
+                RETIRED_DATE_UTC,
+                VERSION_ID,
+                REMOTE_DELETE_BEHAVIOR  
+            FROM
+                {TableNames.COOP.DATABASE_CONTRACT}
+            ;
+            ";
+
+            internal const string UPDATE_DB_CONTRACT_WITH_ID = $@"
+            UPDATE {TableNames.COOP.DATABASE_CONTRACT}
+            SET 
+                GENERATED_DATE_UTC = @generatedDateUtc,
+                DESCRIPTION = @description,
+                RETIRED_DATE_UTC = @retiredDateUtc,
+                REMOTE_DELETE_BEHAVIOR = @remoteDeleteBehavior
+            WHERE
+                VERSION_ID = @versionId
+            ;";
+
+            internal const string ADD_DB_CONTRACT = $@"
+            INSERT INTO {TableNames.COOP.DATABASE_CONTRACT}
+            (
+                CONTRACT_ID,
+                GENERATED_DATE_UTC,
+                DESCRIPTION,
+                RETIRED_DATE_UTC,
+                VERSION_ID,
+                REMOTE_DELETE_BEHAVIOR
+            )
+            VALUES
+            (
+                @id,
+                @generatedDateUtc,
+                @description,
+                @retiredDateUtc,
+                @versionId,
+                @remoteDeleteBehavior
+            )
+            ;
+            ";
+
+            internal const string GET_ACTIVE_DB_CONTRACT = $@"
+            SELECT
+                CONTRACT_ID,
+                GENERATED_DATE_UTC,
+                DESCRIPTION,
+                RETIRED_DATE_UTC,
+                VERSION_ID,
+                REMOTE_DELETE_BEHAVIOR  
+            FROM
+                {TableNames.COOP.DATABASE_CONTRACT}
+            WHERE
+                RETIRED_DATE_UTC = @date
+            ;
+            ";
+
+            internal const string GET_DB_CONTRACT_ID = $@"SELECT MAX(CONTRACT_ID) CONTRACT_ID FROM {TableNames.COOP.DATABASE_CONTRACT}";
+
+            internal const string GET_DB_CONTRACT_COUNT_FOR_VERSION_ID = $"SELECT COUNT(*) CONTRACTCOUNT FROM {TableNames.COOP.DATABASE_CONTRACT} WHERE VERSION_ID = 'version_id';";
+
+            internal const string GET_DB_CONTRACT_COUNT = $"SELECT COUNT(*) CONTRACTCOUNT FROM {TableNames.COOP.DATABASE_CONTRACT}";
+
             internal const string ADD_ADMIN_ROLE = $"INSERT INTO {TableNames.CDS.ROLE} (ROLENAME) VALUES ('{RoleNames.SYS_ADMIN}');";
             internal const string ADD_USER_TO_ROLE = $"INSERT INTO {TableNames.CDS.USER_ROLE} (USERNAME, ROLENAME) VALUES (@username, @rolename);";
 

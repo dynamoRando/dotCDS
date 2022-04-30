@@ -175,7 +175,7 @@ namespace DotCDS.Services
             throw new NotImplementedException();
         }
 
-        public bool HandleGenerateContract(string un, string pw, string hostName, string description, string databaseName)
+        public bool HandleGenerateContract(string un, string pw, string hostName, string description, string databaseName, RemoteDeleteBehavior deleteBehavior)
         {
             bool isSuccessful = false;
             if (_cooperativeStore.IsValidLogin(un, pw))
@@ -187,12 +187,12 @@ namespace DotCDS.Services
                     if (_userDatabaseManager.HasDatabase(databaseName))
                     {
                         var db = _userDatabaseManager.GetSqliteUserDatabase(databaseName);
-                        db.GenerateContract(description);
+                        isSuccessful = db.GenerateContract(description, deleteBehavior);
                     }
                 }
             }
 
-            throw new NotImplementedException();
+            return isSuccessful;
         }
 
         public LogicalStoragePolicy HandleGetLogicalStoragePolicy(string databaseName, string tableName)

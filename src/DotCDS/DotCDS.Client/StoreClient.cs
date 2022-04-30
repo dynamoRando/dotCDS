@@ -190,13 +190,14 @@ namespace DotCDS.Client
         /// <exception cref="NotImplementedException"></exception>
         /// <remarks>Before a contract can be generated for a database, logical storage policies must be set on all tables 
         /// and cooperative features enabled on the database</remarks>
-        public GenerateContractReply GenerateContract(string hostName, string description, string databaseName, string userName, string pw)
+        public GenerateContractReply GenerateContract(string hostName, string description, string databaseName, string userName, string pw, uint remoteDeleteBehavior)
         {
             var request = new GenerateContractRequest();
             request.Authentication = GetAuthRequest(userName, pw);
             request.HostName = hostName;
             request.Description = description;
             request.DatabaseName = databaseName;
+            request.RemoteDeleteBehavior = remoteDeleteBehavior;
 
             return _client.GenerateContract(request);
         }

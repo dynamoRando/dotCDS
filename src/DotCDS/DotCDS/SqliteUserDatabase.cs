@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.SQLite;
 using DotCDS.Common.Enum;
 using DotCDS.Enum;
+using DotCDS.Model;
 
 namespace DotCDS
 {
@@ -135,6 +136,11 @@ namespace DotCDS
             return _client.ExecuteRead(_databaseName, query);
         }
 
+        public DataTable ExecuteRead(string query, Dictionary<string, object> values)
+        {
+            return _client.ExecuteRead(_databaseName, query, values);
+        }
+
         public int ExecuteWrite(string query)
         {
             return _client.ExecuteWrite(_databaseName, query);
@@ -173,6 +179,8 @@ namespace DotCDS
             {
                 actionResult = resultRemote;
             }
+
+            CreateContractTableIfNotExists();
 
             return actionResult;
         }
@@ -258,9 +266,136 @@ namespace DotCDS
             return policy;
         }
 
-        public bool GenerateContract(string description)
+        public DatabaseContract[] GetDatabaseContracts()
         {
-            throw new NotImplementedException();
+            var query = InternalSQLStatements.SQLLite.GET_DB_CONTRACT_COUNT;
+            DataTable dt = ExecuteRead(query);
+            int totalContracts = Convert.ToInt32(dt.Rows[0]["CONTRACTCOUNT"]);
+            var contracts = new DatabaseContract[totalContracts];
+            int i = 0;
+
+            query = InternalSQLStatements.SQLLite.GET_DB_CONTRACTS;
+            dt = ExecuteRead(query);
+            foreach (DataRow row in dt.Rows)
+            {
+                contracts[i] = DatabaseContract.Parse(row);
+                i++;
+            }
+
+            return contracts;
+        }
+
+        public void SaveContract(DatabaseContract contract)
+        {
+            var query = InternalSQLStatements.SQLLite.GET_DB_CONTRACT_COUNT_FOR_VERSION_ID;
+            query = query.Replace("version_id", contract.Version.ToString());
+            DataTable dt = ExecuteRead(query);
+            int totalContracts = Convert.ToInt32(dt.Rows[0]["CONTRACTCOUNT"]);
+
+            if (totalContracts > 0)
+            {
+                // update
+                query = InternalSQLStatements.SQLLite.UPDATE_DB_CONTRACT_WITH_ID;
+                var values = new Dictionary<string, object>();
+                values.Add("@generatedDateUtc", contract.GeneratedDateUTC);
+                values.Add("@description", contract.Description);
+                values.Add("@retiredDateUtc", contract.RetiredDateUTC);
+                values.Add("@remoteDeleteBehavior", contract.DeleteBehavior);
+                values.Add("@versionId", contract.Version);
+
+                ExecuteWrite(query, values);
+            }
+
+            if (totalContracts == 0)
+            {
+                // insert
+                query = InternalSQLStatements.SQLLite.ADD_DB_CONTRACT;
+                var values = new Dictionary<string, object>();
+                values.Add("@generatedDateUtc", contract.GeneratedDateUTC);
+                values.Add("@description", contract.Description);
+                values.Add("@retiredDateUtc", contract.RetiredDateUTC);
+                values.Add("@remoteDeleteBehavior", contract.DeleteBehavior);
+                values.Add("@versionId", contract.Version);
+                values.Add("@id", contract.Id);
+
+                ExecuteWrite(query, values);
+            }
+        }
+
+        public Guid GetContractId()
+        {
+            Guid contractId = Guid.Empty;
+
+            var query = InternalSQLStatements.SQLLite.GET_DB_CONTRACT_ID;
+            DataTable dt = ExecuteRead(query);
+            foreach (DataRow row in dt.Rows)
+            {
+                string id = Convert.ToString(row["CONTRACT_ID"]) ?? string.Empty;
+                contractId = Guid.Parse(id);
+            }
+
+            return contractId;
+        }
+
+        public DatabaseContract? GetActiveContract()
+        {
+            var query = InternalSQLStatements.SQLLite.GET_ACTIVE_DB_CONTRACT;
+            var values = new Dictionary<string, object>();
+            values.Add("@date", DateTime.MinValue);
+            DataTable dt = ExecuteRead(query, values);
+            foreach (DataRow row in dt.Rows)
+            {
+                var contract = DatabaseContract.Parse(row);
+                return contract;
+            }
+
+            return null;
+        }
+
+        public bool GenerateContract(string description, RemoteDeleteBehavior deleteBehavior)
+        {
+            bool isSuccessful = false;
+            var contracts = GetDatabaseContracts();
+
+            if (contracts.Length == 0)
+            {
+                // this is the first contract ever
+                var firstContract = new DatabaseContract();
+                firstContract.Id = Guid.NewGuid();
+                firstContract.GeneratedDateUTC = DateTime.UtcNow;
+                firstContract.Description = description;
+                firstContract.RetiredDateUTC = DateTime.MinValue;
+                firstContract.Version = Guid.NewGuid();
+                firstContract.DeleteBehavior = deleteBehavior;
+                SaveContract(firstContract);
+                isSuccessful = true;
+            }
+            else
+            {
+                // we need to find the contract that is not retired and retire it
+                foreach (var contract in contracts)
+                {
+                    if (contract.RetiredDateUTC == DateTime.MinValue)
+                    {
+                        contract.RetiredDateUTC = DateTime.UtcNow;
+                        SaveContract(contract);
+                        break;
+                    }
+                }
+
+                // now generate a new contract
+                var newContract = new DatabaseContract();
+                newContract.Id = contracts.FirstOrDefault().Id;
+                newContract.GeneratedDateUTC = DateTime.UtcNow;
+                newContract.Description = description;
+                newContract.RetiredDateUTC = DateTime.MinValue;
+                newContract.Version = Guid.NewGuid();
+                newContract.DeleteBehavior = deleteBehavior;
+                SaveContract(newContract);
+                isSuccessful = true;
+            }
+
+            return isSuccessful;
         }
         #endregion
 
@@ -357,6 +492,8 @@ namespace DotCDS
 
             return actionResult;
         }
+
+        
         #endregion
     }
 }

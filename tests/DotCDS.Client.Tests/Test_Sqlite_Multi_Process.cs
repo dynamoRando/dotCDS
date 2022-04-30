@@ -57,7 +57,7 @@ namespace DotCDS.Client.Tests
             // and then add the customer as a participant
             var enableCooperation = hostClient.EnableCooperativeFeatures(testDb, un, pw);
             var setPolicy = hostClient.SetLogicalStoragePolicy(testDb, testTableName, (uint)LogicalStoragePolicy.ParticipantOwned, un, pw);
-            var generateContract = hostClient.GenerateContract(hostName, contractDesc, testDb, un, pw);
+            var generateContract = hostClient.GenerateContract(hostName, contractDesc, testDb, un, pw, (uint)RemoteDeleteBehavior.UpdateStatusOnly);
             var addParticipant = hostClient.AddParticipant(participantName, participantContainer.Address, string.Empty, (uint)participantContainer.DatabasePortNumber, testDb, un, pw);
 
             // -- on the customer side, view and accept the contract

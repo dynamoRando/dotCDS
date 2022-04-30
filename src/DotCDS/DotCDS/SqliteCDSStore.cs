@@ -171,7 +171,18 @@ namespace DotCDS
             if (info.Id == Guid.Empty)
             {
                 // need to generate
-                throw new NotImplementedException();
+                var token = Crypto.GenerateToken();
+
+                var values = new Dictionary<string, object>();
+                values.Add("@hostId", Guid.NewGuid().ToString());
+                values.Add("@hostName", hostName);
+                values.Add("@token", token);
+                var rows = _client.ExecuteWrite(_backingDbName, SQLLite.ADD_HOST_INFO, values);
+
+                if (rows > 0)
+                {
+                    isSucessful = true;
+                }
             }
 
             return isSucessful;

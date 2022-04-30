@@ -85,6 +85,7 @@ message GenerateContractRequest {
 	string hostName = 2;
 	string description = 3;
 	string databaseName = 4;
+	uint32 remoteDeleteBehavior = 5;
 }
 
 message GenerateContractReply {

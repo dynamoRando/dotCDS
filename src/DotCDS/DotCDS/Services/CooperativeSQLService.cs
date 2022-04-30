@@ -107,7 +107,28 @@ namespace DotCDS.Services
             var result = new GenerateContractReply();
             AuthResult authResult = GetAuthResult(request.Authentication);
             result.AuthenticationResult = authResult;
-            result.IsSuccessful = _handler.HandleGenerateContract(request.Authentication.UserName, request.Authentication.Pw, request.DatabaseName, request.Description, request.DatabaseName);
+
+            RemoteDeleteBehavior deleteBehavior;
+
+            switch (request.RemoteDeleteBehavior)
+            {
+                case 0:
+                    deleteBehavior = RemoteDeleteBehavior.Unknown;
+                    break;
+                case 1:
+                    deleteBehavior = RemoteDeleteBehavior.Ignore;
+                    break;
+                case 2:
+                    deleteBehavior = RemoteDeleteBehavior.AutoDelete;
+                    break;
+                case 3:
+                    deleteBehavior = RemoteDeleteBehavior.UpdateStatusOnly;
+                    break;
+                default:
+                    throw new InvalidOperationException("Unknown delete behavior");
+            }
+
+            result.IsSuccessful = _handler.HandleGenerateContract(request.Authentication.UserName, request.Authentication.Pw, request.DatabaseName, request.Description, request.DatabaseName, deleteBehavior);
 
             return Task.FromResult(result);
         }
