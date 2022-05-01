@@ -484,6 +484,10 @@ namespace DotCDS
             SELECT count(*) AS TABLECOUNT FROM sqlite_master WHERE type='table' AND name='table_name';
             ";
 
+            internal const string GET_TABLE_SCHEMA = @"
+            SELECT sql FROM sqlite_master WHERE tbl_name= 't_name' and type = 'table';
+            ";
+
             internal const string COUNT_OF_USERS_WITH_NAME = $"SELECT count(*) AS USERCOUNT FROM {TableNames.CDS.USER} WHERE USERNAME = 'user_name';";
             internal const string COUNT_OF_ROLES_WITH_NAME = $"SELECT count(*) AS ROLECOUNT FROM {TableNames.CDS.ROLE} WHERE ROLENAME = 'role_name';";
             internal const string COUNT_OF_USER_WITH_ROLE = $"SELECT count(*) AS TOTALCOUNT FROM {TableNames.CDS.USER_ROLE} WHERE USERNAME = @username AND ROLENAME = @rolename;";

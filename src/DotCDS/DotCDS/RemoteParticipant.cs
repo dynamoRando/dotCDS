@@ -40,7 +40,7 @@ namespace DotCDS
         #endregion
 
         #region Public Methods
-        public bool SaveContract(DatabaseContract contract)
+        public bool SaveContract(DatabaseContract contract, DatabaseHostInfo hostInfo)
         {
             throw new NotImplementedException();
         }

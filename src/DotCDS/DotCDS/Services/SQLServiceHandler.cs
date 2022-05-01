@@ -270,9 +270,10 @@ namespace DotCDS.Services
                     if (_userDatabaseManager.HasDatabase(databaseName))
                     {
                         var db = _userDatabaseManager.GetSqliteUserDatabase(databaseName);
-                        var contract = db.GetActiveContract();
+                        var contract = db.GetActiveContract(true);
                         var participant = db.GetDatabaseParticipant(alias);
-                        isSuccessful = _remoteNetworkManager.SendContractToParticipant(participant, contract);
+                        var hostInfo = _cooperativeStore.GetHostInformation();
+                        isSuccessful = _remoteNetworkManager.SendContractToParticipant(participant, contract, hostInfo);
 
                         throw new NotImplementedException();
                     }

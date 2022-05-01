@@ -29,10 +29,10 @@ namespace DotCDS
         #endregion
 
         #region Public Methods
-        public bool SendContractToParticipant(DatabaseParticipant participant, DatabaseContract contract)
+        public bool SendContractToParticipant(DatabaseParticipant participant, DatabaseContract contract, DatabaseHostInfo databaseHostInfo)
         {
             RemoteParticipant remote = GetOrAddParticipant(participant);
-            return remote.SaveContract(contract);
+            return remote.SaveContract(contract, databaseHostInfo);
         }
         #endregion
 

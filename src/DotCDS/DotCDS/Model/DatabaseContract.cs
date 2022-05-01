@@ -1,4 +1,5 @@
-﻿using DotCDS.Common.Enum;
+﻿using DotCDS.Common;
+using DotCDS.Common.Enum;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,6 +17,7 @@ namespace DotCDS.Model
         public DateTime RetiredDateUTC { get; set; }
         public Guid Version { get; set; }
         public RemoteDeleteBehavior DeleteBehavior { get; set; }
+        public DatabaseSchema Schema { get; set; }
 
         public static DatabaseContract Parse(DataRow row)
         {

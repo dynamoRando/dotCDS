@@ -257,6 +257,26 @@ namespace DotCDS
             return isSuccessful;
         }
 
+        public DatabaseRemoteStatusTable[] GetStatusTables()
+        {
+            DataTable dt = ExecuteRead(InternalSQLStatements.SQLLite.GET_REMOTE_STATUS);
+            var statuses = new DatabaseRemoteStatusTable[dt.Rows.Count];
+            int i = 0;
+
+            foreach (DataRow row in dt.Rows)
+            {
+                var status = new DatabaseRemoteStatusTable();
+                status.TableName = Convert.ToString(row["TABLENAME"]) ?? string.Empty;
+                uint logicalStatus = Convert.ToUInt32(row["LOGICAL_STORAGE_POLICY"]);
+                status.StoragePolicy = (LogicalStoragePolicy)logicalStatus;
+                statuses[i] = status;
+                i++;
+            }
+
+            return statuses;
+
+        }
+
         public LogicalStoragePolicy GetLogicalStoragePolicy(string tableName)
         {
             LogicalStoragePolicy policy = LogicalStoragePolicy.None;
@@ -457,19 +477,53 @@ namespace DotCDS
             return contractId;
         }
 
-        public DatabaseContract? GetActiveContract()
+        public DatabaseContract? GetActiveContract(bool fillSchema = false)
         {
+            DatabaseContract contract = null;
             var query = InternalSQLStatements.SQLLite.GET_ACTIVE_DB_CONTRACT;
             var values = new Dictionary<string, object>();
             values.Add("@date", DateTime.MinValue);
             DataTable dt = ExecuteRead(query, values);
             foreach (DataRow row in dt.Rows)
             {
-                var contract = DatabaseContract.Parse(row);
-                return contract;
+                contract = DatabaseContract.Parse(row);
+                break;
             }
 
-            return null;
+            if (fillSchema)
+            {
+                var schema = new DatabaseSchema();
+                schema.DatabaseName = _databaseName;
+
+                // need to fill out tables
+                var tables = GetStatusTables();
+                foreach (var table in tables)
+                {
+                    // need to get the table schema
+                    var tableSchema = new TableSchema();
+                    tableSchema.DatabaseName = _databaseName;
+                    tableSchema.TableName = table.TableName;
+
+                    // how do we look up table schema in SQLite?
+                    // https://www.sqlitetutorial.net/sqlite-describe-table/
+                    // https://stackoverflow.com/questions/3268986/getting-table-schema-doesnt-seem-to-work-with-system-data-sqlite
+                    DataTable dtSchema = _client.GetSchemaForTable(_databaseName, table.TableName);
+                    foreach (DataRow dr in dtSchema.Rows)
+                    {
+                        var colSchema = new ColumnSchema();
+                        colSchema.ColumnName = Convert.ToString(dr[1]) ?? string.Empty;
+                        string colType = Convert.ToString(dr[2]) ?? string.Empty;
+                        bool isNullable = Convert.ToBoolean(dr[3]);
+                        bool isPrimaryKey = Convert.ToBoolean(dr[5]);
+
+                        throw new NotImplementedException();
+                    }
+                }
+
+                throw new NotImplementedException();
+            }
+
+            return contract;
         }
 
         public bool GenerateContract(string description, RemoteDeleteBehavior deleteBehavior)
