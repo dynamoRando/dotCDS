@@ -156,6 +156,29 @@ namespace DotCDS
             return _client.HasTable(_databaseName, tableName);
         }
 
+        public bool AddParticipant(string alias, string ipAddress, uint portNumber)
+        {
+            bool isSuccessful = false;
+            if (!HasDatabaseParticipant(alias))
+            {
+                var participant = new DatabaseParticipant();
+                participant.InternalId = Guid.NewGuid();
+                participant.Alias = alias;
+                participant.Ip4Address = ipAddress;
+                participant.Ip6Address = String.Empty;
+                participant.Port = portNumber;
+                participant.Token = new byte[0];
+                participant.ParticipantId = Guid.Empty;
+                participant.AcceptedContractVersion = Guid.Empty;
+                participant.ContractStatus = ContractStatus.NotSent;
+
+                SaveParticipant(participant);
+                isSuccessful = true;
+            }
+
+            return isSuccessful;
+        }
+
         public ActionOptionalResult EnableCooperativeFeatures()
         {
             ActionOptionalResult actionResult = new ActionOptionalResult();
@@ -266,6 +289,103 @@ namespace DotCDS
             return policy;
         }
 
+        public bool SaveParticipant(DatabaseParticipant participant)
+        {
+            bool isSuccessful = false;
+
+            if (HasDatabaseParticipant(participant.Alias))
+            {
+                // update
+                string query = InternalSQLStatements.SQLLite.UPDATE_DB_PARTICIPANT_BY_ALIAS;
+                var values = new Dictionary<string, object>();
+                values.Add("@ip4", participant.Ip4Address);
+                values.Add("@ip6", participant.Ip6Address);
+                values.Add("@port", participant.Port);
+                values.Add("@status", participant.ContractStatus);
+                values.Add("@contract_version", participant.AcceptedContractVersion.ToString());
+                values.Add("@token", participant.Token);
+                values.Add("@alias", participant.Alias);
+
+                ExecuteWrite(query, values);
+                isSuccessful = true;
+            }
+            else
+            {
+                // insert
+                string query = InternalSQLStatements.SQLLite.INSERT_DB_PARTICIPANT;
+                var values = new Dictionary<string, object>();
+                values.Add("@ip4", participant.Ip4Address);
+                values.Add("@ip6", participant.Ip6Address);
+                values.Add("@port", participant.Port);
+                values.Add("@status", (uint)participant.ContractStatus);
+                values.Add("@contract_version", participant.AcceptedContractVersion.ToString());
+                values.Add("@token", participant.Token);
+                values.Add("@alias", participant.Alias);
+                values.Add("@internalId", participant.InternalId.ToString());
+                values.Add("@participantId", participant.ParticipantId.ToString());
+
+                ExecuteWrite(query, values);
+                isSuccessful = true;
+            }
+
+            return isSuccessful;
+        }
+
+        public bool HasDatabaseParticipant(string alias)
+        {
+            var query = InternalSQLStatements.SQLLite.HAS_DB_PARTICIPANT_BY_ALIAS;
+            query = query.Replace("p_alias", alias);
+            DataTable dt = ExecuteRead(query);
+            int totalParticipants = Convert.ToInt32(dt.Rows[0]["PARTICIPANTCOUNT"]);
+
+            return totalParticipants > 0;
+        }
+
+        public bool HasDatabaseParticipant(Guid participantId)
+        {
+            var query = InternalSQLStatements.SQLLite.HAS_DB_PARTICIPANT_BY_ID;
+            query = query.Replace("p_id", participantId.ToString());
+            DataTable dt = ExecuteRead(query);
+            int totalParticipants = Convert.ToInt32(dt.Rows[0]["PARTICIPANTCOUNT"]);
+
+            return totalParticipants > 0;
+        }
+
+        public DatabaseParticipant? GetDatabaseParticipant(string alias)
+        {
+            DatabaseParticipant result = null;
+
+            string query = InternalSQLStatements.SQLLite.GET_DB_PARTICIPANT_BY_ALIAS;
+            query = query.Replace("p_alias", alias);
+            DataTable dt = ExecuteRead(query);
+            foreach (DataRow row in dt.Rows)
+            {
+                result = DatabaseParticipant.Parse(row);
+                break;
+            }
+
+            return result;
+        }
+
+        public DatabaseParticipant[] GetDatabaseParticipants()
+        {
+            var query = InternalSQLStatements.SQLLite.GET_DB_PARTICIPANT_COUNT;
+            DataTable dt = ExecuteRead(query);
+            int totalParticipants = Convert.ToInt32(dt.Rows[0]["PARTICIPANTCOUNT"]);
+            var participants = new DatabaseParticipant[totalParticipants];
+            int i = 0;
+
+            query = InternalSQLStatements.SQLLite.GET_DB_PARTICIPANTS;
+            dt = ExecuteRead(query);
+            foreach (DataRow row in dt.Rows)
+            {
+                participants[i] = DatabaseParticipant.Parse(row);
+                i++;
+            }
+
+            return participants;
+        }
+
         public DatabaseContract[] GetDatabaseContracts()
         {
             var query = InternalSQLStatements.SQLLite.GET_DB_CONTRACT_COUNT;
@@ -301,7 +421,7 @@ namespace DotCDS
                 values.Add("@description", contract.Description);
                 values.Add("@retiredDateUtc", contract.RetiredDateUTC);
                 values.Add("@remoteDeleteBehavior", contract.DeleteBehavior);
-                values.Add("@versionId", contract.Version);
+                values.Add("@versionId", contract.Version.ToString());
 
                 ExecuteWrite(query, values);
             }
@@ -315,8 +435,8 @@ namespace DotCDS
                 values.Add("@description", contract.Description);
                 values.Add("@retiredDateUtc", contract.RetiredDateUTC);
                 values.Add("@remoteDeleteBehavior", contract.DeleteBehavior);
-                values.Add("@versionId", contract.Version);
-                values.Add("@id", contract.Id);
+                values.Add("@versionId", contract.Version.ToString());
+                values.Add("@id", contract.Id.ToString());
 
                 ExecuteWrite(query, values);
             }
@@ -493,7 +613,7 @@ namespace DotCDS
             return actionResult;
         }
 
-        
+
         #endregion
     }
 }

@@ -249,6 +249,16 @@ namespace DotCDS.Client
 
             return _client.AcceptPendingContract(request);
         }
+
+        public SendParticipantContractReply SendParticipantContract(string name, string databaseName, string userName, string pw)
+        {
+            var request = new SendParticipantContractRequest();
+            request.Authentication = GetAuthRequest(userName, pw);
+            request.ParticipantAlias = name;
+            request.DatabaseName = databaseName;
+
+            return _client.SendParticipantContract(request);
+        }
         #endregion
 
         #region Private Methods

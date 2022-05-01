@@ -20,6 +20,7 @@ namespace DotCDS.Services
         private SqliteCDSStore _cooperativeStore;
         private SqliteUserDatabaseManager _userDatabaseManager;
         private QueryParser _queryParser;
+        private RemoteNetworkManager _remoteNetworkManager;
         #endregion
 
         #region Public Properties
@@ -47,6 +48,11 @@ namespace DotCDS.Services
         public void SetCooperativeStore(SqliteCDSStore store)
         {
             _cooperativeStore = store;
+        }
+
+        public void SetRemoteNetworkManager(RemoteNetworkManager remote)
+        {
+            _remoteNetworkManager = remote;
         }
 
         public bool IsValidLogin(string un, string pw)
@@ -200,9 +206,23 @@ namespace DotCDS.Services
             throw new NotImplementedException();
         }
 
-        public bool HandleAddParticipant(string databaseName, string alias, string ipAddress, uint portNumber)
+        public bool HandleAddParticipant(string un, string pw, string databaseName, string alias, string ipAddress, uint portNumber)
         {
-            throw new NotImplementedException();
+            bool isSuccessful = false;
+            if (_cooperativeStore.IsValidLogin(un, pw))
+            {
+                if (_cooperativeStore.UserIsInRole(un, InternalSQLStatements.RoleNames.SYS_ADMIN))
+                {
+
+                    if (_userDatabaseManager.HasDatabase(databaseName))
+                    {
+                        var db = _userDatabaseManager.GetSqliteUserDatabase(databaseName);
+                        isSuccessful = db.AddParticipant(alias, ipAddress, portNumber);
+                    }
+                }
+            }
+
+            return isSuccessful;
         }
 
         public uint HandleCooperativeWrite(string un, string pw, string alias, Guid participantId, string databaseName, string statement)
@@ -237,6 +257,28 @@ namespace DotCDS.Services
 
         public Contract[] HandleViewPendingContracts()
         {
+            throw new NotImplementedException();
+        }
+
+        public bool HandleSendContractToParticipant(string alias, string databaseName, string un, string pw)
+        {
+            bool isSuccessful = false;
+            if (_cooperativeStore.IsValidLogin(un, pw))
+            {
+                if (_cooperativeStore.UserIsInRole(un, InternalSQLStatements.RoleNames.SYS_ADMIN))
+                {
+                    if (_userDatabaseManager.HasDatabase(databaseName))
+                    {
+                        var db = _userDatabaseManager.GetSqliteUserDatabase(databaseName);
+                        var contract = db.GetActiveContract();
+                        var participant = db.GetDatabaseParticipant(alias);
+                        isSuccessful = _remoteNetworkManager.SendContractToParticipant(participant, contract);
+
+                        throw new NotImplementedException();
+                    }
+                }
+            }
+
             throw new NotImplementedException();
         }
 

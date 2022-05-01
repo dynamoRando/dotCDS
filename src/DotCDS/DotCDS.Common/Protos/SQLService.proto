@@ -18,9 +18,23 @@ service CooperativeSQLService {
 	rpc GetLogicalStoragePolicy(GetLogicalStoragePolicyRequest) returns (GetLogicalStoragePolicyReply);
 	rpc GenerateContract(GenerateContractRequest) returns (GenerateContractReply);
 	rpc AddParticipant(AddParticipantRequest) returns (AddParticipantReply);
+	rpc SendParticipantContract(SendParticipantContractRequest) returns (SendParticipantContractReply);
 	rpc ReviewPendingContracts(ViewPendingContractsRequest) returns (ViewPendingContractsReply);
 	rpc AcceptPendingContract(AcceptPendingContractRequest) returns (AcceptPendingContractReply);
 	rpc RejectPendingContract(RejectPendingContractRequest) returns (RejectPendingContractReply);
+}
+
+message SendParticipantContractRequest {
+  CDS.AuthRequest authentication = 1;
+  string databaseName = 2;
+  string participantAlias = 3;
+
+}
+
+message SendParticipantContractReply {
+	CDS.AuthResult authenticationResult = 1;
+	bool isSent = 2;
+	string message = 3;
 }
 
 // a message representing the results of a SQL query

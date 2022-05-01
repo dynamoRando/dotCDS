@@ -166,7 +166,7 @@ namespace DotCDS
         {
             bool isSucessful = true;
 
-            HostInfo info = GetHostInformation();
+            DatabaseHostInfo info = GetHostInformation();
 
             if (info.Id == Guid.Empty)
             {
@@ -188,10 +188,10 @@ namespace DotCDS
             return isSucessful;
         }
 
-        public HostInfo GetHostInformation()
+        public DatabaseHostInfo GetHostInformation()
         {
-            HostInfo hostInfo = new HostInfo();
-            DataTable dt = _client.ExecuteRead(_backingDbName, InternalSQLStatements.SQLLite.GET_HOST_INFO);
+            DatabaseHostInfo hostInfo = new DatabaseHostInfo();
+            DataTable dt = _client.ExecuteRead(_backingDbName, SQLLite.GET_HOST_INFO);
             foreach (DataRow row in dt.Rows)
             {
                 hostInfo.Name = Convert.ToString(row["HOST_NAME"]) ?? String.Empty;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotCDS.Model
 {
-    internal class HostInfo
+    internal class DatabaseHostInfo
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

@@ -33,6 +33,7 @@ namespace DotCDS
         private SqliteCDSStore _store;
         private SqliteUserDatabaseManager _userDatabaseManager;
         private QueryParser _queryParser;
+        private RemoteNetworkManager _remoteNetworkManager;
         #endregion
 
         #region Public Properties
@@ -46,6 +47,10 @@ namespace DotCDS
         #endregion
 
         #region Public Methods
+        public void SetRemoteNetworkManager(RemoteNetworkManager remote)
+        {
+            _remoteNetworkManager = remote;
+        }
         public void SetQueryParser(QueryParser parser)
         {
             _queryParser = parser;
@@ -146,6 +151,7 @@ namespace DotCDS
                         _sqlServiceHandler.SetSqliteClient(new SqliteClient(_rootFolder));
                         _sqlServiceHandler.SetSqliteUserDatabaseManager(_userDatabaseManager);
                         _sqlServiceHandler.SetQueryParser(_queryParser);
+                        _sqlServiceHandler.SetRemoteNetworkManager(_remoteNetworkManager);
                         break;
                     default:
                         throw new InvalidOperationException();

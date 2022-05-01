@@ -391,11 +391,91 @@ namespace DotCDS
             ;
             ";
 
+            internal const string GET_DB_PARTICIPANTS = $@"
+            SELECT
+                INTERNAL_PARTICIPANT_ID,
+                ALIAS,
+                IP4ADDRESS,
+                IP6ADDRESS,
+                PORT,
+                CONTRACT_STATUS,
+                ACCEPTED_CONTRACT_VERSION_ID,
+                TOKEN,
+                PARTICIPANT_ID
+            FROM
+                {TableNames.COOP.PARTICIPANT}
+            ;
+            ";
+
+            internal const string GET_DB_PARTICIPANT_BY_ALIAS = $@"
+            SELECT
+                INTERNAL_PARTICIPANT_ID,
+                ALIAS,
+                IP4ADDRESS,
+                IP6ADDRESS,
+                PORT,
+                CONTRACT_STATUS,
+                ACCEPTED_CONTRACT_VERSION_ID,
+                TOKEN,
+                PARTICIPANT_ID
+            FROM
+                {TableNames.COOP.PARTICIPANT}
+            WHERE
+                ALIAS = 'p_alias'
+            ;
+            ";
+
+            internal const string UPDATE_DB_PARTICIPANT_BY_ALIAS = $@"
+            UPDATE {TableNames.COOP.PARTICIPANT}
+            SET 
+                IP4ADDRESS = @ip4,
+                IP6ADDRESS = @ip6,
+                PORT = @port,
+                CONTRACT_STATUS = @status,
+                ACCEPTED_CONTRACT_VERSION_ID = @contract_version,
+                TOKEN = @token  
+            WHERE
+                ALIAS = @alias
+            ";
+
+            internal const string INSERT_DB_PARTICIPANT = $@"
+            INSERT INTO {TableNames.COOP.PARTICIPANT}
+            (
+                INTERNAL_PARTICIPANT_ID,
+                ALIAS,
+                IP4ADDRESS,
+                IP6ADDRESS,
+                PORT,
+                CONTRACT_STATUS,
+                ACCEPTED_CONTRACT_VERSION_ID,
+                TOKEN,
+                PARTICIPANT_ID
+            )
+            VALUES
+            (
+                @internalId,
+                @alias,
+                @ip4,
+                @ip6,
+                @port,
+                @status,
+                @contract_version,
+                @token,
+                @participantId
+            )
+            ;
+            ";
+
             internal const string GET_DB_CONTRACT_ID = $@"SELECT MAX(CONTRACT_ID) CONTRACT_ID FROM {TableNames.COOP.DATABASE_CONTRACT}";
 
             internal const string GET_DB_CONTRACT_COUNT_FOR_VERSION_ID = $"SELECT COUNT(*) CONTRACTCOUNT FROM {TableNames.COOP.DATABASE_CONTRACT} WHERE VERSION_ID = 'version_id';";
 
             internal const string GET_DB_CONTRACT_COUNT = $"SELECT COUNT(*) CONTRACTCOUNT FROM {TableNames.COOP.DATABASE_CONTRACT}";
+
+            internal const string GET_DB_PARTICIPANT_COUNT = $"SELECT COUNT(*) PARTICIPANTCOUNT FROM {TableNames.COOP.PARTICIPANT}";
+
+            internal const string HAS_DB_PARTICIPANT_BY_ALIAS = $"SELECT COUNT(*) PARTICIPANTCOUNT FROM {TableNames.COOP.PARTICIPANT} WHERE ALIAS = 'p_alias';";
+            internal const string HAS_DB_PARTICIPANT_BY_ID = $"SELECT COUNT(*) PARTICIPANTCOUNT FROM {TableNames.COOP.PARTICIPANT} WHERE PARTICIPANT_ID = 'p_id';";
 
             internal const string ADD_ADMIN_ROLE = $"INSERT INTO {TableNames.CDS.ROLE} (ROLENAME) VALUES ('{RoleNames.SYS_ADMIN}');";
             internal const string ADD_USER_TO_ROLE = $"INSERT INTO {TableNames.CDS.USER_ROLE} (USERNAME, ROLENAME) VALUES (@username, @rolename);";

@@ -148,7 +148,7 @@ namespace DotCDS.Services
             var result = new AddParticipantReply();
             AuthResult authResult = GetAuthResult(request.Authentication);
             result.AuthenticationResult = authResult;
-            result.IsSuccessful = _handler.HandleAddParticipant(request.DatabaseName, request.Alias, request.Ip4Address, request.Port);
+            result.IsSuccessful = _handler.HandleAddParticipant(request.Authentication.UserName, request.Authentication.Pw, request.DatabaseName, request.Alias, request.Ip4Address, request.Port);
 
             return Task.FromResult(result);
         }
@@ -182,6 +182,16 @@ namespace DotCDS.Services
             AuthResult authResult = GetAuthResult(request.Authentication);
             result.AuthenticationResult = authResult;
             result.Contracts.AddRange(_handler.HandleViewPendingContracts());
+
+            return Task.FromResult(result);
+        }
+
+        public override Task<SendParticipantContractReply> SendParticipantContract(SendParticipantContractRequest request, ServerCallContext context)
+        {
+            var result = new SendParticipantContractReply();
+            AuthResult authResult = GetAuthResult(request.Authentication);
+            result.AuthenticationResult = authResult;
+            result.IsSent = _handler.HandleSendContractToParticipant(request.ParticipantAlias, request.DatabaseName, request.Authentication.UserName, request.Authentication.Pw);
 
             return Task.FromResult(result);
         }

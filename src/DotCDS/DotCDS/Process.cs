@@ -20,6 +20,7 @@ namespace DotCDS
         private string _connectionString;
         private SqliteCDSStore _cooperativeStore;
         private NetworkManager _networkManager;
+        private RemoteNetworkManager _remoteNetworkManager;
         private SqliteUserDatabaseManager _userDatabaseManager;
         private QueryParser _queryParser;
         #endregion
@@ -225,6 +226,7 @@ namespace DotCDS
                     _networkManager.SetSqliteUserDatabaseManager(_userDatabaseManager);
                     _networkManager.SetCooperativeStore(_cooperativeStore);
                     _networkManager.SetClientType(_clientType);
+                    _networkManager.SetRemoteNetworkManager(new RemoteNetworkManager());
                     
                     break;
                 default:

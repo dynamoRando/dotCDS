@@ -59,6 +59,7 @@ namespace DotCDS.Client.Tests
             var setPolicy = hostClient.SetLogicalStoragePolicy(testDb, testTableName, (uint)LogicalStoragePolicy.ParticipantOwned, un, pw);
             var generateContract = hostClient.GenerateContract(hostName, contractDesc, testDb, un, pw, (uint)RemoteDeleteBehavior.UpdateStatusOnly);
             var addParticipant = hostClient.AddParticipant(participantName, participantContainer.Address, string.Empty, (uint)participantContainer.DatabasePortNumber, testDb, un, pw);
+            var sendContractToParticipant = hostClient.SendParticipantContract(participantName, testDb, un, pw);
 
             // -- on the customer side, view and accept the contract
             var pendingContracts = participantClient.ViewPendingContracts(un, pw);
