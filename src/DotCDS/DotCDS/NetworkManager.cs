@@ -37,6 +37,8 @@ namespace DotCDS
         #endregion
 
         #region Public Properties
+        public PortSettings SQLServiceSettings =>  _sqlServicePort;
+        public PortSettings DatabaseServiceSettings => _databaseServicePort;
         #endregion
 
         #region Constructors

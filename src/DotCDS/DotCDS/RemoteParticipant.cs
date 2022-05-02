@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using DotCDS.Common;
 using Grpc.Net.Client;
-
+using Google.Protobuf;
+using Google.Protobuf.Collections;
+using Google.Protobuf.WellKnownTypes;
 
 namespace DotCDS
 {
@@ -42,6 +44,22 @@ namespace DotCDS
         #region Public Methods
         public bool SaveContract(DatabaseContract contract, DatabaseHostInfo hostInfo)
         {
+            var request = new SaveContractRequest();
+
+            var messageContract = new Contract();
+            messageContract.ContractGUID = contract.Id.ToString();
+            messageContract.ContractVersion = contract.Version.ToString();
+            messageContract.Description = contract.Description;
+            messageContract.GeneratedDate = contract.GeneratedDateUTC.ToUniversalTime().ToTimestamp();
+            
+            var messageHost = new Host();
+            messageHost.HostName = hostInfo.Name;
+            messageHost.DatabasePortNumber = (uint)hostInfo.DataPortSettings.PortNumber;
+            messageHost.Ip4Address = hostInfo.DataPortSettings.IPAddress;
+
+            messageContract.HostInfo = messageHost;
+            
+
             throw new NotImplementedException();
         }
         #endregion

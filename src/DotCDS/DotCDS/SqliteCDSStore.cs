@@ -32,6 +32,8 @@ namespace DotCDS
         private const string _fileExtension = ".db";
         private string _dbFileLocation;
         private Crypto _crypt = new Crypto();
+        private PortSettings _sqlSettings;
+        private PortSettings _dataSettings;
         #endregion
 
         #region Public Properties
@@ -49,6 +51,15 @@ namespace DotCDS
         #endregion
 
         #region Public Methods
+        public void SetSQLSettngs(PortSettings settings)
+        {
+            _sqlSettings = settings;
+        }
+
+        public void SetDataSettings(PortSettings settings)
+        {
+            _dataSettings = settings;
+        }
         public bool HasLogin(string loginName)
         {
             string sql = SQLLite.COUNT_OF_USERS_WITH_NAME.Replace("user_name", loginName);
@@ -198,10 +209,12 @@ namespace DotCDS
                 string id = Convert.ToString(row["HOST_ID"]) ?? string.Empty;
                 hostInfo.Id = id == string.Empty ? Guid.Empty : Guid.Parse(id);
                 hostInfo.Token = (byte[])row["TOKEN"];
+                hostInfo.DataPortSettings = _dataSettings;
+                hostInfo.SQLPortSettings = _sqlSettings;
                 break;
             }
 
-            return hostInfo; ;
+            return hostInfo;
         }
         #endregion
 

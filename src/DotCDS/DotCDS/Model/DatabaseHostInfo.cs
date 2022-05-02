@@ -11,5 +11,7 @@ namespace DotCDS.Model
         public Guid Id { get; set; }
         public string Name { get; set; }
         public byte[] Token { get; set; }
+        public PortSettings DataPortSettings { get; set; }
+        public PortSettings SQLPortSettings { get; set; }
     }
 }

@@ -227,7 +227,9 @@ namespace DotCDS
                     _networkManager.SetCooperativeStore(_cooperativeStore);
                     _networkManager.SetClientType(_clientType);
                     _networkManager.SetRemoteNetworkManager(new RemoteNetworkManager());
-                    
+                    _cooperativeStore.SetSQLSettngs(_networkManager.SQLServiceSettings);
+                    _cooperativeStore.SetDataSettings(_networkManager.DatabaseServiceSettings);
+
                     break;
                 default:
                     throw new InvalidOperationException(unknownDbType);
