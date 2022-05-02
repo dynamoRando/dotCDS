@@ -28,7 +28,22 @@ namespace DotCDS.Common
                 return SQLColumnType.Int;
             }
 
+            if (type.Contains("integer", StringComparison.OrdinalIgnoreCase))
+            {
+                return SQLColumnType.Int;
+            }
+
+            if (type.Contains("int", StringComparison.OrdinalIgnoreCase))
+            {
+                return SQLColumnType.Int;
+            }
+
             if (type.Contains("Boolean", StringComparison.OrdinalIgnoreCase))
+            {
+                return SQLColumnType.Bit;
+            }
+
+            if (type.Contains("bit", StringComparison.OrdinalIgnoreCase))
             {
                 return SQLColumnType.Bit;
             }

@@ -513,14 +513,20 @@ namespace DotCDS
                         var colSchema = new ColumnSchema();
                         colSchema.ColumnName = Convert.ToString(dr[1]) ?? string.Empty;
                         string colType = Convert.ToString(dr[2]) ?? string.Empty;
-                        bool isNullable = Convert.ToBoolean(dr[3]);
-                        bool isPrimaryKey = Convert.ToBoolean(dr[5]);
+                        colSchema.ColumnType = (uint)SQLColumnTypeHelper.GetType(colType);
 
-                        throw new NotImplementedException();
+                        bool isNullable = Convert.ToBoolean(dr[3]);
+                        colSchema.IsNullable = isNullable;
+
+                        bool isPrimaryKey = Convert.ToBoolean(dr[5]);
+                        colSchema.IsPrimaryKey = isPrimaryKey;
+                        tableSchema.Columns.Add(colSchema);
                     }
+
+                    schema.Tables.Add(tableSchema);
                 }
 
-                throw new NotImplementedException();
+                contract.Schema = schema;
             }
 
             return contract;
