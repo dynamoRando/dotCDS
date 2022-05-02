@@ -114,6 +114,9 @@ namespace DotCDS
                 _databaseServiceServer = new DatabaseServiceServer();
             }
 
+            
+            _store.SetDataSettings(portsettings);
+
             _databaseServiceServer.RunAsync(null, urls, _databaseServiceHandler, _databaseServicePort);
         }
 
@@ -176,6 +179,8 @@ namespace DotCDS
             {
                 _sqlServiceServer = new SQLServiceServer();
             }
+
+            _store.SetSQLSettngs(portsettings);
 
             _sqlServiceServer.RunAsync(null, urls, _sqlServiceHandler, _sqlServicePort);
         }

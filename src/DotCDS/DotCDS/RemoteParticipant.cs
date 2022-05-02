@@ -58,9 +58,11 @@ namespace DotCDS
             messageHost.Ip4Address = hostInfo.DataPortSettings.IPAddress;
 
             messageContract.HostInfo = messageHost;
-            
+            messageContract.Schema = contract.Schema;
 
-            throw new NotImplementedException();
+            var result = _client.SaveContract(request);
+
+            return result.IsSaved;
         }
         #endregion
 
