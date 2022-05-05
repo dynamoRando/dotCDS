@@ -216,6 +216,11 @@ namespace DotCDS
 
             return hostInfo;
         }
+
+        public bool SavePendingContract(DatabaseContract contract)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Private Methods

@@ -4,12 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DotCDS.Common;
+using DotCDS.Database;
+using DotCDS.Query;
 using Grpc.Core;
 
 namespace DotCDS.Services
 {
     internal class CooperativeDatabaseService : CooperativeDataService.CooperativeDataServiceBase
     {
+        #region Private Fields
+        private DatabaseServiceHandler _handler;
+        #endregion
+
+        #region Public Properties
+        #endregion
+
+        #region Constructors
+        public CooperativeDatabaseService(DatabaseServiceHandler handler)
+        {
+            _handler = handler;
+        }
+        #endregion
+
+        #region Public Methods
+        public void SetHandler(DatabaseServiceHandler handler)
+        {
+            _handler = handler;
+        }
+     
         public override Task<TestReply> IsOnline(TestRequest request, ServerCallContext context)
         {
             var reply = new TestReply();
@@ -17,6 +39,7 @@ namespace DotCDS.Services
             reply.ReplyEchoMessage = request.RequestEchoMessage;
             return Task.FromResult(reply);
         }
+
 
         public override Task<CreateDatabaseResult> CreatePartialDatabase(CreateDatabaseRequest request, ServerCallContext context)
         {
@@ -60,7 +83,10 @@ namespace DotCDS.Services
 
         public override Task<SaveContractResult> SaveContract(SaveContractRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var result = new SaveContractResult();
+            result.IsSaved = _handler.HandleSaveContract(request.Contract);
+
+            return Task.FromResult(result);
         }
 
         public override Task<UpdateRowDataHashForHostResponse> UpdateRowDataHashForHost(UpdateRowDataHashForHostRequest request, ServerCallContext context)
@@ -72,6 +98,19 @@ namespace DotCDS.Services
         {
             throw new NotImplementedException();
         }
+        #endregion
+
+        #region Private Methods
+        private AuthResult GetAuthResult(AuthRequest request)
+        {
+            var authResult = new AuthResult();
+            authResult.IsAuthenticated = _handler.IsValidLogin(request.UserName, request.Pw);
+
+            return authResult;
+        }
+        #endregion
+
+
 
     }
 }

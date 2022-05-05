@@ -7,6 +7,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <UseAppHost>false</UseAppHost>
+</PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\DotCDS\DotCDS.csproj" />
   </ItemGroup>

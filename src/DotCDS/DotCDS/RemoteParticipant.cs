@@ -9,6 +9,8 @@ using Grpc.Net.Client;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
+using DotCDS.Mapper;
+using System.Net;
 
 namespace DotCDS
 {
@@ -45,21 +47,14 @@ namespace DotCDS
         public bool SaveContract(DatabaseContract contract, DatabaseHostInfo hostInfo)
         {
             var request = new SaveContractRequest();
-
-            var messageContract = new Contract();
-            messageContract.ContractGUID = contract.Id.ToString();
-            messageContract.ContractVersion = contract.Version.ToString();
-            messageContract.Description = contract.Description;
-            messageContract.GeneratedDate = contract.GeneratedDateUTC.ToUniversalTime().ToTimestamp();
-            
-            var messageHost = new Host();
-            messageHost.HostName = hostInfo.Name;
-            messageHost.DatabasePortNumber = (uint)hostInfo.DataPortSettings.PortNumber;
-            messageHost.Ip4Address = hostInfo.DataPortSettings.IPAddress;
+            var messageContract = ContractMapper.Map(contract);
+            var messageHost = HostMapper.Map(hostInfo);
 
             messageContract.HostInfo = messageHost;
-            messageContract.Schema = contract.Schema;
 
+            request.Contract = messageContract;
+            request.MessageInfo = GetMessageInfo();
+            
             var result = _client.SaveContract(request);
 
             return result.IsSaved;
@@ -67,9 +62,26 @@ namespace DotCDS
         #endregion
 
         #region Private Methods
+        private MessageInfo GetMessageInfo()
+        {
+            var info = new MessageInfo();
+            info.IsLittleEndian = BitConverter.IsLittleEndian;
+
+            var addresses = Dns.GetHostAddresses(Dns.GetHostName());
+
+            foreach (var address in addresses)
+            {
+                info.MessageAddresses.Add(address.ToString());
+            }
+
+            info.MessageGeneratedTimeUTC = DateTime.UtcNow.ToString();
+            info.MessageGUID = Guid.NewGuid().ToString();
+
+            return info;
+        }
         #endregion
 
-        
+
 
     }
 }

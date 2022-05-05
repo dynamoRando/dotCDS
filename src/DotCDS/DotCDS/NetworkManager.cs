@@ -95,6 +95,28 @@ namespace DotCDS
             if (_databaseServiceHandler is null)
             {
                 _databaseServiceHandler = new DatabaseServiceHandler();
+                _databaseServiceHandler.SetCooperativeStore(_store);
+
+
+                switch (_clientType)
+                {
+                    case DatabaseClientType.Unknown:
+                        throw new InvalidOperationException();
+                    case DatabaseClientType.SQLServer:
+                        throw new NotImplementedException();
+                        break;
+                    case DatabaseClientType.Postgres:
+                        throw new NotImplementedException();
+                        break;
+                    case DatabaseClientType.Sqlite:
+                        _databaseServiceHandler.SetSqliteClient(new SqliteClient(_rootFolder));
+                        _databaseServiceHandler.SetSqliteUserDatabaseManager(_userDatabaseManager);
+                        _databaseServiceHandler.SetQueryParser(_queryParser);
+                        _databaseServiceHandler.SetRemoteNetworkManager(_remoteNetworkManager);
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
 
             if (useHttps)
