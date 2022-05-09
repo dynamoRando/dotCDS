@@ -548,13 +548,13 @@ namespace DotCDS
             internal const string INSERT_DB_CONTRACT_TABLE_COLUMN_FROM_HOST = $@"
             INSERT INTO {TableNames.CDS.CONTRACTS_TABLE_SCHEMAS}            
             (
-                TABLE_ID CHAR(36) NOT NULL,
-                COLUMN_ID CHAR(36) NOT NULL,
-                COLUMN_NAME VARCHAR(50) NOT NULL,
-                COLUMN_TYPE INT NOT NULL,
-                COLUMN_LENGTH INT NOT NULL,
-                COLUMN_ORDINAL INT NOT NULL,
-                IS_NULLABLE INT
+                TABLE_ID,
+                COLUMN_ID,
+                COLUMN_NAME,
+                COLUMN_TYPE,
+                COLUMN_LENGTH,
+                COLUMN_ORDINAL,
+                IS_NULLABLE
             )
             VALUES
             (

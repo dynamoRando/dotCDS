@@ -571,6 +571,10 @@ namespace DotCDS
                 newContract.RetiredDateUTC = DateTime.MinValue;
                 newContract.Version = Guid.NewGuid();
                 newContract.DeleteBehavior = deleteBehavior;
+
+                // we need to populate the data host tables  
+                throw new NotImplementedException();
+
                 SaveContract(newContract);
                 isSuccessful = true;
             }
