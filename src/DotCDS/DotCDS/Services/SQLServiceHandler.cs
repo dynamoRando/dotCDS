@@ -258,6 +258,8 @@ namespace DotCDS.Services
 
         public Contract[] HandleViewPendingContracts()
         {
+            DatabaseContract[] pendingContracts = _cooperativeStore.GetPendingContracts();
+
             throw new NotImplementedException();
         }
 
@@ -276,13 +278,11 @@ namespace DotCDS.Services
                         var participant = db.GetDatabaseParticipant(alias);
                         var hostInfo = _cooperativeStore.GetHostInformation();
                         isSuccessful = _remoteNetworkManager.SendContractToParticipant(participant, contract, hostInfo);
-
-                        throw new NotImplementedException();
                     }
                 }
             }
 
-            throw new NotImplementedException();
+            return isSuccessful;
         }
 
         public bool HandleSetLogicalStoragePolicy(string un, string pw, string databaseName, string tableName, LogicalStoragePolicy policy)

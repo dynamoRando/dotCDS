@@ -490,6 +490,22 @@ namespace DotCDS
             )
             ";
 
+            internal const string GET_PENDING_CONTRACTS_FROM_HOST = $@"
+            SELECT
+                HOST_ID,
+                CONTRACT_ID,
+                CONTRACT_VERSION_ID,
+                DATABASE_NAME,
+                DATABASE_ID,
+                DESCRIPTION,
+                GENERATED_DATE_UTC,
+                CONTRACT_STATUS
+            FROM
+                {TableNames.CDS.CONTRACTS}
+            WHERE
+                CONTRACT_STATUS = 2
+            ";
+
             internal const string GET_DB_CONTRACT_ID = $@"SELECT MAX(CONTRACT_ID) CONTRACT_ID FROM {TableNames.COOP.DATABASE_CONTRACT}";
 
             internal const string GET_DB_CONTRACT_COUNT_FOR_VERSION_ID = $"SELECT COUNT(*) CONTRACTCOUNT FROM {TableNames.COOP.DATABASE_CONTRACT} WHERE VERSION_ID = 'version_id';";

@@ -16,7 +16,8 @@ namespace DotCDS.Mapper
             messageHost.HostName = host.Name;
             messageHost.DatabasePortNumber = (uint)host.DataPortSettings.PortNumber;
             messageHost.Ip4Address = host.DataPortSettings.IPAddress;
-
+            messageHost.HostGUID = host.Id.ToString();
+    
             return messageHost;
         }
     }

@@ -16,6 +16,7 @@ using System.Data.SQLite;
 using System.Data;
 using static DotCDS.InternalSQLStatements;
 using DotCDS.Model;
+using DotCDS.Common.Enum;
 
 namespace DotCDS
 {
@@ -219,7 +220,6 @@ namespace DotCDS
 
         public bool SavePendingContract(DatabaseContract contract)
         {
-
             var values = new Dictionary<string, object>();
             values.Add("@hostId", contract.HostId.ToString());
             values.Add("@contractId", contract.Id.ToString());
@@ -232,6 +232,33 @@ namespace DotCDS
             var rows = _client.ExecuteWrite(_backingDbName, SQLLite.INSERT_DB_CONTRACT_FROM_HOST, values);
 
             return rows > 0;
+        }
+
+        public DatabaseContract[] GetPendingContracts()
+        {
+            DataTable dtPendingContracts = _client.ExecuteRead(_backingDbName, SQLLite.GET_PENDING_CONTRACTS_FROM_HOST);
+            var result = new DatabaseContract[dtPendingContracts.Rows.Count];
+            int idx = 0;
+
+            foreach (DataRow row in dtPendingContracts.Rows)
+            {
+                DatabaseContract contract = new DatabaseContract();
+                contract.Schema = new Common.DatabaseSchema();
+
+                contract.HostId = Guid.Parse(Convert.ToString(row["HOST_ID"]) ?? string.Empty);
+                contract.Id = Guid.Parse(Convert.ToString(row["CONTRACT_ID"]) ?? string.Empty);
+                contract.Version = Guid.Parse(Convert.ToString(row["CONTRACT_VERSION_ID"]) ?? string.Empty);
+                contract.Schema.DatabaseName = Convert.ToString(row["DATABASE_NAME"] ?? string.Empty);
+                contract.Schema.DatabaseId = Convert.ToString(row["DATABASE_ID"]) ?? string.Empty;
+                contract.Description = Convert.ToString(row["DESCRIPTION"] ?? string.Empty);
+                contract.GeneratedDateUTC = Convert.ToDateTime(row["GENERATED_DATE_UTC"] ?? DateTime.MinValue);
+                contract.Status = (ContractStatus)Convert.ToUInt32(row["CONTRACT_STATUS"] ?? 0);
+
+                result[idx] = contract;
+                idx++;
+            }
+
+            return result;
         }
         #endregion
 
@@ -268,6 +295,26 @@ namespace DotCDS
             }
         }
 
+        private void CreateContractsTables()
+        {
+            if (!HasTable(TableNames.CDS.CONTRACTS))
+            {
+                _client.ExecuteRead(_backingDbName, SQLLite.CREATE_CDS_CONTRACTS_TABLE);
+            }
+
+            if (!HasTable(TableNames.CDS.CONTRACTS_TABLES))
+            {
+                _client.ExecuteRead(_backingDbName, SQLLite.CREATE_CDS_CONTRACTS_TABLE_TABLE);
+            }
+
+            if (!HasTable(TableNames.CDS.CONTRACTS_TABLE_SCHEMAS))
+            {
+                _client.ExecuteRead(_backingDbName, SQLLite.CREATE_CDS_CONTRACTS_TABLE_SCHEMA_TABLE);
+            }
+
+
+        }
+
 
         private void ConfigureBackingDb()
         {
@@ -283,6 +330,7 @@ namespace DotCDS
             CreateRoleTable();
             CreateUserRoleTable();
             CreateHostInfoTable();
+            CreateContractsTables();
 
             if (!HasRole(RoleNames.SYS_ADMIN))
             {

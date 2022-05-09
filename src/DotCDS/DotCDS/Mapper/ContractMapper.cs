@@ -22,6 +22,7 @@ namespace DotCDS.Mapper
             messageContract.Description = contract.Description;
             messageContract.GeneratedDate = contract.GeneratedDateUTC.ToUniversalTime().ToTimestamp();
             messageContract.Schema = contract.Schema;
+            messageContract.Status = (uint)contract.Status;
 
             return messageContract;
         }
@@ -32,7 +33,7 @@ namespace DotCDS.Mapper
             dbContract.Schema = contract.Schema;
 
             dbContract.Id = Guid.Parse(contract.ContractGUID);
-            dbContract.GeneratedDateUTC = DateTime.Parse(contract.GeneratedDate.ToString());
+            dbContract.GeneratedDateUTC = DateTime.Parse(contract.GeneratedDate.ToDateTime().ToString());
             dbContract.Description = contract.Description;
             dbContract.Version = Guid.Parse(contract.ContractVersion);
             dbContract.Status = (ContractStatus)contract.Status;
