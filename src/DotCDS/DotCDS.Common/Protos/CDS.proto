@@ -102,7 +102,7 @@ message ColumnSchema {
 	// the ordinal value of the column, i.e. the order in which the column appears in the table
 	uint32 ordinal = 5; 
 	// empty value in a request, populated in a response with the column identifier (INT)
-	uint32 columnId = 6;
+	string columnId = 6;
 	// empty string in a request, populated in a response with the table GUID the column is attached to
 	string tableId = 7; 
 	// empty string in a request, populated in a response with the column GUID value

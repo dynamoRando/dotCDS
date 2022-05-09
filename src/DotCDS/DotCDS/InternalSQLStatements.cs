@@ -101,6 +101,18 @@ namespace DotCDS
                 // to instead look at the corresponding shadow table and request data from the participant(s)
                 internal const string REMOTES = "COOP_REMOTES";
 
+                // contains the database id generated when we first enable cooperative features
+                internal const string DATA_HOST = "COOP_DATA_HOST";
+
+                // contains the table ids generated when we start setting logical storage policies on tables
+                // this should be aligned with COOP_REMOTES
+                internal const string DATA_HOST_TABLES = "COOP_DATA_TABLES";
+
+                // contains the column ids generated when we start setting logical storage policies on tables
+                // this needs to be aligned with the actual schema of the table in the database
+                internal const string DATA_HOST_TABLE_COLUMNS = "COOP_DATA_COLUMNS";
+
+
                 // ----------
                 // the tables below are for partial databases (data participants)
                 // ----------
@@ -197,6 +209,32 @@ namespace DotCDS
             DATA_HASH BLOB
         );
         ";
+
+            internal const string CREATE_DATA_HOST = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.COOP.DATA_HOST} 
+        (
+            DATABASE_ID CHAR(36) NOT NULL,
+            DATABASE_NAME VARCHAR(500) NOT NULL
+        );
+        ";
+
+            internal const string CREATE_HOST_TABLE = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.COOP.DATA_HOST_TABLES} 
+        (
+            TABLE_ID CHAR(36) NOT NULL,
+            TABLE_NAME VARCHAR(500) NOT NULL
+        );
+        ";
+
+            internal const string CREATE_HOST_TABLE_COLUMNS = $@"
+        CREATE TABLE IF NOT EXISTS {TableNames.COOP.DATA_HOST_TABLE_COLUMNS}
+        (
+            TABLE_ID CHAR(36) NOT NULL,
+            COLUMN_ID CHAR(36) NOT NULL,
+            COLUMN_NAME VARCHAR(500) NOT NULL
+        )
+        ";
+
 
             internal const string CREATE_HOST_INTO_TABLE = $@"
         CREATE TABLE IF NOT EXISTS {TableNames.CDS.HOST_INFO}
@@ -489,6 +527,46 @@ namespace DotCDS
                 @status
             )
             ";
+
+            internal const string INSERT_DB_CONTRACT_TABLE_FROM_HOST = $@"
+            INSERT INTO {TableNames.CDS.CONTRACTS_TABLES}
+            (
+                DATABASE_ID,
+                DATABASE_NAME,
+                TABLE_ID,
+                TABLE_NAME
+            )
+            VALUES
+            (   
+                @dbId,
+                @dbName,
+                @tbId,
+                @tbName
+            )
+            ";
+
+            internal const string INSERT_DB_CONTRACT_TABLE_COLUMN_FROM_HOST = $@"
+            INSERT INTO {TableNames.CDS.CONTRACTS_TABLE_SCHEMAS}            
+            (
+                TABLE_ID CHAR(36) NOT NULL,
+                COLUMN_ID CHAR(36) NOT NULL,
+                COLUMN_NAME VARCHAR(50) NOT NULL,
+                COLUMN_TYPE INT NOT NULL,
+                COLUMN_LENGTH INT NOT NULL,
+                COLUMN_ORDINAL INT NOT NULL,
+                IS_NULLABLE INT
+            )
+            VALUES
+            (
+                @tbId,
+                @colId,
+                @colName,
+                @colType,
+                @colLength,
+                @colOrdinal,
+                @isNullable
+            )
+            ;";
 
             internal const string GET_PENDING_CONTRACTS_FROM_HOST = $@"
             SELECT

@@ -231,6 +231,33 @@ namespace DotCDS
             values.Add("@status", (uint)contract.Status);
             var rows = _client.ExecuteWrite(_backingDbName, SQLLite.INSERT_DB_CONTRACT_FROM_HOST, values);
 
+            foreach (var tb in contract.Schema.Tables)
+            {
+                var tbValues = new Dictionary<string, object>();
+                tbValues.Add("@dbId", contract.Schema.DatabaseId);
+                tbValues.Add("@dbName", contract.Schema.DatabaseName);
+                tbValues.Add("@tbId", tb.TableId);
+                tbValues.Add("@tbName", tb.TableName);
+
+                var tbRows = _client.ExecuteWrite(_backingDbName, SQLLite.INSERT_DB_CONTRACT_TABLE_FROM_HOST, tbValues);
+                tbValues.Clear();
+
+                foreach (var col in tb.Columns)
+                {
+                    var tbColValues = new Dictionary<string, object>();
+                    tbColValues.Add("@tbId", col.TableId);
+                    tbColValues.Add("@colId", col.ColumnId);
+                    tbColValues.Add("@colName", col.ColumnName);
+                    tbColValues.Add("@colType", col.ColumnType);
+                    tbColValues.Add("@colLength", col.ColumnLength);
+                    tbColValues.Add("@colOrdinal", col.Ordinal);
+                    tbColValues.Add("@isNullable", col.IsNullable);
+
+                    var tbColRows = _client.ExecuteWrite(_backingDbName, SQLLite.INSERT_DB_CONTRACT_TABLE_COLUMN_FROM_HOST, tbColValues);
+                    tbColValues.Clear();
+                }
+            }
+
             return rows > 0;
         }
 
@@ -253,6 +280,9 @@ namespace DotCDS
                 contract.Description = Convert.ToString(row["DESCRIPTION"] ?? string.Empty);
                 contract.GeneratedDateUTC = Convert.ToDateTime(row["GENERATED_DATE_UTC"] ?? DateTime.MinValue);
                 contract.Status = (ContractStatus)Convert.ToUInt32(row["CONTRACT_STATUS"] ?? 0);
+
+                // we need to populate the schemas, etc.
+                throw new NotImplementedException();
 
                 result[idx] = contract;
                 idx++;
