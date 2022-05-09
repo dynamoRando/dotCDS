@@ -170,7 +170,7 @@ namespace DotCDS
                 participant.Token = new byte[0];
                 participant.ParticipantId = Guid.Empty;
                 participant.AcceptedContractVersion = Guid.Empty;
-                participant.ContractStatus = ContractStatus.NotSent;
+                participant.ContractStatus = Common.Enum.ContractStatus.NotSent;
 
                 SaveParticipant(participant);
                 isSuccessful = true;

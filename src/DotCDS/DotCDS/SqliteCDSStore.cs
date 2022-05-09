@@ -219,7 +219,19 @@ namespace DotCDS
 
         public bool SavePendingContract(DatabaseContract contract)
         {
-            throw new NotImplementedException();
+
+            var values = new Dictionary<string, object>();
+            values.Add("@hostId", contract.HostId.ToString());
+            values.Add("@contractId", contract.Id.ToString());
+            values.Add("@contractVersion", contract.Version.ToString());
+            values.Add("@databaseName", contract.Schema.DatabaseName);
+            values.Add("@databaseId", contract.Schema.DatabaseId);
+            values.Add("@description", contract.Description);
+            values.Add("@gendate", contract.GeneratedDateUTC.ToString());
+            values.Add("@status", (uint)contract.Status);
+            var rows = _client.ExecuteWrite(_backingDbName, SQLLite.INSERT_DB_CONTRACT_FROM_HOST, values);
+
+            return rows > 0;
         }
         #endregion
 

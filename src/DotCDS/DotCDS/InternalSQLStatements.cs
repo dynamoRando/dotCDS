@@ -466,6 +466,30 @@ namespace DotCDS
             ;
             ";
 
+            internal const string INSERT_DB_CONTRACT_FROM_HOST = $@"INSERT INTO {TableNames.CDS.CONTRACTS}
+            (
+                HOST_ID,
+                CONTRACT_ID,
+                CONTRACT_VERSION_ID,
+                DATABASE_NAME,
+                DATABASE_ID,
+                DESCRIPTION,
+                GENERATED_DATE_UTC,
+                CONTRACT_STATUS
+            )
+            VALUES
+            (
+                @hostId,
+                @contractId,
+                @contractVersion,
+                @databaseName,
+                @databaseId,
+                @description,
+                @gendate,
+                @status
+            )
+            ";
+
             internal const string GET_DB_CONTRACT_ID = $@"SELECT MAX(CONTRACT_ID) CONTRACT_ID FROM {TableNames.COOP.DATABASE_CONTRACT}";
 
             internal const string GET_DB_CONTRACT_COUNT_FOR_VERSION_ID = $"SELECT COUNT(*) CONTRACTCOUNT FROM {TableNames.COOP.DATABASE_CONTRACT} WHERE VERSION_ID = 'version_id';";

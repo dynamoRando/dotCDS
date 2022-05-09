@@ -18,6 +18,8 @@ namespace DotCDS.Model
         public Guid Version { get; set; }
         public RemoteDeleteBehavior DeleteBehavior { get; set; }
         public DatabaseSchema Schema { get; set; }
+        public ContractStatus Status { get; set; }
+        public Guid HostId { get; set; }
 
         public static DatabaseContract Parse(DataRow row)
         {

@@ -8,6 +8,7 @@ using DotCDS.Common;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
+using DotCDS.Common.Enum;
 
 namespace DotCDS.Mapper
 {
@@ -30,7 +31,14 @@ namespace DotCDS.Mapper
             var dbContract = new DatabaseContract();
             dbContract.Schema = contract.Schema;
 
-            throw new NotImplementedException();
+            dbContract.Id = Guid.Parse(contract.ContractGUID);
+            dbContract.GeneratedDateUTC = DateTime.Parse(contract.GeneratedDate.ToString());
+            dbContract.Description = contract.Description;
+            dbContract.Version = Guid.Parse(contract.ContractVersion);
+            dbContract.Status = (ContractStatus)contract.Status;
+            dbContract.HostId = Guid.Parse(contract.HostInfo.HostGUID);
+            
+            return dbContract;
         }
     }
 }

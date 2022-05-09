@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DotCDS.Enum;
+using DotCDS.Model;
 
 namespace DotCDS.Services
 {
@@ -270,7 +271,8 @@ namespace DotCDS.Services
                     if (_userDatabaseManager.HasDatabase(databaseName))
                     {
                         var db = _userDatabaseManager.GetSqliteUserDatabase(databaseName);
-                        var contract = db.GetActiveContract(true);
+                        DatabaseContract contract = db.GetActiveContract(true);
+                        contract.Status = Common.Enum.ContractStatus.Pending;
                         var participant = db.GetDatabaseParticipant(alias);
                         var hostInfo = _cooperativeStore.GetHostInformation();
                         isSuccessful = _remoteNetworkManager.SendContractToParticipant(participant, contract, hostInfo);
