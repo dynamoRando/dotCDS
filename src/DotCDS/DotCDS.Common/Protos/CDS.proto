@@ -101,14 +101,12 @@ message ColumnSchema {
 	bool isNullable = 4;
 	// the ordinal value of the column, i.e. the order in which the column appears in the table
 	uint32 ordinal = 5; 
-	// empty value in a request, populated in a response with the column identifier (INT)
-	string columnId = 6;
 	// empty string in a request, populated in a response with the table GUID the column is attached to
-	string tableId = 7; 
+	string tableId = 6; 
 	// empty string in a request, populated in a response with the column GUID value
-	string columnGUID = 8;
+	string columnId = 7;
 	// if the column is the primary key of the table. If this is part of a list of columns, it is implied to be a composite primary key
-	bool isPrimaryKey = 9;
+	bool isPrimaryKey = 8;
 }
 
 message Contract {
@@ -156,7 +154,7 @@ message DatabaseSchema {
 // a message for describing the schema information of a table in a database 
 message TableSchema {
 	string tableName = 1;
-	uint32 tableId = 2;
+	string tableId = 2;
 	string databaseName = 3;
 	string databaseId = 4;
 	repeated ColumnSchema columns = 5;

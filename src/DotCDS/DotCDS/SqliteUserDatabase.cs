@@ -204,6 +204,7 @@ namespace DotCDS
             }
 
             CreateContractTableIfNotExists();
+            CreateAndPopulateDataHostTables();
 
             return actionResult;
         }
@@ -496,13 +497,35 @@ namespace DotCDS
                 schema.DatabaseName = _databaseName;
 
                 // need to fill out tables
-                var tables = GetStatusTables();
+                DatabaseRemoteStatusTable[] tables = GetStatusTables();
                 foreach (var table in tables)
                 {
                     // need to get the table schema
                     var tableSchema = new TableSchema();
                     tableSchema.DatabaseName = _databaseName;
                     tableSchema.TableName = table.TableName;
+
+                    Guid tableId = Guid.Empty;
+
+                    string sql = @$"
+                    SELECT 
+                        TABLE_ID 
+                    FROM 
+                        {InternalSQLStatements.TableNames.COOP.DATA_HOST_TABLES}
+                    WHERE
+                        TABLE_NAME = '{table.TableName}';
+                    ";
+
+                    DataTable dttid = ExecuteRead(sql);
+                    if (dttid.Rows.Count > 0)
+                    {
+                        tableId = Guid.Parse(Convert.ToString(dttid.Rows[0][0]));
+                    }
+
+                    if (tableId != Guid.Empty)
+                    {
+                        tableSchema.TableId = tableId.ToString();
+                    }
 
                     // how do we look up table schema in SQLite?
                     // https://www.sqlitetutorial.net/sqlite-describe-table/
@@ -520,6 +543,23 @@ namespace DotCDS
 
                         bool isPrimaryKey = Convert.ToBoolean(dr[5]);
                         colSchema.IsPrimaryKey = isPrimaryKey;
+
+                        sql = $@"SELECT
+                                    COLUMN_ID
+                                 FROM 
+                                    {InternalSQLStatements.TableNames.COOP.DATA_HOST_TABLE_COLUMNS}
+                                WHERE
+                                    TABLE_ID = '{tableId}'
+                                AND
+                                    COLUMN_NAME = '{colSchema.ColumnName}'
+                                ";
+
+                        DataTable dtColId = ExecuteRead(sql);
+                        if (dtColId.Rows.Count > 0)
+                        {
+                            colSchema.ColumnId = Convert.ToString(dtColId.Rows[0][0]);
+                        }
+
                         tableSchema.Columns.Add(colSchema);
                     }
 
@@ -572,8 +612,7 @@ namespace DotCDS
                 newContract.Version = Guid.NewGuid();
                 newContract.DeleteBehavior = deleteBehavior;
 
-                // we need to populate the data host tables  
-                throw new NotImplementedException();
+                CreateAndPopulateDataHostTables();
 
                 SaveContract(newContract);
                 isSuccessful = true;
@@ -584,6 +623,120 @@ namespace DotCDS
         #endregion
 
         #region Private Methods
+        private void CreateAndPopulateDataHostTables()
+        {
+            if (!HasTable(InternalSQLStatements.TableNames.COOP.DATA_HOST))
+            {
+                _client.ExecuteWrite(_databaseName, InternalSQLStatements.SQLLite.CREATE_DATA_HOST);
+            }
+
+            if (!HasTable(InternalSQLStatements.TableNames.COOP.DATA_HOST_TABLES))
+            {
+                _client.ExecuteWrite(_databaseName, InternalSQLStatements.SQLLite.CREATE_HOST_TABLE);
+            }
+
+            if (!HasTable(InternalSQLStatements.TableNames.COOP.DATA_HOST_TABLE_COLUMNS))
+            {
+                _client.ExecuteWrite(_databaseName, InternalSQLStatements.SQLLite.CREATE_HOST_TABLE_COLUMNS);
+            }
+
+            string sql = $"SELECT COUNT(*) COUNT FROM {InternalSQLStatements.TableNames.COOP.DATA_HOST}";
+
+            DataTable dt = ExecuteRead(sql);
+            int totalRecords = Convert.ToInt32(dt.Rows[0][0]);
+
+            if (totalRecords == 0)
+            {
+                // we need to generate the db id
+                var dbId = Guid.NewGuid();
+                sql = $@"INSERT INTO {InternalSQLStatements.TableNames.COOP.DATA_HOST}
+                (DATABASE_ID, DATABASE_NAME) VALUES ('{dbId.ToString()}', '{_databaseName}');
+                ";
+
+                ExecuteWrite(sql);
+            }
+
+            PopulateDataTablesandSchemas();
+
+        }
+
+        private void PopulateDataTablesandSchemas()
+        {
+            string sql = string.Empty;
+            DatabaseRemoteStatusTable[] tables = GetStatusTables();
+            foreach (var table in tables)
+            {
+                sql = $@"SELECT 
+                            COUNT(*) COUNT 
+                        FROM {InternalSQLStatements.TableNames.COOP.DATA_HOST_TABLES}
+                        WHERE 
+                            TABLE_NAME = '{table.TableName}'
+                ;
+                ";
+
+                DataTable dt = ExecuteRead(sql);
+                int tblCount = Convert.ToInt32(dt.Rows[0][0]);
+                Guid tableId = Guid.Empty;
+
+                if (tblCount == 0)
+                {
+                    tableId = Guid.NewGuid();
+                    sql = $@"
+                    INSERT INTO {InternalSQLStatements.TableNames.COOP.DATA_HOST_TABLES}
+                    (
+                        TABLE_ID, 
+                        TABLENAME
+                    ) 
+                    VALUES 
+                    (
+                        '{table.TableName}', 
+                        '{tableId.ToString()}'
+                    );
+                    ";
+
+                    ExecuteWrite(sql);
+                }
+
+                DataTable dtSchema = _client.GetSchemaForTable(_databaseName, table.TableName);
+                foreach (DataRow dr in dtSchema.Rows)
+                {
+                    string columnName = Convert.ToString(dr[1]) ?? string.Empty;
+                    sql = @$"SELECT 
+                                COUNT(*) COUNT
+                            FROM 
+                                {InternalSQLStatements.TableNames.COOP.DATA_HOST_TABLE_COLUMNS}
+                            WHERE
+                                COLUMN_NAME = '{columnName}'
+                            ;";
+
+                    DataTable dtCol = ExecuteRead(sql);
+                    int totalCol = Convert.ToInt32(dtCol.Rows[0][0]);
+
+                    Guid colId = Guid.Empty;
+
+                    if (totalCol == 0)
+                    {
+                        colId = Guid.NewGuid();
+                        sql = $@"INSERT INTO {InternalSQLStatements.TableNames.COOP.DATA_HOST_TABLE_COLUMNS}
+                        (
+                            TABLE_ID,
+                            COLUMN_ID,
+                            COLUMN_NAME
+                        )
+                        VALUES
+                        (
+                            '{tableId.ToString()}',
+                            '{colId.ToString()},
+                            '{columnName}'
+                        )
+                        ;";
+
+                        ExecuteWrite(sql);
+                    }
+                }
+            }
+        }
+
         private ActionOptionalResult CreateDbIfNotExists()
         {
             ActionOptionalResult actionResult = new ActionOptionalResult();
