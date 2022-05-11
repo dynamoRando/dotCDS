@@ -17,6 +17,7 @@ using System.Data;
 using static DotCDS.InternalSQLStatements;
 using DotCDS.Model;
 using DotCDS.Common.Enum;
+using DotCDS.Common;
 
 namespace DotCDS
 {
@@ -282,7 +283,63 @@ namespace DotCDS
                 contract.Status = (ContractStatus)Convert.ToUInt32(row["CONTRACT_STATUS"] ?? 0);
 
                 // we need to populate the schemas, etc.
-                throw new NotImplementedException();
+                string sql = $@"SELECT
+                                    TABLE_ID,
+                                    TABLE_NAME
+                                FROM
+                                    {TableNames.CDS.CONTRACTS_TABLES}   
+                                WHERE
+                                    DATABASE_ID = '{contract.Schema.DatabaseId}'
+                                OR
+                                    DATABASE_NAME = '{contract.Schema.DatabaseName}'
+                                ;
+                                ";
+
+                DataTable dtTables = _client.ExecuteRead(_backingDbName, sql);
+                if (dtTables.Rows.Count > 0)
+                {
+                    foreach (DataRow drTableRow in dtTables.Rows)
+                    {
+                        var tSchema = new TableSchema();
+                        tSchema.DatabaseId = contract.Schema.DatabaseId;
+                        tSchema.DatabaseName = contract.Schema.DatabaseName;
+                        tSchema.TableId = Convert.ToString(drTableRow["TABLE_ID"]);
+                        tSchema.TableName = Convert.ToString(drTableRow["TABLE_NAME"]);
+
+
+                        sql = $@"SELECT
+                                    COLUMN_ID,
+                                    COLUMN_NAME,
+                                    COLUMN_TYPE,
+                                    COLUMN_LENGTH,
+                                    COLUMN_ORDINAL,
+                                    IS_NULLABLE
+                                FROM
+                                    {TableNames.CDS.CONTRACTS_TABLE_SCHEMAS}    
+                                WHERE
+                                    TABLE_ID = '{tSchema.TableId}'
+                                ;
+                                ";
+
+                        DataTable dtColSchema = _client.ExecuteRead(_backingDbName, sql);
+                        if (dtColSchema.Rows.Count > 0)
+                        {
+                            foreach (DataRow drColRow in dtColSchema.Rows)
+                            {
+                                var cSchema = new ColumnSchema();
+                                cSchema.ColumnId = Convert.ToString(drColRow["COLUMN_ID"]);
+                                cSchema.ColumnName = Convert.ToString(drColRow["COLUMN_NAME"]);
+                                cSchema.ColumnType = Convert.ToUInt32(drColRow["COLUMN_TYPE"]);
+                                cSchema.ColumnLength = Convert.ToUInt32(drColRow["COLUMN_LENGTH"]);
+                                cSchema.Ordinal = Convert.ToUInt32(drColRow["COLUMN_ORDINAL"]);
+                                cSchema.IsNullable = Convert.ToBoolean(drColRow["IS_NULLABLE"]);
+                                tSchema.Columns.Add(cSchema);
+                            }
+                        }
+
+                        contract.Schema.Tables.Add(tSchema);
+                    }
+                }
 
                 result[idx] = contract;
                 idx++;
