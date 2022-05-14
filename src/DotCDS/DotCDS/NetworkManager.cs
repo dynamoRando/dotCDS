@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DotCDS.Query;
+using DotCDS.DatabaseClient;
 
 namespace DotCDS
 {
@@ -30,7 +31,7 @@ namespace DotCDS
 
         private string _rootFolder = string.Empty;
         private DatabaseClientType _clientType;
-        private SqliteCDSStore _store;
+        private ICooperativeStore _store;
         private SqliteUserDatabaseManager _userDatabaseManager;
         private QueryParser _queryParser;
         private RemoteNetworkManager _remoteNetworkManager;
@@ -73,7 +74,7 @@ namespace DotCDS
             _clientType = type;
         }
 
-        public void SetCooperativeStore(SqliteCDSStore store)
+        public void SetCooperativeStore(ICooperativeStore store)
         {
             _store = store;
         }
@@ -202,7 +203,7 @@ namespace DotCDS
                 _sqlServiceServer = new SQLServiceServer();
             }
 
-            _store.SetSQLSettngs(portsettings);
+            _store.SetSQLSettings(portsettings);
 
             _sqlServiceServer.RunAsync(null, urls, _sqlServiceHandler, _sqlServicePort);
         }

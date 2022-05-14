@@ -16,9 +16,10 @@ namespace DotCDS
         private Configurator _configurator;
         private string _rootPath;
         private bool _overrideDefaultDb = false;
+        private bool _overrideDefaultDbType = false;
         private DatabaseClientType _clientType;
         private string _connectionString;
-        private SqliteCDSStore _cooperativeStore;
+        private ICooperativeStore _cooperativeStore;
         private NetworkManager _networkManager;
         private RemoteNetworkManager _remoteNetworkManager;
         private SqliteUserDatabaseManager _userDatabaseManager;
@@ -38,6 +39,12 @@ namespace DotCDS
         public Process(string rootPath) : this()
         {
             _rootPath = rootPath;
+        }
+
+        public Process(string rootPath, uint dbClientType) : this(rootPath)
+        {
+            _clientType = (DatabaseClientType)dbClientType;
+            _overrideDefaultDbType = true;
         }
         #endregion
 
@@ -192,7 +199,12 @@ namespace DotCDS
                 {
                     _rootPath = Settings.RootFolder;
                 }
-                _clientType = (DatabaseClientType)Settings.DatabaseClientType;
+
+                if (!_overrideDefaultDbType)
+                {
+                    _clientType = (DatabaseClientType)Settings.DatabaseClientType;
+                }
+                
                 _connectionString = _configurator.DefaultConnection();
             }
 
@@ -212,7 +224,7 @@ namespace DotCDS
                     throw new NotImplementedException();
                     break;
                 case DatabaseClientType.Postgres:
-                    //_cooperativeStore = new PostgresClient();
+                    _cooperativeStore = new PostgresCDSStore(_configurator.PostgresCDSConnection());
                     throw new NotImplementedException();
                     break;
                 case DatabaseClientType.Sqlite:

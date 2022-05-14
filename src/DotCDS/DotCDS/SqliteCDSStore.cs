@@ -53,7 +53,7 @@ namespace DotCDS
         #endregion
 
         #region Public Methods
-        public void SetSQLSettngs(PortSettings settings)
+        public void SetSQLSettings(PortSettings settings)
         {
             _sqlSettings = settings;
         }

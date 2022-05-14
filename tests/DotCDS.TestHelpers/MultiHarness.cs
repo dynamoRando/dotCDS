@@ -14,6 +14,8 @@ namespace DotCDS.TestHelpers
         #region Private Fields
         private string _rootFolder;
         private List<ProcessContainer> _processContainers;
+        private uint _databaseType;
+        private bool _overrideDefaultDbType = false;
         #endregion
 
         #region Public Properties
@@ -34,6 +36,18 @@ namespace DotCDS.TestHelpers
             }
 
             _processContainers = new List<ProcessContainer>();
+        }
+
+        public MultiHarness(bool useTempFolder, uint dbClientType, [CallerMemberName] string memberName = "")
+        {
+            if (useTempFolder)
+            {
+                _rootFolder = Path.Combine(TestConstants.TEST_TEMP_FOLDER, memberName);
+            }
+
+            _processContainers = new List<ProcessContainer>();
+            _databaseType = dbClientType;
+            _overrideDefaultDbType = true;
         }
         #endregion
 
@@ -59,7 +73,15 @@ namespace DotCDS.TestHelpers
 
                 if (process is null)
                 {
-                    process = new Process(path);
+                    if (!_overrideDefaultDbType)
+                    {
+                        process = new Process(path);
+                    }
+                    else
+                    {
+                        process = new Process(path, _databaseType);
+                    }
+                    
                 }
 
                 if (client is null)

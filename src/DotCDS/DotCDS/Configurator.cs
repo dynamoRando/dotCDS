@@ -35,6 +35,11 @@ namespace DotCDS
             return _config.GetConnectionString("Default");
         }
 
+        public string PostgresCDSConnection()
+        {
+            return _config.GetConnectionString("PostgresCDS");
+        }
+
         internal Settings Load()
         {
             var allSettings = _config.GetSection(nameof(Settings));

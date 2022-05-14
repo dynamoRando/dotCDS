@@ -12,7 +12,7 @@ namespace DotCDS.Client.Tests
 {
     public class Test_Sqlite_Multi_Process
     {
-        [Fact]
+        [Fact(Skip ="SQLite not on mac")]
         public void Test_Generate_Contract()
         {
             // ARRANGE

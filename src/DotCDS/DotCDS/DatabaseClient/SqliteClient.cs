@@ -9,12 +9,12 @@ using System.Data.SQLite;
 using System.Data;
 using static DotCDS.InternalSQLStatements;
 
-namespace DotCDS.Database
+namespace DotCDS.DatabaseClient
 {
     /// <summary>
     /// A backing library for interacting with a Sqlite database
     /// </summary>
-    internal class SqliteClient
+    internal class SqliteClient 
     {
         /*
          * https://devtut.github.io/csharp/using-sqlite-in-c.html#creating-simple-crud-using-sqlite-in-c
@@ -239,6 +239,19 @@ namespace DotCDS.Database
             }
         }
 
+        /// <summary>
+        /// Returns a table describing the schema of the table
+        /// </summary>
+        /// <param name="dbName">The name of the database</param>
+        /// <param name="tableName">The name of the table</param>
+        /// <returns>A data table representing the schema of the table. The column orders are:
+        /// [0] - columnId,
+        /// [1] - name,
+        /// [2] - type,
+        /// [3] - NotNull,
+        /// [4] - defaultValue,
+        /// [5] - IsPK</returns>
+        /// <remarks>The column orders are: [0] - columnId, [1] - name, [2] - type, [3] - NotNull, [4] - defaultValue, [5] - IsPK</remarks>
         public DataTable GetSchemaForTable(string dbName, string tableName)
         {
             string sqlCommand = $"PRAGMA table_info(\"{tableName}\")";

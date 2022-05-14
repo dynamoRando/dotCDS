@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DotCDS.Mapper;
+using DotCDS.DatabaseClient;
 
 namespace DotCDS.Services
 {
@@ -15,7 +16,7 @@ namespace DotCDS.Services
         #region Private Fields
         private DatabaseServiceHandler _handler;
         private SqliteClient _sqliteClient;
-        private SqliteCDSStore _cooperativeStore;
+        private ICooperativeStore _cooperativeStore;
         private SqliteUserDatabaseManager _userDatabaseManager;
         private QueryParser _queryParser;
         private RemoteNetworkManager _remoteNetworkManager;
@@ -48,7 +49,7 @@ namespace DotCDS.Services
             _sqliteClient = client;
         }
 
-        public void SetCooperativeStore(SqliteCDSStore store)
+        public void SetCooperativeStore(ICooperativeStore store)
         {
             _cooperativeStore = store;
         }
