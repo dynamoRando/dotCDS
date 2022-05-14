@@ -20,3 +20,5 @@
 /tests/DotCDS.Client.Tests/obj
 /tests/DotCDS.TestHelpers/bin/Debug/net6.0
 /tests/DotCDS.TestHelpers/obj
+.DS_Store
+src/.DS_Store
