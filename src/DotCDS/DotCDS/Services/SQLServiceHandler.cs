@@ -1,6 +1,6 @@
 ﻿using DotCDS.Common;
 using DotCDS.Common.Enum;
-using DotCDS.Database;
+using DotCDS.DatabaseClient;
 using DotCDS.Query;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DotCDS.Enum;
 using DotCDS.Model;
-using DotCDS.DatabaseClient;
 
 namespace DotCDS.Services
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DotCDS.Common;
-using DotCDS.Database;
+using DotCDS.DatabaseClient;
 using DotCDS.Query;
 using Grpc.Core;
 

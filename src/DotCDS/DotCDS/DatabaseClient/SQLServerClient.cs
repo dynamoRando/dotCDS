@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotCDS.Database
+namespace DotCDS.DatabaseClient
 {
     /// <summary>
     /// A backing library for working with a SQL Server database

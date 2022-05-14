@@ -1,5 +1,5 @@
 ﻿using DotCDS.Common;
-using DotCDS.Database;
+using DotCDS.DatabaseClient;
 using DotCDS.Query;
 using System;
 using System.Collections.Generic;
